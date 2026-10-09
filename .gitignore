@@ -1,0 +1,27 @@
+# Local credentials and sessions
+.env
+.env.*
+!.env.example
+cookies.txt
+*.cookie
+*.cookies
+*.pem
+*.key
+secrets/
+local/
+# Runtime and third-party working copies
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+node_modules/
+DVWA/
+vendor/
+db_data/
+mysql_data/
+# Editor and OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+~$*

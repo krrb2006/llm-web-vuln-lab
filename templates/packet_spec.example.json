@@ -1,0 +1,16 @@
+{
+  "sample_id": "S009",
+  "context": "PHP + MariaDB; GET ids; local teaching list endpoint; replace with verified context.",
+  "fragments": [
+    {
+      "file": "index.php",
+      "start": 1,
+      "end": 30
+    },
+    {
+      "file": "repository.php",
+      "start": 1,
+      "end": 24
+    }
+  ]
+}
