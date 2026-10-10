@@ -30,6 +30,7 @@ family_id：SQL04
 危险操作或浏览器输出位置：`repository.php:7/12`（查询以绑定值方式执行）
 沿途安全措施及其适用范围：预处理 + 绑定参数（**待人工复核确认覆盖范围**）
 是否需要额外文件或模板：`../common/db_connect.php`、`repository.php`
+初步判断（仅代码分析，待 D 参考验证）：安全（repository 层 `prepare` + `bind_param` 绑定）
 结论（true、false或待判定）：**待判定（未验证）**
 结论解释（附文件与行号）：**未验证**
 证据文件相对路径：（无）
