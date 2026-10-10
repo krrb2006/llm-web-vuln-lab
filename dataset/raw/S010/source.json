@@ -1,0 +1,33 @@
+{
+  "sample_id": "S010",
+  "family_id": "SQL05",
+  "author": "C",
+  "date": "2026-10-10",
+  "source_type": "self-built",
+  "basis": "docs/C_样本与预处理操作手册.md 二（SQL05 蓝图：多ID列表检索，逐项校验与对应占位符）；运行外壳依据 docs/D_环境与POC验证操作手册.md 三（lab_people 表与 mysqli 连接 $db）",
+  "source_url": "",
+  "source_commit": "",
+  "license": "本组自建教学样本；lab_people 数据与 mysqli 连接约定取自本组 D 手册，不涉及第三方源码复制",
+  "files": [
+    {
+      "file": "index.php",
+      "role": "入口与查询（逐项校验整数 + 等量占位符 + bind_param 绑定）",
+      "sha256": "cdab7fb05940df7266fcb9df96ef664b958781cfdf9490ae635f72e8d88d84cd"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "共享 bootstrap.php",
+      "contract": "建立并返回 mysqli 连接 $db（host/user/pass/dbname 由 D 配置），口令不进入样本文件"
+    },
+    {
+      "name": "lab_people 表",
+      "ddl": "CREATE TABLE IF NOT EXISTS lab_people (id INT PRIMARY KEY, name VARCHAR(80) NOT NULL) CHARACTER SET utf8mb4;",
+      "seed": "INSERT INTO lab_people(id,name) VALUES (1,'Alice'),(2,'Bob'),(3,'Carol');"
+    },
+    {
+      "name": "运行环境",
+      "note": "PHP >= 8.1（bind_param 参数展开），MariaDB/MySQL；php -l 待D容器内执行"
+    }
+  ]
+}
