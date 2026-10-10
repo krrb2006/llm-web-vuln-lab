@@ -1,0 +1,33 @@
+{
+  "sample_id": "S009",
+  "family_id": "SQL05",
+  "author": "C",
+  "date": "2026-10-10",
+  "source_type": "self-built",
+  "basis": "docs/C_样本与预处理操作手册.md 二（SQL05 蓝图：多ID列表检索，直接拼接 IN 列表）；运行外壳依据 docs/D_环境与POC验证操作手册.md 三（lab_people 表与 mysqli 连接 $db）",
+  "source_url": "",
+  "source_commit": "",
+  "license": "本组自建教学样本；lab_people 数据与 mysqli 连接约定取自本组 D 手册，不涉及第三方源码复制",
+  "files": [
+    {
+      "file": "index.php",
+      "role": "入口与查询（危险 sink：直接拼接 ids 到 IN(...)）",
+      "sha256": "65fa84d614af4e480d7a6024b500d466e0447ad48363038343d8ecc0dcf2caa8"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "共享 bootstrap.php",
+      "contract": "建立并返回 mysqli 连接 $db（host/user/pass/dbname 由 D 配置），口令不进入样本文件"
+    },
+    {
+      "name": "lab_people 表",
+      "ddl": "CREATE TABLE IF NOT EXISTS lab_people (id INT PRIMARY KEY, name VARCHAR(80) NOT NULL) CHARACTER SET utf8mb4;",
+      "seed": "INSERT INTO lab_people(id,name) VALUES (1,'Alice'),(2,'Bob'),(3,'Carol');"
+    },
+    {
+      "name": "运行环境",
+      "note": "PHP >= 8.1（bind_param 参数展开），MariaDB/MySQL；php -l 待D容器内执行"
+    }
+  ]
+}
