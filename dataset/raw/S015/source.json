@@ -1,0 +1,24 @@
+{
+  "sample_id": "S015",
+  "family_id": "XSS02",
+  "author": "C",
+  "date": "2026-10-10",
+  "source_type": "self-built",
+  "basis": "docs/C_样本与预处理操作手册.md 二（XSS02 蓝图：文字写入带引号普通属性，直接拼接）",
+  "source_url": "",
+  "source_commit": "",
+  "license": "本组自建教学样本；无第三方源码复制",
+  "files": [
+    {
+      "file": "index.php",
+      "role": "入口与输出（危险 sink：将 q 直接拼接进 input 的 value 属性，属性可逃逸）",
+      "sha256": "1270539fa9afa232e32a272568c2198f0a3bfd819de8a7765535e215fdab2d46"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "运行环境",
+      "note": "PHP 任意版本，无数据库、无登录；php -l 待D容器内执行"
+    }
+  ]
+}
