@@ -10,9 +10,9 @@ family_id：SQL01
 构造目标：fixed（设计目标，非真实标签）
 普通业务参考请求及结果：**未验证**
 参考测试请求及结果：**未验证**
-源头代码位置：`dataset/raw/S002/index.php:15`（prepare）、`:21`（bind_param）
-调用链：`index.php:13` `$_GET['name']` → `:15` `prepare(?)` → `:21` `bind_param` → `:22` `execute`
-危险操作或浏览器输出位置：`index.php:15/22`（查询以绑定值方式执行）
+源头代码位置：`dataset/raw/S002/index.php:9`（prepare）、`:15`（bind_param）
+调用链：`index.php:7` `$_GET['name']` → `:9` `prepare(?)` → `:15` `bind_param` → `:16` `execute`
+危险操作或浏览器输出位置：`index.php:9/16`（查询以绑定值方式执行）
 沿途安全措施及其适用范围：预处理 + 绑定参数（**待人工复核确认覆盖范围**）
 是否需要额外文件或模板：`../common/db_connect.php`（共享 bootstrap）
 结论（true、false或待判定）：**待判定（未验证）**

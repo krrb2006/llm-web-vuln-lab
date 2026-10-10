@@ -7,5 +7,5 @@
   与 S006 的唯一差异为查询构造方式（LIKE 拼接 vs 完整匹配值绑定）。
 - 许可：自建，无第三方许可约束。
 - case_code_sha256（当前文件；冻结前需与容器内运行文件两端一致）：
-  `9eec179c638a136e9d93d35c1bd0d48fe054b0c0e85a47c80db73fec623dde68`
+  `c5bc903494b213c56c774785434720aefc4287aaaa24e2798a1e0d09fd4c4193`
 - source_url / source_commit：自建样本，暂为空。

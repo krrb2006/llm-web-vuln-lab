@@ -20,9 +20,9 @@
 
 ## 目标漏洞点（设计目标）
 
-- `index.php:14`：输入来源 `$_GET['id']`；
-- `index.php:16`：`$id` 作为字符串**直接拼入不带引号的数值位置**（`WHERE id = $id`）；
-- `index.php:17`：`$db->query($sql)` 执行拼接后的语句。
+- `index.php:7`：输入来源 `$_GET['id']`；
+- `index.php:9`：`$id` 作为字符串**直接拼入不带引号的数值位置**（`WHERE id = $id`）；
+- `index.php:10`：`$db->query($sql)` 执行拼接后的语句。
 
 ## 观察点（预期现象 vs 实际观察）
 

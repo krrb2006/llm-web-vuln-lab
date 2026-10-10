@@ -20,9 +20,9 @@
 
 ## 目标漏洞点（设计目标）
 
-- `index.php:16`：输入来源 `$_GET['q']`；
-- `index.php:18`：`$q` 直接拼入 `LIKE '%...%'` 字符串字面量；
-- `index.php:19`：`$db->query($sql)` 执行拼接后的语句。
+- `index.php:7`：输入来源 `$_GET['q']`；
+- `index.php:9`：`$q` 直接拼入 `LIKE '%...%'` 字符串字面量；
+- `index.php:10`：`$db->query($sql)` 执行拼接后的语句。
 
 ## 观察点（预期现象 vs 实际观察）
 

@@ -20,11 +20,11 @@
 
 ## 目标漏洞点 / 修复方式（设计目标）
 
-- `index.php:14`：输入来源 `$_GET['id']`；
-- `index.php:16`：`ctype_digit` 严格校验（仅接受十进制数字串，否则拒绝）；
-- `index.php:21`：`(int)` 转换后；
-- `index.php:23`：`$db->prepare('... WHERE id = ?')` 使用占位符；
-- `index.php:29-30`：`bind_param('i', $id)` + `execute`。
+- `index.php:7`：输入来源 `$_GET['id']`；
+- `index.php:9`：`ctype_digit` 严格校验（仅接受十进制数字串，否则拒绝）；
+- `index.php:14`：`(int)` 转换后；
+- `index.php:16`：`$db->prepare('... WHERE id = ?')` 使用占位符；
+- `index.php:22-23`：`bind_param('i', $id)` + `execute`。
 - `id` 仅作为绑定值进入查询，不参与 SQL 语法结构。
 
 ## 观察点（预期现象 vs 实际观察）

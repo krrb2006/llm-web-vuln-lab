@@ -10,9 +10,9 @@ family_id：SQL01
 构造目标：vulnerable（设计目标，非真实标签）
 普通业务参考请求及结果：**未验证**
 参考测试请求及结果：**未验证**
-源头代码位置：`dataset/raw/S001/index.php:16-17`（拼接与执行）
-调用链：`index.php:14` `$_GET['name']` → `:16` 字符串拼接 → `:17` `$db->query($sql)`
-危险操作或浏览器输出位置：`index.php:17` `$db->query($sql)`
+源头代码位置：`dataset/raw/S001/index.php:9-10`（拼接与执行）
+调用链：`index.php:7` `$_GET['name']` → `:9` 字符串拼接 → `:10` `$db->query($sql)`
+危险操作或浏览器输出位置：`index.php:10` `$db->query($sql)`
 沿途安全措施及其适用范围：未观察到绑定/转义（**待人工复核确认**）
 是否需要额外文件或模板：`../common/db_connect.php`（共享 bootstrap）
 结论（true、false或待判定）：**待判定（未验证）**

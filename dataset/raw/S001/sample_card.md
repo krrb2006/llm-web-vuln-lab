@@ -21,9 +21,9 @@
 
 ## 目标漏洞点（设计目标）
 
-- `index.php:14`：输入来源 `$_GET['name']`；
-- `index.php:16`：`$name` 通过字符串拼接进入 SQL 语句；
-- `index.php:17`：`$db->query($sql)` 执行拼接后的语句。
+- `index.php:7`：输入来源 `$_GET['name']`；
+- `index.php:9`：`$name` 通过字符串拼接进入 SQL 语句；
+- `index.php:10`：`$db->query($sql)` 执行拼接后的语句。
 
 ## 输出约定
 

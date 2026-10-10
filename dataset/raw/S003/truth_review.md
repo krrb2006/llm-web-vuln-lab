@@ -11,9 +11,9 @@ family_id：SQL02
 
 ## 分析思路（待验证，非结论）
 
-- 输入来源 `index.php:14`（`$_GET['id']`）为外部可控字符串。
-- `index.php:16` 将其直接拼入 SQL 的数值位置；因数值位置不带引号，字符串可影响语法结构。
-- `index.php:17` 执行该语句；未观察到数字校验或绑定。
+- 输入来源 `index.php:7`（`$_GET['id']`）为外部可控字符串。
+- `index.php:9` 将其直接拼入 SQL 的数值位置；因数值位置不带引号，字符串可影响语法结构。
+- `index.php:10` 执行该语句；未观察到数字校验或绑定。
 - 判定依据仍按 `docs/judgment_criteria.md` 的 SQLi 四项检查逐条落地，结论只取「满足/不满足/未知」。
 
 ## 待验证步骤
@@ -25,9 +25,9 @@ family_id：SQL02
 
 普通业务参考请求及结果：**未验证**
 参考测试请求及结果：**未验证**
-源头代码位置：`dataset/raw/S003/index.php:16-17`
-调用链：`index.php:14` `$_GET['id']` → `:16` 字符串拼接 → `:17` `$db->query($sql)`
-危险操作或浏览器输出位置：`index.php:17` `$db->query($sql)`
+源头代码位置：`dataset/raw/S003/index.php:9-10`
+调用链：`index.php:7` `$_GET['id']` → `:9` 字符串拼接 → `:10` `$db->query($sql)`
+危险操作或浏览器输出位置：`index.php:10` `$db->query($sql)`
 沿途安全措施及其适用范围：未观察到数字校验/绑定（**待人工复核确认**）
 是否需要额外文件或模板：`../common/db_connect.php`（共享 bootstrap）
 结论（true、false或待判定）：**待判定（未验证）**

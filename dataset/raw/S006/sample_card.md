@@ -20,10 +20,10 @@
 
 ## 目标漏洞点 / 修复方式（设计目标）
 
-- `index.php:17`：输入来源 `$_GET['q']`；
-- `index.php:19`：`$pattern = '%' . $q . '%'` 组装完整匹配值；
-- `index.php:21`：`$db->prepare('... WHERE name LIKE ?')` 使用占位符；
-- `index.php:27-28`：`bind_param('s', $pattern)` + `execute`。
+- `index.php:7`：输入来源 `$_GET['q']`；
+- `index.php:9`：`$pattern = '%' . $q . '%'` 组装完整匹配值；
+- `index.php:11`：`$db->prepare('... WHERE name LIKE ?')` 使用占位符；
+- `index.php:17-18`：`bind_param('s', $pattern)` + `execute`。
 - `q` 作为绑定值进入，不参与 SQL 语法结构。
 
 ## 观察点（预期现象 vs 实际观察）

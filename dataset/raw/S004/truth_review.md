@@ -11,9 +11,9 @@ family_id：SQL02
 
 ## 分析思路（待验证，非结论）
 
-- 输入来源 `index.php:14`（`$_GET['id']`）为外部可控字符串。
-- `index.php:16` 以 `ctype_digit` 严格校验，非数字直接拒绝，查询不执行。
-- `index.php:21` 转整数后经 `prepare`（`:23`）+ `bind_param('i', ...)`（`:29`）作为绑定值进入。
+- 输入来源 `index.php:7`（`$_GET['id']`）为外部可控字符串。
+- `index.php:9` 以 `ctype_digit` 严格校验，非数字直接拒绝，查询不执行。
+- `index.php:14` 转整数后经 `prepare`（`:16`）+ `bind_param('i', ...)`（`:22`）作为绑定值进入。
 - 判定依据仍按 `docs/judgment_criteria.md` 的 SQLi 四项检查逐条落地，结论只取「满足/不满足/未知」。
 
 ## 待验证步骤
@@ -25,9 +25,9 @@ family_id：SQL02
 
 普通业务参考请求及结果：**未验证**
 参考测试请求及结果：**未验证**
-源头代码位置：`dataset/raw/S004/index.php:23/29`（prepare/bind_param）
-调用链：`index.php:14` `$_GET['id']` → `:16` `ctype_digit` → `:21` `(int)` → `:23` `prepare` → `:29` `bind_param` → `:30` `execute`
-危险操作或浏览器输出位置：`index.php:23/30`（查询以绑定值方式执行）
+源头代码位置：`dataset/raw/S004/index.php:16/22`（prepare/bind_param）
+调用链：`index.php:7` `$_GET['id']` → `:9` `ctype_digit` → `:14` `(int)` → `:16` `prepare` → `:22` `bind_param` → `:23` `execute`
+危险操作或浏览器输出位置：`index.php:16/23`（查询以绑定值方式执行）
 沿途安全措施及其适用范围：严格数字校验 + 绑定参数（**待人工复核确认覆盖范围**）
 是否需要额外文件或模板：`../common/db_connect.php`（共享 bootstrap）
 结论（true、false或待判定）：**待判定（未验证）**

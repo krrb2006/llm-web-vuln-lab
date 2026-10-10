@@ -11,8 +11,8 @@ family_id：SQL03
 
 ## 分析思路（待验证，非结论）
 
-- 输入来源 `index.php:17`（`$_GET['q']`）为外部可控字符串。
-- `index.php:19` 组装 `$pattern = '%' . $q . '%'`，经 `prepare`（`:21`）+ `bind_param`（`:27`）
+- 输入来源 `index.php:7`（`$_GET['q']`）为外部可控字符串。
+- `index.php:9` 组装 `$pattern = '%' . $q . '%'`，经 `prepare`（`:11`）+ `bind_param`（`:17`）
   作为单个绑定值进入，无法打破引号改写语法。
 - **LIKE 通配符区分**：绑定值中的 `%`/`_` 仍作为 LIKE 通配符生效（改变匹配范围），
   不构成 SQL 注入；结论需与 S005 的注入证据明确区分。
@@ -27,9 +27,9 @@ family_id：SQL03
 
 普通业务参考请求及结果：**未验证**
 参考测试请求及结果：**未验证**
-源头代码位置：`dataset/raw/S006/index.php:21/27`（prepare/bind_param）
-调用链：`index.php:17` `$_GET['q']` → `:19` `$pattern` → `:21` `prepare` → `:27` `bind_param` → `:28` `execute`
-危险操作或浏览器输出位置：`index.php:21/28`（查询以绑定值方式执行）
+源头代码位置：`dataset/raw/S006/index.php:11/17`（prepare/bind_param）
+调用链：`index.php:7` `$_GET['q']` → `:9` `$pattern` → `:11` `prepare` → `:17` `bind_param` → `:18` `execute`
+危险操作或浏览器输出位置：`index.php:11/18`（查询以绑定值方式执行）
 沿途安全措施及其适用范围：预处理 + 完整匹配值绑定（**待人工复核确认覆盖范围**）
 是否需要额外文件或模板：`../common/db_connect.php`（共享 bootstrap）
 结论（true、false或待判定）：**待判定（未验证）**

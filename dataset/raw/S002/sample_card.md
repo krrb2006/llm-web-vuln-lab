@@ -21,10 +21,10 @@
 
 ## 目标漏洞点 / 修复方式（设计目标）
 
-- `index.php:13`：输入来源 `$_GET['name']`；
-- `index.php:15`：`$db->prepare('... WHERE name = ?')` 使用占位符；
-- `index.php:21`：`$stmt->bind_param('s', $name)` 绑定参数；
-- `index.php:22`：`$stmt->execute()` 执行。
+- `index.php:7`：输入来源 `$_GET['name']`；
+- `index.php:9`：`$db->prepare('... WHERE name = ?')` 使用占位符；
+- `index.php:15`：`$stmt->bind_param('s', $name)` 绑定参数；
+- `index.php:16`：`$stmt->execute()` 执行。
 - `name` 仅作为绑定值进入查询，不参与 SQL 语法结构。
 
 ## 输出约定
