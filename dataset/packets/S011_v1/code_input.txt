@@ -1,0 +1,49 @@
+<sample_id>S011</sample_id>
+<runtime_context>
+PHP + MariaDB（MySQLi 接口）。GET 参数 sort 为排序字段；入口按 sort 对教学人员表 lab_people（id INT 主键、name VARCHAR(80)，utf8mb4，预置 1 Alice / 2 Bob / 3 Carol）排序输出。$db 为已连接的 mysqli 连接。页面字段值经 HTML 转义输出。
+</runtime_context>
+<untrusted_code>
+FILE F01 ORIGINAL_LINES 1-42
+F01:0001 | <?php
+F01:0002 | // 共享 bootstrap.php 提供已连接的 mysqli 连接 $db（host/user/pass/dbname 由 D 配置）。
+F01:0003 | // 依赖约定详见 sample_card.md；此处不包含数据库口令。
+F01:0004 | require __DIR__ . '/bootstrap.php';
+F01:0005 | $db->set_charset('utf8mb4');
+F01:0006 | 
+F01:0007 | // 读取排序字段参数，例如 sort=name；为空时按 id 排序
+F01:0008 | $sort = trim($_GET['sort'] ?? '');
+F01:0009 | if ($sort === '') {
+F01:0010 |     $sort = 'id';
+F01:0011 | }
+F01:0012 | 
+F01:0013 | $sql = "SELECT id, name FROM lab_people ORDER BY $sort";
+F01:0014 | $result = $db->query($sql);
+F01:0015 | if ($result === false) {
+F01:0016 |     // 查询失败仅写入日志，不向页面回显数据库错误细节
+F01:0017 |     error_log('lab_people order query failed: ' . $db->error);
+F01:0018 |     $rows = [];
+F01:0019 | } else {
+F01:0020 |     $rows = $result->fetch_all(MYSQLI_ASSOC);
+F01:0021 |     $result->free();
+F01:0022 | }
+F01:0023 | ?>
+F01:0024 | <!DOCTYPE html>
+F01:0025 | <html lang="zh-CN">
+F01:0026 | <head>
+F01:0027 | <meta charset="utf-8">
+F01:0028 | <title>教学人员列表</title>
+F01:0029 | </head>
+F01:0030 | <body>
+F01:0031 | <h1>教学人员列表</h1>
+F01:0032 | <?php if (count($rows) === 0): ?>
+F01:0033 | <p>未找到匹配记录。</p>
+F01:0034 | <?php else: ?>
+F01:0035 | <ul>
+F01:0036 | <?php foreach ($rows as $row): ?>
+F01:0037 | <li><?php echo htmlspecialchars((string) $row['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>：<?php echo htmlspecialchars((string) $row['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></li>
+F01:0038 | <?php endforeach; ?>
+F01:0039 | </ul>
+F01:0040 | <?php endif; ?>
+F01:0041 | </body>
+F01:0042 | </html>
+</untrusted_code>

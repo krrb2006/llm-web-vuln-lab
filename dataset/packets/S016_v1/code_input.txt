@@ -1,0 +1,26 @@
+<sample_id>S016</sample_id>
+<runtime_context>
+PHP 单页脚本。GET 参数 q 为输入内容；页面将 q 回显到表单 input 元素的 value 属性内。无数据库、无登录、无外部依赖。
+</runtime_context>
+<untrusted_code>
+FILE F01 ORIGINAL_LINES 1-19
+F01:0001 | <?php
+F01:0002 | // 读取输入参数 q，回显到表单 input 的 value 属性内
+F01:0003 | $q = $_GET['q'] ?? '';
+F01:0004 | ?>
+F01:0005 | <!DOCTYPE html>
+F01:0006 | <html lang="zh-CN">
+F01:0007 | <head>
+F01:0008 | <meta charset="utf-8">
+F01:0009 | <title>教学表单</title>
+F01:0010 | </head>
+F01:0011 | <body>
+F01:0012 | <h1>留言输入</h1>
+F01:0013 | <form method="get">
+F01:0014 | <label>内容：</label>
+F01:0015 | <input type="text" name="q" value="<?php echo htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+F01:0016 | <input type="submit" value="提交">
+F01:0017 | </form>
+F01:0018 | </body>
+F01:0019 | </html>
+</untrusted_code>

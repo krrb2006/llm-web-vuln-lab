@@ -1,0 +1,22 @@
+<sample_id>S014</sample_id>
+<runtime_context>
+PHP 单页脚本。GET 参数 q 为搜索词；页面将搜索词显示在 HTML 正文的 <p> 元素内。无数据库、无登录、无外部依赖。
+</runtime_context>
+<untrusted_code>
+FILE F01 ORIGINAL_LINES 1-15
+F01:0001 | <?php
+F01:0002 | // 读取搜索词参数 q
+F01:0003 | $q = $_GET['q'] ?? '';
+F01:0004 | ?>
+F01:0005 | <!DOCTYPE html>
+F01:0006 | <html lang="zh-CN">
+F01:0007 | <head>
+F01:0008 | <meta charset="utf-8">
+F01:0009 | <title>教学搜索</title>
+F01:0010 | </head>
+F01:0011 | <body>
+F01:0012 | <h1>搜索</h1>
+F01:0013 | <p>搜索词：<?php echo htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></p>
+F01:0014 | </body>
+F01:0015 | </html>
+</untrusted_code>

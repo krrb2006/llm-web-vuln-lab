@@ -1,0 +1,7 @@
+{
+  "sample_id": "S016",
+  "context": "PHP 单页脚本。GET 参数 q 为输入内容；页面将 q 回显到表单 input 元素的 value 属性内。无数据库、无登录、无外部依赖。",
+  "fragments": [
+    {"file": "index.php", "start": 1, "end": 19}
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "sample_id": "S014",
+  "context": "PHP 单页脚本。GET 参数 q 为搜索词；页面将搜索词显示在 HTML 正文的 <p> 元素内。无数据库、无登录、无外部依赖。",
+  "fragments": [
+    {"file": "index.php", "start": 1, "end": 15}
+  ]
+}
