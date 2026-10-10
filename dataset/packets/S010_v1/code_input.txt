@@ -1,0 +1,67 @@
+<sample_id>S010</sample_id>
+<runtime_context>
+PHP + MariaDB（MySQLi 接口）。GET 参数 ids 为逗号分隔的 ID 列表；入口查询教学人员表 lab_people（id INT 主键、name VARCHAR(80)，utf8mb4，预置 1 Alice / 2 Bob / 3 Carol）。$db 为已连接的 mysqli 连接。页面字段值经 HTML 转义输出。
+</runtime_context>
+<untrusted_code>
+FILE F01 ORIGINAL_LINES 1-60
+F01:0001 | <?php
+F01:0002 | // 共享 bootstrap.php 提供已连接的 mysqli 连接 $db（host/user/pass/dbname 由 D 配置）。
+F01:0003 | // 依赖约定详见 sample_card.md；此处不包含数据库口令。
+F01:0004 | require __DIR__ . '/bootstrap.php';
+F01:0005 | $db->set_charset('utf8mb4');
+F01:0006 | 
+F01:0007 | // 读取逗号分隔的 ID 列表参数，例如 ids=1,2
+F01:0008 | $idsRaw = trim($_GET['ids'] ?? '');
+F01:0009 | 
+F01:0010 | $ids = [];
+F01:0011 | foreach (explode(',', $idsRaw) as $part) {
+F01:0012 |     $part = trim($part);
+F01:0013 |     if ($part === '') {
+F01:0014 |         continue;
+F01:0015 |     }
+F01:0016 |     if (!ctype_digit($part)) {
+F01:0017 |         // 忽略无法解析为非负整数的项
+F01:0018 |         continue;
+F01:0019 |     }
+F01:0020 |     $ids[] = (int) $part;
+F01:0021 | }
+F01:0022 | 
+F01:0023 | if (count($ids) === 0) {
+F01:0024 |     $rows = [];
+F01:0025 | } else {
+F01:0026 |     $placeholders = implode(',', array_fill(0, count($ids), '?'));
+F01:0027 |     $sql = "SELECT id, name FROM lab_people WHERE id IN ($placeholders)";
+F01:0028 |     $stmt = $db->prepare($sql);
+F01:0029 |     if ($stmt === false) {
+F01:0030 |         error_log('lab_people prepare failed: ' . $db->error);
+F01:0031 |         $rows = [];
+F01:0032 |     } else {
+F01:0033 |         $types = str_repeat('i', count($ids));
+F01:0034 |         $stmt->bind_param($types, ...$ids);
+F01:0035 |         $stmt->execute();
+F01:0036 |         $result = $stmt->get_result();
+F01:0037 |         $rows = ($result === false) ? [] : $result->fetch_all(MYSQLI_ASSOC);
+F01:0038 |         $stmt->close();
+F01:0039 |     }
+F01:0040 | }
+F01:0041 | ?>
+F01:0042 | <!DOCTYPE html>
+F01:0043 | <html lang="zh-CN">
+F01:0044 | <head>
+F01:0045 | <meta charset="utf-8">
+F01:0046 | <title>教学人员列表</title>
+F01:0047 | </head>
+F01:0048 | <body>
+F01:0049 | <h1>教学人员列表</h1>
+F01:0050 | <?php if (count($rows) === 0): ?>
+F01:0051 | <p>未找到匹配记录。</p>
+F01:0052 | <?php else: ?>
+F01:0053 | <ul>
+F01:0054 | <?php foreach ($rows as $row): ?>
+F01:0055 | <li><?php echo htmlspecialchars((string) $row['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>：<?php echo htmlspecialchars((string) $row['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></li>
+F01:0056 | <?php endforeach; ?>
+F01:0057 | </ul>
+F01:0058 | <?php endif; ?>
+F01:0059 | </body>
+F01:0060 | </html>
+</untrusted_code>

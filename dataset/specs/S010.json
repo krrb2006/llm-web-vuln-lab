@@ -1,0 +1,7 @@
+{
+  "sample_id": "S010",
+  "context": "PHP + MariaDB（MySQLi 接口）。GET 参数 ids 为逗号分隔的 ID 列表；入口查询教学人员表 lab_people（id INT 主键、name VARCHAR(80)，utf8mb4，预置 1 Alice / 2 Bob / 3 Carol）。$db 为已连接的 mysqli 连接。页面字段值经 HTML 转义输出。",
+  "fragments": [
+    {"file": "index.php", "start": 1, "end": 60}
+  ]
+}
