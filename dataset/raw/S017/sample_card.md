@@ -11,4 +11,4 @@
 - 清理：仅清理本样本数据：`DELETE FROM lab_guestbook WHERE sample_id = 'S017';`。每次存储型参考验证前后记录清理时间和行数，不清理别的样本。
 - 浏览器动作：完成写入和 303 跳转后，另行 GET 同页，检查普通文字和无害页面属性标记的执行状态；POST 成功本身不代表脚本执行。
 - 语法检查：容器内 `php -l /var/www/html/lab_cases/S017/index.php`；宿主机与容器内 SHA-256 应一致。
-- 状态：`ground_truth=null`，待 D 实际运行、A 独立复核后填写。`reference_check.md` 是待执行计划，不是已取得证据。
+- 状态：D 的本机观察见 `evidence/truth/S017`；`ground_truth=null`，待 A 独立复核后填写。`reference_check.md` 保留原验证计划，实际结果以证据 JSON 为准。

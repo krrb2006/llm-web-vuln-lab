@@ -1,0 +1,62 @@
+{
+  "kind": "ordinary_business_http_observation",
+  "review_status": "pending_independent_review",
+  "ground_truth": null,
+  "observed_at_utc": "2026-10-11T11:57:12Z",
+  "base_url": "http://127.0.0.1:4280",
+  "sample_id": "S018",
+  "d_source_commit": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06",
+  "runtime_check": {
+    "passed": 37,
+    "total": 37
+  },
+  "notes": [
+    "Sample rows reset before this flow and again after all flows."
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/lab_cases/S018/index.php",
+      "form_fields": null,
+      "status": 200,
+      "location": null,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "7d06094b39f0a5bb6bd4395b657327654841cc14e649a01e4d7146302eef026e",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>访客留言板</title></head>\n<body>\n<h1>访客留言板</h1>\n<form method=\"post\" action=\"index.php\">\n  <label for=\"body\">留言</label>\n  <textarea id=\"body\" name=\"body\" rows=\"3\" cols=\"50\" required></textarea>\n  <button type=\"submit\">发布</button>\n</form>\n<h2>最近留言</h2>\n<ul>\n</ul>\n</body>\n</html>\n",
+      "parsed_links": [],
+      "parsed_inputs": {},
+      "parsed_text": "访客留言板 访客留言板 留言 发布 最近留言",
+      "php_fatal_error_visible": false
+    },
+    {
+      "method": "POST",
+      "path": "/lab_cases/S018/index.php",
+      "form_fields": {
+        "body": "Hello from S018 teaching lab"
+      },
+      "status": 303,
+      "location": "index.php",
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_body_utf8": "",
+      "parsed_links": [],
+      "parsed_inputs": {},
+      "parsed_text": "",
+      "php_fatal_error_visible": false
+    },
+    {
+      "method": "GET",
+      "path": "/lab_cases/S018/index.php",
+      "form_fields": null,
+      "status": 200,
+      "location": null,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "b30a1f7115a4cc98c40bf55f635ecb0d6ba567517e345e8e3f699abae0df059a",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>访客留言板</title></head>\n<body>\n<h1>访客留言板</h1>\n<form method=\"post\" action=\"index.php\">\n  <label for=\"body\">留言</label>\n  <textarea id=\"body\" name=\"body\" rows=\"3\" cols=\"50\" required></textarea>\n  <button type=\"submit\">发布</button>\n</form>\n<h2>最近留言</h2>\n<ul>\n  <li><div style=\"white-space: pre-wrap\">Hello from S018 teaching lab</div></li>\n</ul>\n</body>\n</html>\n",
+      "parsed_links": [],
+      "parsed_inputs": {},
+      "parsed_text": "访客留言板 访客留言板 留言 发布 最近留言 Hello from S018 teaching lab",
+      "php_fatal_error_visible": false
+    }
+  ]
+}

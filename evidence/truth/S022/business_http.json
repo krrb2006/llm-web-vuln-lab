@@ -1,0 +1,86 @@
+{
+  "kind": "ordinary_business_http_observation",
+  "review_status": "pending_independent_review",
+  "ground_truth": null,
+  "observed_at_utc": "2026-10-11T11:57:15Z",
+  "base_url": "http://127.0.0.1:4280",
+  "sample_id": "S022",
+  "d_source_commit": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06",
+  "runtime_check": {
+    "passed": 37,
+    "total": 37
+  },
+  "notes": [
+    "Sample rows reset before this flow and again after all flows."
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/lab_cases/S022/submit.php",
+      "form_fields": null,
+      "status": 200,
+      "location": null,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "4d1f8c4efde34b26f719834bd9b0832b11bf7f3ec6941528448ac789a0c7a4a9",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>草稿提交</title></head>\n<body>\n<h1>提交草稿</h1>\n<form method=\"post\" action=\"submit.php\">\n  <label for=\"title\">标题</label>\n  <input id=\"title\" name=\"title\" type=\"text\" maxlength=\"120\" required>\n  <label for=\"body\">正文</label>\n  <textarea id=\"body\" name=\"body\" rows=\"5\" cols=\"50\" required></textarea>\n  <button type=\"submit\">保存并预览</button>\n</form>\n<p><a href=\"list.php\">查看草稿列表</a></p>\n</body>\n</html>\n",
+      "parsed_links": [
+        "list.php"
+      ],
+      "parsed_inputs": {
+        "title": null
+      },
+      "parsed_text": "草稿提交 提交草稿 标题 正文 保存并预览 查看草稿列表",
+      "php_fatal_error_visible": false
+    },
+    {
+      "method": "POST",
+      "path": "/lab_cases/S022/submit.php",
+      "form_fields": {
+        "title": "Teaching draft S022",
+        "body": "Hello from S022 teaching lab"
+      },
+      "status": 303,
+      "location": "preview.php?id=2",
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_body_utf8": "",
+      "parsed_links": [],
+      "parsed_inputs": {},
+      "parsed_text": "",
+      "php_fatal_error_visible": false
+    },
+    {
+      "method": "GET",
+      "path": "/lab_cases/S022/list.php",
+      "form_fields": null,
+      "status": 200,
+      "location": null,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "525ab880d21b5284a35077e0fc3ed7b1baf2b2a818f0587be7f951cfe62fd970",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>草稿列表</title></head>\n<body>\n<h1>草稿列表</h1>\n<p><a href=\"submit.php\">新建草稿</a></p>\n<ul>\n  <li><a href=\"preview.php?id=2\">Teaching draft S022</a></li>\n</ul>\n</body>\n</html>\n",
+      "parsed_links": [
+        "submit.php",
+        "preview.php?id=2"
+      ],
+      "parsed_inputs": {},
+      "parsed_text": "草稿列表 草稿列表 新建草稿 Teaching draft S022",
+      "php_fatal_error_visible": false
+    },
+    {
+      "method": "GET",
+      "path": "/lab_cases/S022/preview.php?id=2",
+      "form_fields": null,
+      "status": 200,
+      "location": null,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "bb35c866e587d626fd05a4fc4111748e3822bf00f0e48c7441a2c91a15780c02",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>草稿预览</title></head>\n<body>\n<h1>Teaching draft S022</h1>\n<div class=\"draft-body\" style=\"white-space: pre-wrap\">Hello from S022 teaching lab</div>\n<p><a href=\"list.php\">返回草稿列表</a></p>\n</body>\n</html>\n",
+      "parsed_links": [
+        "list.php"
+      ],
+      "parsed_inputs": {},
+      "parsed_text": "草稿预览 Teaching draft S022 Hello from S022 teaching lab 返回草稿列表",
+      "php_fatal_error_visible": false
+    }
+  ]
+}

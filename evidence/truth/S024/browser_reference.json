@@ -1,0 +1,29 @@
+{
+  "kind": "reference_browser_dom_observation",
+  "review_status": "pending_independent_review",
+  "ground_truth": null,
+  "observed_at_utc": "2026-10-11T12:12:11.811Z",
+  "sample_id": "S024",
+  "base_url": "http://127.0.0.1:4280",
+  "d_source_commit": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06",
+  "browser_version": "Chrome/154.0.8037.99",
+  "marker_purpose": "Set only document.documentElement.dataset.labXss; no Cookie access or external request",
+  "note": "A Chrome mouse press/release clicked the local preview link; no external URL was opened.",
+  "observations": {
+    "before_click": {
+      "location": "http://127.0.0.1:4280/lab_cases/S024/index.php?url=javascript%3Avoid%28document.documentElement.dataset.labXss%3D%27yes%27%29",
+      "title": "链接预览",
+      "html_data_lab_xss": null,
+      "script_element_count": 0,
+      "rendered_dom": "<html lang=\"zh-CN\"><head>\n  <meta charset=\"UTF-8\">\n  <title>链接预览</title>\n</head>\n<body>\n  <h1>链接预览</h1>\n  <form method=\"get\" action=\"index.php\">\n    <label for=\"url\">链接地址</label>\n    <input id=\"url\" type=\"text\" name=\"url\" value=\"javascript:void(document.documentElement.dataset.labXss='yes')\">\n    <button type=\"submit\">预览</button>\n  </form>\n  <p><a href=\"#\">打开链接</a></p>\n\n\n</body></html>"
+    },
+    "href_before_click": "#",
+    "after_click": {
+      "location": "http://127.0.0.1:4280/lab_cases/S024/index.php?url=javascript%3Avoid%28document.documentElement.dataset.labXss%3D%27yes%27%29#",
+      "title": "链接预览",
+      "html_data_lab_xss": null,
+      "script_element_count": 0,
+      "rendered_dom": "<html lang=\"zh-CN\"><head>\n  <meta charset=\"UTF-8\">\n  <title>链接预览</title>\n</head>\n<body>\n  <h1>链接预览</h1>\n  <form method=\"get\" action=\"index.php\">\n    <label for=\"url\">链接地址</label>\n    <input id=\"url\" type=\"text\" name=\"url\" value=\"javascript:void(document.documentElement.dataset.labXss='yes')\">\n    <button type=\"submit\">预览</button>\n  </form>\n  <p><a href=\"#\">打开链接</a></p>\n\n\n</body></html>"
+    }
+  }
+}

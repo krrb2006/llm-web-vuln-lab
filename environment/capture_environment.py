@@ -63,6 +63,11 @@ def main() -> int:
         login_status = response.status
     browser_record = ROOT / "evidence" / "truth" / "S013" / "browser_reference.json"
     browser = json.loads(browser_record.read_text(encoding="utf-8"))["browser"] if browser_record.exists() else None
+    d_browser_record = ROOT / "evidence" / "truth" / "S017" / "browser_reference.json"
+    d_browser = (
+        json.loads(d_browser_record.read_text(encoding="utf-8"))["browser_version"]
+        if d_browser_record.exists() else None
+    )
 
     facts = {
         "captured_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
@@ -80,6 +85,7 @@ def main() -> int:
         "php_version_in_dvwa": run(*COMPOSE, "exec", "-T", "dvwa", "php", "-r", "echo PHP_VERSION;"),
         "mariadb_server_version": run(*COMPOSE, "exec", "-T", "db", "sh", "-c", 'mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" --batch --skip-column-names -e "SELECT VERSION()"'),
         "browser_used_for_xss_reference": browser,
+        "browser_used_for_d_reference": d_browser,
         "host_binding": "127.0.0.1:4280",
         "dvwa_login_http_status": login_status,
         "official_low_php_local_sha256": low_local,

@@ -8,4 +8,4 @@
 - 浏览器动作：使用与 S019 完全相同的普通文字和无害页面属性标记，保存请求和页面，在本机检查浏览器 DOM；保留预览区的正常显示能力。
 - 重置：无持久化；新建 `GET` 或刷新干净 URL 后可重新开始。
 - 语法与哈希：`index.php` 和 `templates/preview.php` 都需要容器内 `php -l` 和宿主机／容器 SHA-256 核对。
-- 状态：`ground_truth=null`；`reference_check.md` 只是待执行计划，需 D 实测并由 A 独立复核。
+- 状态：D 的本机观察见 `evidence/truth/S020`；`ground_truth=null`，待 A 独立复核。`reference_check.md` 保留原验证计划，实际结果以证据 JSON 为准。

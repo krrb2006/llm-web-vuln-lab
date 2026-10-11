@@ -1,4 +1,4 @@
-# S020 参考验证计划（内部，尚未执行）
+# S020 参考验证计划（内部；已执行，证据待复核）
 
 1. 记录 `index.php` 与 `templates/preview.php` 的本地／容器 SHA-256，运行两处 `php -l`，确认实际 URL 为本机 `/lab_cases/S020/index.php`。
 2. `GET` 打开空表单；`POST content=Hello`，保存请求和响应，确认表单及预览区均显示 `Hello`。

@@ -1,0 +1,38 @@
+{
+  "kind": "reference_browser_dom_observation",
+  "review_status": "pending_independent_review",
+  "ground_truth": null,
+  "observed_at_utc": "2026-10-11T12:12:03.780Z",
+  "sample_id": "S017",
+  "base_url": "http://127.0.0.1:4280",
+  "d_source_commit": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06",
+  "browser_version": "Chrome/154.0.8037.99",
+  "marker_purpose": "Set only document.documentElement.dataset.labXss; no Cookie access or external request",
+  "note": "Write was an HTTP POST; reads were two separate browser GET navigations.",
+  "observations": {
+    "submitted": {
+      "method": "POST",
+      "path": "/lab_cases/S017/index.php",
+      "fields": {
+        "body": "<script>document.documentElement.dataset.labXss='yes'</script>"
+      },
+      "status": 303,
+      "location": "index.php",
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "first_read": {
+      "location": "http://127.0.0.1:4280/lab_cases/S017/index.php",
+      "title": "访客留言板",
+      "html_data_lab_xss": "yes",
+      "script_element_count": 1,
+      "rendered_dom": "<html lang=\"zh-CN\" data-lab-xss=\"yes\"><head><meta charset=\"utf-8\"><title>访客留言板</title></head>\n<body>\n<h1>访客留言板</h1>\n<form method=\"post\" action=\"index.php\">\n  <label for=\"body\">留言</label>\n  <textarea id=\"body\" name=\"body\" rows=\"3\" cols=\"50\" required=\"\"></textarea>\n  <button type=\"submit\">发布</button>\n</form>\n<h2>最近留言</h2>\n<ul>\n  <li><div style=\"white-space: pre-wrap\"><script>document.documentElement.dataset.labXss='yes'</script></div></li>\n</ul>\n\n\n</body></html>"
+    },
+    "separate_read": {
+      "location": "http://127.0.0.1:4280/lab_cases/S017/index.php",
+      "title": "访客留言板",
+      "html_data_lab_xss": "yes",
+      "script_element_count": 1,
+      "rendered_dom": "<html lang=\"zh-CN\" data-lab-xss=\"yes\"><head><meta charset=\"utf-8\"><title>访客留言板</title></head>\n<body>\n<h1>访客留言板</h1>\n<form method=\"post\" action=\"index.php\">\n  <label for=\"body\">留言</label>\n  <textarea id=\"body\" name=\"body\" rows=\"3\" cols=\"50\" required=\"\"></textarea>\n  <button type=\"submit\">发布</button>\n</form>\n<h2>最近留言</h2>\n<ul>\n  <li><div style=\"white-space: pre-wrap\"><script>document.documentElement.dataset.labXss='yes'</script></div></li>\n</ul>\n\n\n</body></html>"
+    }
+  }
+}
