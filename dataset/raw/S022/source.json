@@ -1,0 +1,32 @@
+{
+  "sample_id": "S022",
+  "family_id": "XSS05",
+  "author": "D",
+  "date": "2026-10-11",
+  "source_type": "self-built",
+  "basis": "docs/C_样本与预处理操作手册.md 二（XSS05 跨页存储预览蓝图）",
+  "source_url": "",
+  "source_commit": "",
+  "license": "本组自建教学样本；未复制第三方源码",
+  "files": [
+    {
+      "file": "submit.php",
+      "role": "草稿写入入口",
+      "sha256": "36d47353864d493547282610819c0dab6a5c19466cdb5d4c2c8b7507a4739145"
+    },
+    {
+      "file": "list.php",
+      "role": "草稿标题列表",
+      "sha256": "77f96bda4a34195c69b2b378a52f6565c8cb6336a196e77ce0927ea4cd577051"
+    },
+    {
+      "file": "preview.php",
+      "role": "草稿标题和正文预览",
+      "sha256": "794ab18ce508f48e322224a2e304fac1fd0d7b49b00207a1754cc9da41c68203"
+    }
+  ],
+  "dependencies": [
+    {"name": "../common/db_connect.php", "note": "提供 mysqli $db，使用 DB_* 环境变量和 utf8mb4"},
+    {"name": "lab_preview_drafts", "note": "id、sample_id、title、body、created_at；由 D 的数据库初始化脚本建立"}
+  ]
+}

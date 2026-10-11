@@ -69,6 +69,7 @@ def main() -> int:
         "team_repo_base_commit": run("git", "rev-parse", "main"),
         "a_source_commit": runtime["a_source"]["commit"],
         "c_source_commit": runtime["c_source"]["commit"],
+        "d_source_commit": runtime["d_source"]["commit"] if runtime.get("d_source") else None,
         "dvwa_checkout_commit": run("git", "-C", str(DVWA), "rev-parse", "HEAD"),
         "dvwa_image": config["services"]["dvwa"]["image"],
         "mariadb_image": config["services"]["db"]["image"],

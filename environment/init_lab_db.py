@@ -55,6 +55,10 @@ def main() -> int:
         "--reset-data", action="store_true",
         help="delete rows only from teaching_lab.lab_people before seeding three fictitious rows",
     )
+    parser.add_argument(
+        "--reset-sample", action="append", choices=("S017", "S018", "S021", "S022"),
+        help="delete stored messages belonging to one D sample; may be repeated",
+    )
     args = parser.parse_args()
 
     password = load_or_create_password()
@@ -62,15 +66,35 @@ def main() -> int:
     subprocess.run(compose + ["up", "-d", "db"], cwd=ROOT, check=True)
 
     reset_sql = "DELETE FROM teaching_lab.lab_people;\n" if args.reset_data else ""
+    for sample_id in args.reset_sample or []:
+        table = "lab_guestbook" if sample_id in ("S017", "S018") else "lab_preview_drafts"
+        reset_sql += f"DELETE FROM teaching_lab.{table} WHERE sample_id = '{sample_id}';\n"
     sql = f"""
 CREATE DATABASE IF NOT EXISTS teaching_lab CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE TABLE IF NOT EXISTS teaching_lab.lab_people (
     id INT PRIMARY KEY,
     name VARCHAR(80) NOT NULL
 ) CHARACTER SET utf8mb4;
+CREATE TABLE IF NOT EXISTS teaching_lab.lab_guestbook (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    sample_id VARCHAR(8) NOT NULL,
+    body TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX (sample_id)
+) CHARACTER SET utf8mb4;
+CREATE TABLE IF NOT EXISTS teaching_lab.lab_preview_drafts (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    sample_id VARCHAR(8) NOT NULL,
+    title VARCHAR(120) NOT NULL,
+    body TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX (sample_id)
+) CHARACTER SET utf8mb4;
 CREATE USER IF NOT EXISTS 'lab_user'@'%' IDENTIFIED BY '{password}';
 ALTER USER 'lab_user'@'%' IDENTIFIED BY '{password}';
 GRANT SELECT ON teaching_lab.lab_people TO 'lab_user'@'%';
+GRANT SELECT, INSERT ON teaching_lab.lab_guestbook TO 'lab_user'@'%';
+GRANT SELECT, INSERT ON teaching_lab.lab_preview_drafts TO 'lab_user'@'%';
 {reset_sql}INSERT INTO teaching_lab.lab_people (id, name) VALUES
     (1, 'Alice'), (2, 'Bob'), (3, 'Carol')
     ON DUPLICATE KEY UPDATE name = VALUES(name);

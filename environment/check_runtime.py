@@ -139,14 +139,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--a-ref", default="origin/a/criteria-and-sql01")
     parser.add_argument("--c-ref", default="origin/c/samples")
+    parser.add_argument("--d-ref", help="Git ref containing S017-S024, when deployed")
     args = parser.parse_args()
 
     try:
         a_commit = resolve_commit(args.a_ref)
         c_commit = resolve_commit(args.c_ref)
-        sources = wanted_files(a_commit, c_commit)
-        if len(sources) != 23 or any(path.suffix != ".php" for path in sources):
-            raise RuntimeError("expected exactly 23 PHP runtime files")
+        d_commit = resolve_commit(args.d_ref) if args.d_ref else None
+        sources = wanted_files(a_commit, c_commit, d_commit)
+        if len(sources) < 23 or any(path.suffix != ".php" for path in sources):
+            raise RuntimeError("expected at least 23 PHP runtime files")
         dvwa_revision = dvwa_commit()
         container = running_container()
         unexpected = unexpected_runtime_files(set(sources))
@@ -161,6 +163,7 @@ def main() -> int:
             ),
             "a_source": {"ref": args.a_ref, "commit": a_commit},
             "c_source": {"ref": args.c_ref, "commit": c_commit},
+            "d_source": {"ref": args.d_ref, "commit": d_commit} if d_commit else None,
             "dvwa_commit": dvwa_revision,
             "summary": {
                 "total": len(results),
