@@ -1,0 +1,48 @@
+{
+  "kind": "ordinary_business_http_observation",
+  "review_status": "pending_independent_review",
+  "ground_truth": null,
+  "observed_at_utc": "2026-10-11T11:57:12Z",
+  "base_url": "http://127.0.0.1:4280",
+  "sample_id": "S020",
+  "d_source_commit": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06",
+  "runtime_check": {
+    "passed": 37,
+    "total": 37
+  },
+  "notes": [
+    "The ordinary preview appears in both textarea and preview region."
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/lab_cases/S020/index.php",
+      "form_fields": null,
+      "status": 200,
+      "location": null,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "1a688e70a0d93f18d71d09071225686650e15b61dd1f6ac6eb2d2138ac306334",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>内容预览</title>\n</head>\n<body>\n  <h1>内容预览</h1>\n  <form method=\"post\" action=\"index.php\">\n    <label for=\"content\">内容</label>\n    <textarea id=\"content\" name=\"content\" rows=\"4\" cols=\"50\"></textarea>\n    <button type=\"submit\">预览</button>\n  </form>\n  <section aria-label=\"预览结果\">\n    <h2>预览结果</h2>\n    <div class=\"preview\"></div>\n  </section>\n</body>\n</html>\n",
+      "parsed_links": [],
+      "parsed_inputs": {},
+      "parsed_text": "内容预览 内容预览 内容 预览 预览结果",
+      "php_fatal_error_visible": false
+    },
+    {
+      "method": "POST",
+      "path": "/lab_cases/S020/index.php",
+      "form_fields": {
+        "content": "Hello from S020 teaching lab"
+      },
+      "status": 200,
+      "location": null,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "d5d8609fc2e5fdd364dcea91f8f2bc01faeaca79b0b20337f0f4d2005883968d",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>内容预览</title>\n</head>\n<body>\n  <h1>内容预览</h1>\n  <form method=\"post\" action=\"index.php\">\n    <label for=\"content\">内容</label>\n    <textarea id=\"content\" name=\"content\" rows=\"4\" cols=\"50\">Hello from S020 teaching lab</textarea>\n    <button type=\"submit\">预览</button>\n  </form>\n  <section aria-label=\"预览结果\">\n    <h2>预览结果</h2>\n    <div class=\"preview\">Hello from S020 teaching lab</div>\n  </section>\n</body>\n</html>\n",
+      "parsed_links": [],
+      "parsed_inputs": {},
+      "parsed_text": "内容预览 内容预览 内容 Hello from S020 teaching lab 预览 预览结果 Hello from S020 teaching lab",
+      "php_fatal_error_visible": false
+    }
+  ]
+}

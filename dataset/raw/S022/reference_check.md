@@ -1,4 +1,4 @@
-# S022 参考验证计划（内部，尚未执行）
+# S022 参考验证计划（内部；已执行，证据待复核）
 
 1. 记录 `submit.php`、`list.php`、`preview.php` 的宿主机与容器 SHA-256、`php -l` 和环境版本。仅清空 `lab_preview_drafts` 中 `sample_id='S022'` 的行。
 2. 向 `submit.php` 提交与 S021 相同的普通标题和正文，保存 POST 与 303 跳转；在 `list.php` 找到该标题，按编号打开 `preview.php`，确认标题和正文正常显示。

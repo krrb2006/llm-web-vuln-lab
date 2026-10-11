@@ -10,4 +10,4 @@
 - 清理：仅清理本样本数据：`DELETE FROM lab_preview_drafts WHERE sample_id = 'S021';`。测试前后记录清理时间和行数。
 - 浏览器动作：提交草稿后保存写入和 303 跳转证据，再单独访问列表与预览页；在预览页观察无害页面属性标记的执行状态。列表标题出现文字或 HTTP 200 不能证明目标影响。
 - 语法检查：容器内分别对 `submit.php`、`list.php`、`preview.php` 运行 `php -l`；逐文件核对宿主机与容器内 SHA-256。
-- 状态：`ground_truth=null`，待 D 实际运行、A 独立复核后填写。`reference_check.md` 是待执行计划，不是已取得证据。
+- 状态：D 的本机观察见 `evidence/truth/S021`；`ground_truth=null`，待 A 独立复核后填写。`reference_check.md` 保留原验证计划，实际结果以证据 JSON 为准。
