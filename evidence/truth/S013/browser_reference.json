@@ -1,0 +1,50 @@
+{
+  "sample_id": "S013",
+  "checked_at_utc": "2026-10-11T09:09:13Z",
+  "browser": {
+    "name": "Chrome",
+    "version": "154.0.8037.99",
+    "fresh_temporary_profile_per_request": true
+  },
+  "source": {
+    "c_commit": "a04a83218e7999acd03d8a20422cf4b405903479",
+    "source_path": "dataset/raw/S013/index.php",
+    "source_sha256": "515bd62babff0492e9ad40692f415b06524ba82141735310d171a7d89d5c9f43",
+    "local_sha256": "515bd62babff0492e9ad40692f415b06524ba82141735310d171a7d89d5c9f43",
+    "container_sha256": "515bd62babff0492e9ad40692f415b06524ba82141735310d171a7d89d5c9f43"
+  },
+  "normal": {
+    "request_path_query": "/lab_cases/S013/index.php?q=hello",
+    "http_status": 200,
+    "rendered_dom": "<!DOCTYPE html>\r\n<html lang=\"zh-CN\"><head>\r\n<meta charset=\"utf-8\">\r\n<title>教学搜索</title>\r\n</head>\r\n<body>\r\n<h1>搜索</h1>\r\n<p>搜索词：hello</p>\r\n\r\n\r\n</body></html>\r\n",
+    "dom": {
+      "html_data_lab_xss": null,
+      "script_element_count": 0,
+      "marker_script_element_present": false,
+      "paragraph_text": [
+        "搜索词：hello"
+      ],
+      "q_input_value": null
+    }
+  },
+  "marker": {
+    "request_path_query": "/lab_cases/S013/index.php?q=%3Cscript%3Edocument.documentElement.dataset.labXss%3D%27yes%27%3C%2Fscript%3E",
+    "http_status": 200,
+    "rendered_dom": "<!DOCTYPE html>\r\n<html lang=\"zh-CN\" data-lab-xss=\"yes\"><head>\r\n<meta charset=\"utf-8\">\r\n<title>教学搜索</title>\r\n</head>\r\n<body>\r\n<h1>搜索</h1>\r\n<p>搜索词：<script>document.documentElement.dataset.labXss='yes'</script></p>\r\n\r\n\r\n</body></html>\r\n",
+    "dom": {
+      "html_data_lab_xss": "yes",
+      "script_element_count": 1,
+      "marker_script_element_present": true,
+      "paragraph_text": [
+        "搜索词：document.documentElement.dataset.labXss='yes'"
+      ],
+      "q_input_value": null
+    }
+  },
+  "observations": {
+    "normal_business_observed": true,
+    "normal_dom_marker_present": false,
+    "marker_dom_marker_present": true
+  },
+  "note": "Observed DOM only; C review is required before any ground_truth update."
+}

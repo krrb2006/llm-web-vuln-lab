@@ -1,0 +1,74 @@
+{
+  "kind": "reference_http_observation",
+  "review_status": "pending_independent_review",
+  "ground_truth": null,
+  "observed_at_utc": "2026-10-11T09:55:14Z",
+  "base_url": "http://127.0.0.1:4280",
+  "sample_id": "S003",
+  "a_source_commit": "d498903da01d89a695fa49d5392d3776eb901e2f",
+  "c_source_commit": "a04a83218e7999acd03d8a20422cf4b405903479",
+  "requests": [
+    {
+      "label": "normal_hit",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S003/index.php?id=1",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "63c78176b5d80a3c4c9bc39244afbbb3d1505b9199ba1ef8bee7f4d64ae254bf",
+      "observed_rows": [
+        {
+          "id": 1,
+          "name": "Alice"
+        }
+      ],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<h1>查询结果</h1><p>ID 1：Alice</p>"
+    },
+    {
+      "label": "normal_miss",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S003/index.php?id=999",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "80b1eba3336601dffb8d5fd590b6ab016bc91831d634abbcb3be4a37c75fdbd3",
+      "observed_rows": [],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<h1>查询结果</h1>"
+    },
+    {
+      "label": "controlled_true",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S003/index.php?id=1+OR+1%3D1",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "8bfaa77bdad7e81a12e3ba5cb720318238b888aba85c911c21f7fe72bfd6593a",
+      "observed_rows": [
+        {
+          "id": 1,
+          "name": "Alice"
+        },
+        {
+          "id": 2,
+          "name": "Bob"
+        },
+        {
+          "id": 3,
+          "name": "Carol"
+        }
+      ],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<h1>查询结果</h1><p>ID 1：Alice</p><p>ID 2：Bob</p><p>ID 3：Carol</p>"
+    },
+    {
+      "label": "controlled_false",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S003/index.php?id=1+AND+1%3D2",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "80b1eba3336601dffb8d5fd590b6ab016bc91831d634abbcb3be4a37c75fdbd3",
+      "observed_rows": [],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<h1>查询结果</h1>"
+    }
+  ]
+}
