@@ -50,7 +50,7 @@ def source_file(commit: str, relative_path: str) -> bytes:
     return git_bytes("cat-file", "blob", f"{commit}:{relative_path}")
 
 
-def wanted_files(a_commit: str, c_commit: str) -> dict[Path, bytes]:
+def wanted_files(a_commit: str, c_commit: str, d_commit: str | None = None) -> dict[Path, bytes]:
     files: dict[Path, bytes] = {}
 
     for number in range(1, 9):
@@ -73,6 +73,21 @@ def wanted_files(a_commit: str, c_commit: str) -> dict[Path, bytes]:
         )
     for number in range(9, 13):
         files[Path(f"S{number:03d}") / "bootstrap.php"] = BOOTSTRAP
+
+    if d_commit is not None:
+        for number in range(17, 25):
+            sample_id = f"S{number:03d}"
+            prefix = f"dataset/raw/{sample_id}/"
+            paths = git_bytes("ls-tree", "-r", "--name-only", d_commit, "--", prefix)
+            php_paths = [
+                path for path in paths.decode("utf-8").splitlines()
+                if path.startswith(prefix) and path.endswith(".php")
+            ]
+            if not php_paths:
+                raise RuntimeError(f"no PHP files found for {sample_id} in D commit {d_commit}")
+            for path in php_paths:
+                relative_path = Path(path).relative_to("dataset/raw")
+                files[relative_path] = source_file(d_commit, path)
 
     return files
 
@@ -125,16 +140,22 @@ def main() -> int:
     parser.add_argument(
         "--c-ref", default="origin/c/samples", help="Git ref containing S009-S016"
     )
+    parser.add_argument(
+        "--d-ref", help="Git ref containing S017-S024; omit while those files are not committed"
+    )
     args = parser.parse_args()
 
     try:
         a_commit = resolve_commit(args.a_ref)
         c_commit = resolve_commit(args.c_ref)
-        files = wanted_files(a_commit, c_commit)
+        d_commit = resolve_commit(args.d_ref) if args.d_ref else None
+        files = wanted_files(a_commit, c_commit, d_commit)
         check_output_directory(set(files))
         changed_count = 0
         print(f"A source: {args.a_ref} ({a_commit})")
         print(f"C source: {args.c_ref} ({c_commit})")
+        if d_commit is not None:
+            print(f"D source: {args.d_ref} ({d_commit})")
         print(f"Runtime directory: {OUTPUT_ROOT}")
         for relative_path, content in sorted(files.items()):
             digest, changed = write_and_verify(relative_path, content)

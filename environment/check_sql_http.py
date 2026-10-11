@@ -70,7 +70,9 @@ def observe(sample_id: str, parameter: str, label: str, value: str) -> dict:
 
 def main() -> int:
     runtime_report = json.loads((ROOT / "environment" / "runtime_check.json").read_text(encoding="utf-8"))
-    if runtime_report["summary"]["failed"] or runtime_report["summary"]["passed"] != 23:
+    if (runtime_report["summary"]["failed"] or
+            runtime_report["summary"]["passed"] != runtime_report["summary"]["total"] or
+            runtime_report["summary"]["total"] < 23):
         raise RuntimeError("runtime source/lint checks must pass before HTTP reference checks")
 
     issues: list[str] = []
