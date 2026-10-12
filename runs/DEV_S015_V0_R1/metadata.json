@@ -1,0 +1,19 @@
+{
+  "run_id": "DEV_S015_V0_R1",
+  "phase": "DEV",
+  "sample_id": "S015",
+  "variant": "Original",
+  "prompt_version": "V0",
+  "vulnerability_type": "XSS",
+  "status": "input_prepared",
+  "model_display_name": null,
+  "model_settings": null,
+  "submitted_at": null,
+  "prompt_sha256": "5e4daedae3083bf11608894b5a9eaa6ecd72850701e0399c9e675f4207784b68",
+  "packet_sha256": "3fb2a52b252f953778dcb0c4872bd395a3cd7b846db88898c610bc6d80785619",
+  "input_sha256": "95723811a1184a5f6cdeb34dc40b753481f08af72d400d510e269f9196ca3f19",
+  "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\c-samples-readonly\\dataset\\packets\\S015_v1\\code_input.txt",
+  "raw_output_sha256": null,
+  "source_ref": "origin/c/samples@a04a832",
+  "source_packet_repo_path": "dataset/packets/S015_v1/code_input.txt"
+}
