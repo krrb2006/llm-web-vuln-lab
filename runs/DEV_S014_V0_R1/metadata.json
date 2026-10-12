@@ -9,11 +9,17 @@
   "model_display_name": null,
   "model_settings": null,
   "submitted_at": null,
-  "prompt_sha256": "5e4daedae3083bf11608894b5a9eaa6ecd72850701e0399c9e675f4207784b68",
-  "packet_sha256": "b8f4e60f11dfb32f4c12b1b311bd97e53aa8f69f75c9f5eb794b4619c268c934",
-  "input_sha256": "575ae0ae388e831e8ed28addbc11fa62e494195257c089c6f727d7ee53999d84",
+  "prompt_sha256": "824ea2c5fba391e0827a554c0683a4738efa38859c2b52f2d1de131634a32bf2",
+  "packet_sha256": "7e68e97273ddb20a30ce51c1f1ad1dc0fcb4bc30c248340e41296030cce59f03",
+  "input_sha256": "092518669a43e4aac64632f14db1c7b6de38395cf523af66d21209de464279b7",
   "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\c-samples-readonly\\dataset\\packets\\S014_v1\\code_input.txt",
   "raw_output_sha256": null,
   "source_ref": "origin/c/samples@a04a832",
-  "source_packet_repo_path": "dataset/packets/S014_v1/code_input.txt"
+  "source_packet_repo_path": "dataset/packets/S014_v1/code_input.txt",
+  "pre_submission_correction": "Normalized checkout CRLF to repository LF; no model submission or raw output existed.",
+  "prior_prepared_hashes": {
+    "packet_sha256": "b8f4e60f11dfb32f4c12b1b311bd97e53aa8f69f75c9f5eb794b4619c268c934",
+    "prompt_sha256": "5e4daedae3083bf11608894b5a9eaa6ecd72850701e0399c9e675f4207784b68",
+    "input_sha256": "575ae0ae388e831e8ed28addbc11fa62e494195257c089c6f727d7ee53999d84"
+  }
 }

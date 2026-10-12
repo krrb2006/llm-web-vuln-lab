@@ -13,10 +13,10 @@
 ```powershell
 python tools/b_runs.py plan --seed 20261012
 python tools/b_runs.py prepare --phase DEV --sample S001 --version V0 --code-input dataset/packets/S001/v1/code_input.txt
-python tools/b_runs.py record --run-id DEV_S001_V0_R1 --raw-output <模型回答原文文件> --model <界面显示名称> --settings <界面显示设置或界面不提供>
+python tools/b_runs.py record --run-id DEV_S001_V0_R1 --raw-output <模型回答原文文件> --model <界面显示名称> --settings <界面显示设置或界面不提供> --submitted-at 2026-10-12T14:30:00+08:00
 ```
 
-`prepare` 输出 `runs/{run_id}/input.txt` 和 `metadata.json`，把完整 input 复制到**同一个被测模型交互界面**的新会话。提交时间宜用 `--submitted-at` 填实际时间；省略时仅记录归档时间，需在元数据中更正说明。`record` 原样写 `raw_output.txt`，另写 `normalized.json`。格式违规在后者标明，原文不修改。重复尝试自动使用 R2、R3；已存在的原文拒绝覆盖。模型设置只记录界面实际提供的值，不推测随机性。进度表只表示输入准备状态，不表示实验完成。
+`prepare` 输出 `runs/{run_id}/input.txt` 和 `metadata.json`，把完整 input 复制到**同一个被测模型交互界面**的新会话。`--submitted-at` 必须填实际提交时间及其时区；归档时间另记为 `recorded_at`。`record` 原样写 `raw_output.txt`，另写 `normalized.json`，检查 JSON 字段及行号是否确实存在于该输入包。格式违规在后者标明，原文不修改。重复尝试自动使用 R2、R3；已存在的原文拒绝覆盖。模型设置只记录界面实际提供的值，不推测随机性。进度表只表示输入准备状态，不表示实验完成。
 
 开发集为 S001—S006、S013—S018。先完成全部 V0，逐项分类误报、漏报、定位、证据、格式、POC 和环境问题，再确定 V1 改动并对同一包复测；再根据 V1 的真实问题确定 V2。两轮原文路径与逐句修改写入 `results/B_SQLi_iteration.md` 和 `results/B_XSS_iteration.md`。若某问题源于代码包缺失，先请 C 补齐，修订包后对应版本都重测，避免把输入变化当作 Prompt 效果。
 

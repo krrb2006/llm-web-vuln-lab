@@ -19,6 +19,10 @@ REQUIRED = {'sample_id':str,'prediction':str,'vulnerability_type':str,'locations
 
 def digest(data): return hashlib.sha256(data).hexdigest()
 def read(path): return Path(path).read_bytes()
+def read_canonical_text(path):
+    raw=read(path)
+    raw.decode('utf-8-sig')
+    return raw.replace(b'\r\n',b'\n')
 def put_new(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open('xb') as out: out.write(data)
@@ -28,7 +32,7 @@ def run_id(phase,sid,version,variant=''):
     n=1
     while (ROOT/'runs'/f'{stem}_R{n}').exists(): n+=1
     return f'{stem}_R{n}'
-def validate(raw,sid,kind_name):
+def validate(raw,sid,kind_name,packet=None):
     errors=[]
     try:
         s=raw.decode('utf-8-sig').strip()
@@ -42,6 +46,11 @@ def validate(raw,sid,kind_name):
         if obj.get('prediction') not in ('vulnerable','safe','uncertain'): errors.append('invalid prediction')
         if obj.get('vulnerability_type') != ('SQL注入' if kind_name=='SQLi' else 'XSS'): errors.append('vulnerability_type mismatch')
         if isinstance(obj.get('locations'),list) and any(not isinstance(x,str) or not LOC.fullmatch(x) for x in obj['locations']): errors.append('invalid location')
+        if packet is not None and isinstance(obj.get('locations'),list):
+            available=set(re.findall(r'^(F\d{2}:\d{4}) \| ',packet.decode('utf-8-sig'),re.M))
+            for location in obj['locations']:
+                if isinstance(location,str) and LOC.fullmatch(location) and location not in available:
+                    errors.append(f'location absent from input: {location}')
         ev=obj.get('evidence')
         if isinstance(ev,dict):
             for key in ('source','flow','guard','sink'):
@@ -63,12 +72,12 @@ def prepare(a):
         raise ValueError('formal inputs require confirmed freeze and prompt_hashes.txt')
     if phase=='INJ' and (a.variant not in ('Original','Injected')): raise ValueError('INJ requires --variant')
     if phase=='INJ' and version not in ('V0','V2'): raise ValueError('INJ uses V0 or V2')
-    code=read(a.code_input)
+    code=read_canonical_text(a.code_input)
     if f'<sample_id>{sid}</sample_id>'.encode() not in code: raise ValueError('packet sample_id mismatch')
     if not b'<untrusted_code>' in code or not b'</untrusted_code>' in code: raise ValueError('packet lacks code boundary')
     hit=LEAK.search(code.decode('utf-8-sig'))
     if hit: raise ValueError(f'possible answer leak: {hit.group()}')
-    prompt=read(ROOT/'prompts'/f'{kind(sid)}_{version}.txt')
+    prompt=read_canonical_text(ROOT/'prompts'/f'{kind(sid)}_{version}.txt')
     packet_hash=digest(code)
     comparison=ROOT/'runs'/'b_packet_lock.json'
     locks=json.loads(comparison.read_text(encoding='utf-8')) if comparison.exists() else {}
@@ -88,11 +97,13 @@ def record(a):
     path=ROOT/'runs'/a.run_id
     meta=json.loads((path/'metadata.json').read_text(encoding='utf-8'))
     raw=read(a.raw_output)
-    obj,errors=validate(raw,meta['sample_id'],meta['vulnerability_type'])
+    submitted=datetime.fromisoformat(a.submitted_at.replace('Z','+00:00'))
+    if submitted.tzinfo is None: raise ValueError('submitted-at must include timezone')
+    obj,errors=validate(raw,meta['sample_id'],meta['vulnerability_type'],read(path/'input.txt'))
     put_new(path/'raw_output.txt',raw)
     norm={'run_id':a.run_id,'format_valid':not errors,'format_errors':errors,'parsed_json':obj,'human_verification':'pending'}
     put_new(path/'normalized.json',(json.dumps(norm,ensure_ascii=False,indent=2)+'\n').encode())
-    meta.update(status='raw_recorded',model_display_name=a.model,model_settings=a.settings,submitted_at=a.submitted_at or datetime.now(timezone.utc).isoformat(),raw_output_sha256=digest(raw))
+    meta.update(status='raw_recorded',model_display_name=a.model,model_settings=a.settings,submitted_at=a.submitted_at,recorded_at=datetime.now(timezone.utc).isoformat(),raw_output_sha256=digest(raw))
     (path/'metadata.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print(f'{a.run_id}: format_valid={not errors}; raw preserved')
 
@@ -112,7 +123,7 @@ def plan(a):
 def main():
     ap=argparse.ArgumentParser(description=__doc__); sub=ap.add_subparsers(dest='command',required=True)
     p=sub.add_parser('prepare'); p.add_argument('--phase',choices=('DEV','F','INJ'),required=True); p.add_argument('--sample',required=True); p.add_argument('--version',choices=VERSIONS,required=True); p.add_argument('--code-input',required=True); p.add_argument('--variant',default=''); p.add_argument('--freeze-confirmed',action='store_true'); p.set_defaults(func=prepare)
-    p=sub.add_parser('record'); p.add_argument('--run-id',required=True); p.add_argument('--raw-output',required=True); p.add_argument('--model',required=True); p.add_argument('--settings',required=True); p.add_argument('--submitted-at'); p.set_defaults(func=record)
+    p=sub.add_parser('record'); p.add_argument('--run-id',required=True); p.add_argument('--raw-output',required=True); p.add_argument('--model',required=True); p.add_argument('--settings',required=True); p.add_argument('--submitted-at',required=True,help='actual model submission time with timezone, e.g. 2026-10-12T14:30:00+08:00'); p.set_defaults(func=record)
     p=sub.add_parser('plan'); p.add_argument('--seed',type=int,default=20261012); p.set_defaults(func=plan)
     a=ap.parse_args(); a.func(a)
 if __name__=='__main__': main()
