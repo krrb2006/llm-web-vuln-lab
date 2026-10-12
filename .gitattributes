@@ -6,3 +6,5 @@
 *.docx binary
 *.png binary
 *.pdf binary
+prompts/*.txt text eol=lf
+runs/**/input.txt text eol=lf
