@@ -1,0 +1,24 @@
+```json
+{
+  "sample_id": "S014",
+  "prediction": "safe",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0003", "F01:0013"],
+  "evidence": {
+    "source": "F01:0003：$q = $_GET['q'] ?? ''，GET 参数 q 可由请求控制。",
+    "flow": "F01:0003 的 $q 直接传入 F01:0013 的 echo，输出到 HTML <p> 正文。",
+    "guard": "有效：F01:0013 使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，会编码 HTML 特殊字符；在正文上下文中无法通过 <script> 或标签闭合逃逸。",
+    "sink": "F01:0013：在 <p> 元素正文中输出搜索词；未进入 HTML 属性、URL、JavaScript 或 DOM 等危险上下文。"
+  },
+  "prerequisites": [
+    "PHP 解释器可运行该单页脚本",
+    "通过 GET 参数 q 传入搜索词"
+  ],
+  "missing_context": [
+    "未提供实际浏览器运行与响应观察；但静态路径明确，且输出上下文有有效 HTML 编码，足以判断该路径不构成 XSS。"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "无需生成攻击性 POC。若人工核验，可在本地运行后访问 ?q=test，应显示搜索词 test；访问 ?q=<script>alert(1)</script> 时，页面应只显示被转义的搜索词文本，不应执行脚本或弹出对话框。HTTP 响应中出现字符串不等同于 JavaScript 执行。"
+}
+```
