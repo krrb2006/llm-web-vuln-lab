@@ -55,8 +55,11 @@
 
 ## 内部预期构造目标与参考验证（不进入模型输入）
 - 构造目标：S009 将 ids 直接字符串拼入 IN(...)，无任何校验或参数化，构成 SQLi。
-- 参考验证：
-  - 正常：ids=1,2 → 两条记录
-  - 注入：ids=1 OR 1=1 → 应返回全部 3 条记录（WHERE 条件被改写）
+- 参考验证（据 D 于 PHP 8.5.11 + MariaDB 10.11 容器实测，证据见 d/environment-reference 分支 evidence/truth/S009/http_reference.json）：
+  - 正常：ids=1,2 → 两条记录（Alice、Bob）
+  - 注入输入 ids=1 OR 1=1 → IN(1 OR 1=1) 表达式求值为 IN(1)，仅返回 id=1（Alice）一条记录，并非改写为全表返回
+  - 有效只读条件 ids=1) OR 1=1 # → 闭合右括号并以 # 注释尾随内容，返回全部 3 条记录（WHERE 条件被改写）
+  - 失败记录（保留）：ids=1) OR 1=1 -- （尾随空格）→ trim() 去除尾随空格使 -- 失去注释作用，引发 SQL 语法错误，页面出现 Fatal error；不得把 HTTP 200 当作成功
   - 只观察教学数据条件变化，不读敏感数据、不延时
+- 异常处理：本次已为 index.php 增加自包含 try/catch（查询异常写 error_log，页面保持普通业务输出），源码哈希已变化，待 D 按新哈希重跑 php -l 与参考验证。
 - ground_truth 待 D 运行确认后，经双人复核回填 manifest（保持 null 直至复核通过）。
