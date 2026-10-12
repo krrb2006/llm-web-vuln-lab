@@ -115,6 +115,8 @@ def prepare(a):
 def record(a):
     path=ROOT/'runs'/a.run_id
     meta=json.loads((path/'metadata.json').read_text(encoding='utf-8'))
+    if digest(read(path/'input.txt')) != meta.get('input_sha256'):
+        raise ValueError('prepared input hash differs from metadata')
     raw=read(a.raw_output)
     if a.submitted_at:
         submitted=datetime.fromisoformat(a.submitted_at.replace('Z','+00:00'))
@@ -150,9 +152,19 @@ def plan(a):
                 [f'INJ_{s}_{variant}_{v}' for s in INJECT for variant in ('Original','Injected') for v in ('V0','V2')]]
     for cohort in cohorts: rng.shuffle(cohort)
     tasks=[task for cohort in cohorts for task in cohort]
-    existing={p.name.rsplit('_R',1)[0] for p in (ROOT/'runs').iterdir() if p.is_dir()}
-    lines=['# B 实验进度','',f'排序种子：{a.seed}；只控制任务顺序，不控制模型随机性。','',f'已建输入：{sum(x in existing for x in tasks)}/{len(tasks)}。真实完成数以原始回答及人工验证记录为准。','','|任务|状态|','|---|---|']
-    lines += [f'|{t}|{"input prepared" if t in existing else "pending"}|' for t in tasks]
+    states={}
+    for path in (ROOT/'runs').iterdir():
+        if not path.is_dir() or not (path/'metadata.json').is_file(): continue
+        meta=json.loads((path/'metadata.json').read_text(encoding='utf-8'))
+        if meta.get('primary_experiment_included') is False: continue
+        stem=path.name.rsplit('_R',1)[0]
+        rank=int(path.name.rsplit('_R',1)[1]) if '_R' in path.name else 0
+        if stem not in states or rank>states[stem][0]: states[stem]=(rank,meta.get('status','unknown'))
+    labels={'input_prepared':'input prepared','raw_recorded':'raw recorded; verification pending','raw_recorded_time_unknown':'raw recorded; submission time missing; verification pending'}
+    input_count=sum(t in states for t in tasks)
+    raw_count=sum(states[t][1].startswith('raw_recorded') for t in tasks if t in states)
+    lines=['# B 实验进度','',f'排序种子：{a.seed}；只控制任务顺序，不控制模型随机性。','',f'已建输入：{input_count}/{len(tasks)}；清单任务原文已归档：{raw_count}/{len(tasks)}。原文归档不等于人工验证完成。','','|任务|状态|','|---|---|']
+    lines += [f'|{t}|{labels.get(states[t][1],states[t][1]) if t in states else "pending"}|' for t in tasks]
     lines += ['', 'C 的 S009、S012、S023 各 V0/V1/V2：待 B 复核。']
     out=ROOT/'results'/'b_progress.md'; out.write_text('\n'.join(lines)+'\n',encoding='utf-8'); print(out)
 
