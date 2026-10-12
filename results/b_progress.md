@@ -2,7 +2,7 @@
 
 排序种子：20261012；只控制任务顺序，不控制模型随机性。
 
-已建输入：0/61。真实完成数以原始回答及人工验证记录为准。
+已建输入：4/61。真实完成数以原始回答及人工验证记录为准。
 
 |任务|状态|
 |---|---|
@@ -10,14 +10,14 @@
 |DEV_S006_V0|pending|
 |DEV_S004_V0|pending|
 |DEV_S002_V0|pending|
-|DEV_S014_V0|pending|
+|DEV_S014_V0|input prepared|
 |DEV_S018_V0|pending|
 |DEV_S005_V0|pending|
-|DEV_S015_V0|pending|
-|DEV_S016_V0|pending|
+|DEV_S015_V0|input prepared|
+|DEV_S016_V0|input prepared|
 |DEV_S017_V0|pending|
 |DEV_S001_V0|pending|
-|DEV_S013_V0|pending|
+|DEV_S013_V0|input prepared|
 |DEV_S014_V1|pending|
 |DEV_S013_V1|pending|
 |DEV_S002_V1|pending|
