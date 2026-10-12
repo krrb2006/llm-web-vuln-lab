@@ -12,7 +12,7 @@
     {
       "file": "index.php",
       "role": "入口与查询（危险 sink：直接拼接 ids 到 IN(...)）",
-      "sha256": "65fa84d614af4e480d7a6024b500d466e0447ad48363038343d8ecc0dcf2caa8"
+      "sha256": "2b5e2f2506eef63fb39a2f5e00cdedfcaa3453a05c294f1b03b3d8af08deb0f2"
     }
   ],
   "dependencies": [

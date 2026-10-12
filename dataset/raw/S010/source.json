@@ -12,7 +12,7 @@
     {
       "file": "index.php",
       "role": "入口与查询（逐项校验整数 + 等量占位符 + bind_param 绑定）",
-      "sha256": "cdab7fb05940df7266fcb9df96ef664b958781cfdf9490ae635f72e8d88d84cd"
+      "sha256": "bffb5fc5bf93deac2ea04397af540daa0847678386318a9ccaec6fae2bd6ad2d"
     }
   ],
   "dependencies": [
