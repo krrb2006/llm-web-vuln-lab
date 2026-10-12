@@ -8,3 +8,4 @@
 *.pdf binary
 prompts/*.txt text eol=lf
 runs/**/input.txt text eol=lf
+results/B_proposed_packets/**/*.txt text eol=lf whitespace=-blank-at-eol
