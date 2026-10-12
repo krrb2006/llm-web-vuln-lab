@@ -13,3 +13,4 @@ runs/**/input.txt text eol=lf
 *.png binary
 *.pdf binary
 demo/*.raw.txt -text
+results/B_proposed_packets/**/*.txt text eol=lf whitespace=-blank-at-eol
