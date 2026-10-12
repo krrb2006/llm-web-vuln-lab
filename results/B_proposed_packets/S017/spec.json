@@ -1,0 +1,11 @@
+{
+  "sample_id": "S017",
+  "context": "PHP 与 MariaDB 教学留言板。POST body 保存一条留言，随后以 303 跳转到同一 index.php；GET 从 lab_guestbook 读取本样本最近的留言并显示在 HTML 正文。无需登录。数据库连接由公共文件提供，字符集为 utf8mb4。",
+  "fragments": [
+    {
+      "file": "index.php",
+      "start": 1,
+      "end": 46
+    }
+  ]
+}
