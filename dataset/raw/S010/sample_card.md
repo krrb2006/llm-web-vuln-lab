@@ -55,8 +55,10 @@
 
 ## 内部预期构造目标与参考验证（不进入模型输入）
 - 构造目标：S010 对 ids 逐项 ctype_digit 校验并强制转整型，按数量生成占位符并 bind_param 逐项绑定（类型 'i'），构成参数化查询。
-- 参考验证：
+- 参考验证（据 D 于 PHP 8.5.11 + MariaDB 10.11 容器实测，证据见 d/environment-reference 分支 evidence/truth/S010/http_reference.json）：
   - 正常：ids=1,2 → 两条记录（与 S009 正常行为一致）
-  - 注入尝试：ids=1 OR 1=1 → 非整数项被忽略，不返回全部记录
+  - 注入尝试：ids=1 OR 1=1 → 非整数项被忽略，返回空（observed_rows 为空）
+  - S009 的有效条件 ids=1) OR 1=1 # 及失败尝试 ids=1) OR 1=1 -- 在 S010 均无结果（逐项校验拒绝非整数）
   - ids=1,abc → 忽略 abc，仅返回 id=1
+- 异常处理：本次已为 index.php 增加自包含 try/catch（查询异常写 error_log，页面保持普通业务输出），源码哈希已变化，待 D 按新哈希重跑 php -l 与参考验证。
 - ground_truth 待 D 运行确认后，经双人复核回填 manifest（保持 null 直至复核通过）。
