@@ -25,17 +25,18 @@ if (count($ids) === 0) {
 } else {
     $placeholders = implode(',', array_fill(0, count($ids), '?'));
     $sql = "SELECT id, name FROM lab_people WHERE id IN ($placeholders)";
-    $stmt = $db->prepare($sql);
-    if ($stmt === false) {
-        error_log('lab_people prepare failed: ' . $db->error);
-        $rows = [];
-    } else {
+    try {
+        $stmt = $db->prepare($sql);
         $types = str_repeat('i', count($ids));
         $stmt->bind_param($types, ...$ids);
         $stmt->execute();
         $result = $stmt->get_result();
-        $rows = ($result === false) ? [] : $result->fetch_all(MYSQLI_ASSOC);
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
         $stmt->close();
+    } catch (Throwable $e) {
+        // 查询失败仅写入日志，不向页面回显数据库错误细节
+        error_log('lab_people query failed: ' . $e->getMessage());
+        $rows = [];
     }
 }
 ?>
