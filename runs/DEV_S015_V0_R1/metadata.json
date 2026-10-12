@@ -21,5 +21,10 @@
     "packet_sha256": "3fb2a52b252f953778dcb0c4872bd395a3cd7b846db88898c610bc6d80785619",
     "prompt_sha256": "5e4daedae3083bf11608894b5a9eaa6ecd72850701e0399c9e675f4207784b68",
     "input_sha256": "95723811a1184a5f6cdeb34dc40b753481f08af72d400d510e269f9196ca3f19"
-  }
+  },
+  "planned_test_interface": "DeepSeek web",
+  "experiment_batch": "deepseek-main-2026-10-12",
+  "planned_model_display_name": "DeepSeek-V4.1-Flash",
+  "planned_model_settings": "深度思考=开；联网搜索=关",
+  "planned_model_source": "User report in chat before submission; actual setting must be checked per session."
 }
