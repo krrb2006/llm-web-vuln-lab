@@ -2,7 +2,7 @@
 
 ## 已获 C 标准包，可人工提交 V0
 
-S013—S016：`runs/DEV_S013_V0_R1` 至 `runs/DEV_S016_V0_R1` 的 `input.txt`。来源为 `origin/c/samples@a04a832`；字节哈希与 C 的 Git 标准包一致。四条均尚未送 ChatGPT，也没有模型原文。操作见 `demo/B_ChatGPT_GPT6_提交清单.md`。
+S013—S016：DeepSeek 主实验使用 `DEV_S013_V0_R2`、`DEV_S014_V0_R1`、`DEV_S015_V0_R1`、`DEV_S016_V0_R1` 的 `input.txt`。来源为 `origin/c/samples@a04a832`；字节哈希与 C 的 Git 标准包一致。四条均尚未送 DeepSeek，也没有 DeepSeek 原文。操作见 `demo/B_DeepSeek_提交清单.md`。`DEV_S013_V0_R1` 是早先 ChatGPT GPT-6 试跑，已排除主对照。
 
 ## 待 C 核对的 B 草稿
 

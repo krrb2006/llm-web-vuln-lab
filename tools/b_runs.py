@@ -1,5 +1,6 @@
 """Prepare and record B's manual LLM sessions. No model calls or POC execution."""
 import argparse
+import ast
 import hashlib
 import json
 import random
@@ -64,6 +65,24 @@ def validate(raw,sid,kind_name,packet=None):
     except (UnicodeError,json.JSONDecodeError,ValueError) as exc:
         return None,errors+[f'JSON parse error: {exc}']
 
+def validate_poc(raw,obj):
+    if not isinstance(obj,dict) or obj.get('poc_generated') is not True:
+        return []
+    if obj.get('poc_language') != 'python3':
+        return []  # Manual instructions require human review.
+    blocks=re.findall(r'```([^\n]*)\n([\s\S]*?)```',raw.decode('utf-8-sig'),re.I)
+    candidates=[body for label,body in blocks if label.strip().lower() in ('python','python3','py')]
+    if not candidates:
+        return ['poc_generated=true but no Python fenced code block found']
+    for body in candidates:
+        try:
+            tree=ast.parse(body)
+        except SyntaxError:
+            continue
+        if tree.body:
+            return []
+    return ['Python POC block is not parseable executable code']
+
 def prepare(a):
     sid=a.sample; version=a.version; phase=a.phase
     allowed={'DEV':DEV,'F':FORMAL,'INJ':INJECT}[phase]
@@ -97,14 +116,31 @@ def record(a):
     path=ROOT/'runs'/a.run_id
     meta=json.loads((path/'metadata.json').read_text(encoding='utf-8'))
     raw=read(a.raw_output)
-    submitted=datetime.fromisoformat(a.submitted_at.replace('Z','+00:00'))
-    if submitted.tzinfo is None: raise ValueError('submitted-at must include timezone')
+    if a.submitted_at:
+        submitted=datetime.fromisoformat(a.submitted_at.replace('Z','+00:00'))
+        if submitted.tzinfo is None: raise ValueError('submitted-at must include timezone')
+    elif not a.time_note:
+        raise ValueError('provide actual --submitted-at or explicit --time-note for missing time')
+    batch=meta.get('experiment_batch')
+    if meta.get('planned_model_display_name') and a.model != meta['planned_model_display_name']:
+        raise ValueError('model differs from planned model for this run')
+    if meta.get('planned_model_settings') and a.settings != meta['planned_model_settings']:
+        raise ValueError('settings differ from planned settings for this run')
+    model_lock=ROOT/'runs'/'b_model_lock.json'
+    model_locks=json.loads(model_lock.read_text(encoding='utf-8')) if model_lock.exists() else {}
+    condition={'model_display_name':a.model,'model_settings':a.settings}
+    if batch and batch in model_locks and model_locks[batch]!=condition:
+        raise ValueError(f'model/settings differ from locked batch {batch}; create a new documented batch')
     obj,errors=validate(raw,meta['sample_id'],meta['vulnerability_type'],read(path/'input.txt'))
+    poc_errors=validate_poc(raw,obj)
     put_new(path/'raw_output.txt',raw)
-    norm={'run_id':a.run_id,'format_valid':not errors,'format_errors':errors,'parsed_json':obj,'human_verification':'pending'}
+    norm={'run_id':a.run_id,'format_valid':not errors,'format_errors':errors,'poc_format_valid':not poc_errors,'poc_format_errors':poc_errors,'parsed_json':obj,'human_verification':'pending'}
     put_new(path/'normalized.json',(json.dumps(norm,ensure_ascii=False,indent=2)+'\n').encode())
-    meta.update(status='raw_recorded',model_display_name=a.model,model_settings=a.settings,submitted_at=a.submitted_at,recorded_at=datetime.now(timezone.utc).isoformat(),raw_output_sha256=digest(raw))
+    meta.update(status='raw_recorded' if a.submitted_at else 'raw_recorded_time_unknown',model_display_name=a.model,model_settings=a.settings,submitted_at=a.submitted_at,submission_time_note=a.time_note or None,recorded_at=datetime.now(timezone.utc).isoformat(),raw_output_sha256=digest(raw))
     (path/'metadata.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    if batch and batch not in model_locks:
+        model_locks[batch]=condition
+        model_lock.write_text(json.dumps(model_locks,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print(f'{a.run_id}: format_valid={not errors}; raw preserved')
 
 def plan(a):
@@ -123,7 +159,7 @@ def plan(a):
 def main():
     ap=argparse.ArgumentParser(description=__doc__); sub=ap.add_subparsers(dest='command',required=True)
     p=sub.add_parser('prepare'); p.add_argument('--phase',choices=('DEV','F','INJ'),required=True); p.add_argument('--sample',required=True); p.add_argument('--version',choices=VERSIONS,required=True); p.add_argument('--code-input',required=True); p.add_argument('--variant',default=''); p.add_argument('--freeze-confirmed',action='store_true'); p.set_defaults(func=prepare)
-    p=sub.add_parser('record'); p.add_argument('--run-id',required=True); p.add_argument('--raw-output',required=True); p.add_argument('--model',required=True); p.add_argument('--settings',required=True); p.add_argument('--submitted-at',required=True,help='actual model submission time with timezone, e.g. 2026-10-12T14:30:00+08:00'); p.set_defaults(func=record)
+    p=sub.add_parser('record'); p.add_argument('--run-id',required=True); p.add_argument('--raw-output',required=True); p.add_argument('--model',required=True); p.add_argument('--settings',required=True); p.add_argument('--submitted-at',help='actual model submission time with timezone, e.g. 2026-10-12T14:30:00+08:00'); p.add_argument('--time-note',help='required if actual submission time is unknown; metadata remains incomplete'); p.set_defaults(func=record)
     p=sub.add_parser('plan'); p.add_argument('--seed',type=int,default=20261012); p.set_defaults(func=plan)
     a=ap.parse_args(); a.func(a)
 if __name__=='__main__': main()

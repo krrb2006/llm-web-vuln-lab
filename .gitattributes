@@ -9,3 +9,6 @@
 prompts/*.txt text eol=lf
 runs/**/input.txt text eol=lf
 results/B_proposed_packets/**/*.txt text eol=lf whitespace=-blank-at-eol
+runs/**/raw_output.txt -text whitespace=-blank-at-eol
+runs/**/user_paste*.txt -text whitespace=-blank-at-eol
+pocs/**/original* -text whitespace=-blank-at-eol

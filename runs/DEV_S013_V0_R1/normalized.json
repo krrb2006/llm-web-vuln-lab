@@ -1,0 +1,57 @@
+{
+  "run_id": "DEV_S013_V0_R1",
+  "primary_experiment_included": false,
+  "reason_excluded": "User changed primary tested model to DeepSeek web; this ChatGPT answer is a separate pilot.",
+  "source": "User paste in chat, preserved byte-for-byte, including appended user annotation; model/user boundary at final sentence is uncertain.",
+  "json_parse_valid": true,
+  "json_contract_errors": [],
+  "prediction_as_reported": "vulnerable",
+  "locations_in_input": [
+    "F01:0003",
+    "F01:0013"
+  ],
+  "poc_generated_as_reported": true,
+  "poc_block_language": "lua",
+  "poc_block_line_count": 1,
+  "poc_review": "Supplied POC code is one line beginning with a Python shebang/comment and ends mid urlencode dictionary. As supplied it does not implement a runnable test. No POC was executed.",
+  "verification": "not_run",
+  "submitted_at": null,
+  "reported_time_context": "2026-10-12T09:54+08:00; user states this is system/conversation time, not confirmed actual submission timestamp.",
+  "model_display_name": null,
+  "reported_model": "GPT-6 (user report; contemporaneous interface label unavailable)",
+  "poc_format_valid": false,
+  "poc_format_errors": [
+    "poc_generated=true but no Python fenced code block found"
+  ],
+  "format_valid": true,
+  "format_errors": [],
+  "parsed_json": {
+    "sample_id": "S013",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0003",
+      "F01:0013"
+    ],
+    "evidence": {
+      "source": "F01:0003：通过 $_GET['q'] 获取用户可控的搜索词，未进行输入限制。",
+      "flow": "F01:0003 → F01:0013：用户提交的 q 参数赋值给 $q，随后直接通过 echo 输出到 HTML 正文的 p 元素中，无数据库或其他中间处理。",
+      "guard": "无效：代码未使用 htmlspecialchars() 等 HTML 编码函数，也没有有效净化。攻击者输入的 HTML 标签可被直接插入页面。浏览器是否执行脚本还可能受未提供的 CSP 响应头等运行环境限制。",
+      "sink": "F01:0013：<p>搜索词：<?php echo $q; ?></p>。输出位置是 HTML 正文，未编码的用户输入能够被浏览器解析为 HTML，其中的脚本有机会执行。"
+    },
+    "prerequisites": [
+      "PHP 脚本部署在本地 127.0.0.1:4280 并能够通过 HTTP 访问。",
+      "GET 参数 q 能够传递至目标 PHP 脚本。",
+      "浏览器正常解析服务端返回的 HTML。",
+      "没有额外的 CSP 等机制阻止测试脚本执行。"
+    ],
+    "missing_context": [
+      "PHP 脚本实际对应的 HTTP 访问路径未提供。",
+      "服务器是否设置阻止内联脚本执行的 CSP 响应头未知。",
+      "尚未获得实际 HTTP 响应和浏览器执行结果。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "将下方代码保存为 poc_s013.py。确认本地 PHP 服务运行后，执行 python3 poc_s013.py --path '<实际PHP访问路径>'，其中路径必须以 / 开头。脚本生成指向 127.0.0.1:4280 的普通输入 URL 和 XSS 测试 URL，不发送网络请求或外传数据。首先在浏览器打开普通 URL，确认页面正常显示搜索词 hello-S013；随后打开测试 URL，观察是否弹出 S013-XSS 提示框。出现该提示框说明测试 JavaScript 在浏览器中执行。仅在 HTTP 响应中发现 payload 字符串不能证明 XSS 执行。如果没有弹窗，应检查实际访问路径、响应内容和 CSP 等运行条件，不应直接断言验证成功。"
+  }
+}
