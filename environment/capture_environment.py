@@ -61,6 +61,11 @@ def main() -> int:
 
     with urllib.request.urlopen("http://127.0.0.1:4280/login.php", timeout=10) as response:
         login_status = response.status
+        login_body = response.read()
+    login_body_lower = login_body.lower()
+    if (login_status != 200 or b"<form" not in login_body_lower
+            or b"fatal error" in login_body_lower or b"access denied" in login_body_lower):
+        raise RuntimeError("DVWA login page is not healthy despite its HTTP status")
     browser_record = ROOT / "evidence" / "truth" / "S013" / "browser_reference.json"
     browser = json.loads(browser_record.read_text(encoding="utf-8"))["browser"] if browser_record.exists() else None
     d_browser_record = ROOT / "evidence" / "truth" / "S017" / "browser_reference.json"
@@ -88,6 +93,9 @@ def main() -> int:
         "browser_used_for_d_reference": d_browser,
         "host_binding": "127.0.0.1:4280",
         "dvwa_login_http_status": login_status,
+        "dvwa_login_form_present": True,
+        "dvwa_config_local_sha256": runtime["dvwa_config"]["local_sha256"],
+        "dvwa_config_container_sha256": runtime["dvwa_config"]["container_sha256"],
         "official_low_php_local_sha256": low_local,
         "official_low_php_container_sha256": low_container,
         "runtime_php_checks": runtime["summary"],

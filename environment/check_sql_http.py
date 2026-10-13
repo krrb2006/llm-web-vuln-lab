@@ -8,6 +8,7 @@ lab_people rows. No cookies or login credentials are sent or saved.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import re
@@ -69,6 +70,16 @@ def observe(sample_id: str, parameter: str, label: str, value: str) -> dict:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--sample",
+        dest="samples",
+        action="append",
+        choices=tuple(MARKERS),
+        help="sample to check; repeat to select several (default: all S001-S012)",
+    )
+    args = parser.parse_args()
+
     runtime_report = json.loads((ROOT / "environment" / "runtime_check.json").read_text(encoding="utf-8"))
     if (runtime_report["summary"]["failed"] or
             runtime_report["summary"]["passed"] != runtime_report["summary"]["total"] or
@@ -77,7 +88,12 @@ def main() -> int:
 
     issues: list[str] = []
     stamp = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
-    for sample_id, (parameter, scenarios) in MARKERS.items():
+    sample_ids = args.samples or list(MARKERS)
+    if len(sample_ids) != len(set(sample_ids)):
+        parser.error("each --sample value may be specified only once")
+
+    for sample_id in sample_ids:
+        parameter, scenarios = MARKERS[sample_id]
         observations = [observe(sample_id, parameter, label, value) for label, value in scenarios]
         report = {
             "kind": "reference_http_observation",
@@ -98,14 +114,14 @@ def main() -> int:
         for item in observations:
             if item["status"] != 200:
                 issues.append(f"{sample_id}/{item['label']}: HTTP {item['status']}")
-            if item["php_fatal_error_visible"] and item["label"] != "first_attempt_syntax_error":
+            if item["php_fatal_error_visible"]:
                 issues.append(f"{sample_id}/{item['label']}: PHP fatal error was visible")
         hits = [item for item in observations if item["label"] == "normal_hit"]
         if hits and not hits[0]["observed_rows"]:
             issues.append(f"{sample_id}: normal_hit returned no teaching rows")
     if issues:
         raise RuntimeError("; ".join(issues))
-    print("Saved 12 reference HTTP records; no ground truth assigned.")
+    print(f"Saved reference HTTP records for {len(sample_ids)} sample(s); no ground truth assigned.")
     return 0
 
 

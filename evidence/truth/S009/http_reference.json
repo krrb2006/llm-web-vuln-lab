@@ -2,11 +2,11 @@
   "kind": "reference_http_observation",
   "review_status": "pending_independent_review",
   "ground_truth": null,
-  "observed_at_utc": "2026-10-11T09:55:14Z",
+  "observed_at_utc": "2026-10-13T12:34:58Z",
   "base_url": "http://127.0.0.1:4280",
   "sample_id": "S009",
   "a_source_commit": "d498903da01d89a695fa49d5392d3776eb901e2f",
-  "c_source_commit": "a04a83218e7999acd03d8a20422cf4b405903479",
+  "c_source_commit": "8da63f7b8e169e5037626b0362d005ba7ba5ede0",
   "requests": [
     {
       "label": "normal_hit",
@@ -66,10 +66,10 @@
       "request_path_and_query": "/lab_cases/S009/index.php?ids=1%29+OR+1%3D1+--+",
       "status": 200,
       "content_type": "text/html; charset=UTF-8",
-      "response_sha256": "2faeaa8fbb08512ad4d64ef15a7a912b0e252f4f8e75adff0c0882bb5ef31b5f",
+      "response_sha256": "c46727f035c92a8e2b43cdba0e284d06131a33f5d6aff4e924a1ad047aa2d258",
       "observed_rows": [],
-      "php_fatal_error_visible": true,
-      "response_body_utf8": "<br />\n<b>Fatal error</b>:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ')' at line 1 in /var/www/html/lab_cases/S009/index.php:14\nStack trace:\n#0 /var/www/html/lab_cases/S009/index.php(14): mysqli-&gt;query('SELECT id, name...')\n#1 {main}\n  thrown in <b>/var/www/html/lab_cases/S009/index.php</b> on line <b>14</b><br />\n"
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<p>未找到匹配记录。</p>\n</body>\n</html>\n"
     },
     {
       "label": "controlled_condition",

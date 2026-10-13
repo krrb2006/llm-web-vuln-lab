@@ -1,0 +1,208 @@
+{
+  "kind": "burp_proxy_xss_local_observation",
+  "review_status": "pending_independent_review",
+  "ground_truth": null,
+  "observed_at_utc": "2026-10-13T11:27:52Z",
+  "base_url": "http://127.0.0.1:4280",
+  "transport": "HTTP proxy 127.0.0.1:8080 (Burp Proxy listener); a temporary headless Chrome profile was explicitly routed through the same proxy for DOM observation.",
+  "scope_note": "Loopback teaching lab only. Payload only sets document.documentElement.dataset.labXss; no Cookie access or external request. No request Cookie or credentials were sent or saved. Response headers are limited to Content-Type and Location.",
+  "marker": "<script>document.documentElement.dataset.labXss='yes'</script>",
+  "unique_titles": {
+    "S021": {
+      "normal": "BurpD_20261013T112752Z_74fa28fe_S021_normal",
+      "marker": "BurpD_20261013T112752Z_74fa28fe_S021_marker"
+    },
+    "S022": {
+      "normal": "BurpD_20261013T112752Z_74fa28fe_S022_normal",
+      "marker": "BurpD_20261013T112752Z_74fa28fe_S022_marker"
+    }
+  },
+  "initial_sample_row_counts": {
+    "S021": 0,
+    "S022": 0
+  },
+  "requests": [
+    {
+      "sample_id": "S021",
+      "label": "normal_submit",
+      "method": "POST",
+      "request_path_and_query": "/lab_cases/S021/submit.php",
+      "request_fields": {
+        "title": "BurpD_20261013T112752Z_74fa28fe_S021_normal",
+        "body": "Hello"
+      },
+      "status": 303,
+      "response_headers": {
+        "Content-Type": "text/html; charset=UTF-8",
+        "Location": "preview.php?id=11"
+      },
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_body_utf8": "",
+      "created_row_id": 11
+    },
+    {
+      "sample_id": "S021",
+      "label": "marker_submit",
+      "method": "POST",
+      "request_path_and_query": "/lab_cases/S021/submit.php",
+      "request_fields": {
+        "title": "BurpD_20261013T112752Z_74fa28fe_S021_marker",
+        "body": "<script>document.documentElement.dataset.labXss='yes'</script>"
+      },
+      "status": 303,
+      "response_headers": {
+        "Content-Type": "text/html; charset=UTF-8",
+        "Location": "preview.php?id=12"
+      },
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_body_utf8": "",
+      "created_row_id": 12
+    },
+    {
+      "sample_id": "S021",
+      "label": "list_after_posts",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S021/list.php",
+      "request_fields": null,
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "text/html; charset=UTF-8"
+      },
+      "response_sha256": "6966c5879043647bf333839ae3b999b70cf49d5200637a6e9c013e96bc4e4ffb",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>草稿列表</title></head>\n<body>\n<h1>草稿列表</h1>\n<p><a href=\"submit.php\">新建草稿</a></p>\n<ul>\n  <li><a href=\"preview.php?id=12\">BurpD_20261013T112752Z_74fa28fe_S021_marker</a></li>\n  <li><a href=\"preview.php?id=11\">BurpD_20261013T112752Z_74fa28fe_S021_normal</a></li>\n</ul>\n</body>\n</html>\n"
+    },
+    {
+      "sample_id": "S021",
+      "label": "normal_preview",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S021/preview.php?id=11",
+      "request_fields": null,
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "text/html; charset=UTF-8"
+      },
+      "response_sha256": "9ea64e749f6a832cd13d22fdb0753c49c6c4235126aa92e0bc0d5373486abf43",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>草稿预览</title></head>\n<body>\n<h1>BurpD_20261013T112752Z_74fa28fe_S021_normal</h1>\n<div class=\"draft-body\" style=\"white-space: pre-wrap\">Hello</div>\n<p><a href=\"list.php\">返回草稿列表</a></p>\n</body>\n</html>\n"
+    },
+    {
+      "sample_id": "S021",
+      "label": "marker_preview",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S021/preview.php?id=12",
+      "request_fields": null,
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "text/html; charset=UTF-8"
+      },
+      "response_sha256": "7dfc28c449daa33b97f157350d3e8d36830fc19aa8381a8930bbaf687caa99ad",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>草稿预览</title></head>\n<body>\n<h1>BurpD_20261013T112752Z_74fa28fe_S021_marker</h1>\n<div class=\"draft-body\" style=\"white-space: pre-wrap\"><script>document.documentElement.dataset.labXss='yes'</script></div>\n<p><a href=\"list.php\">返回草稿列表</a></p>\n</body>\n</html>\n"
+    },
+    {
+      "sample_id": "S022",
+      "label": "normal_submit",
+      "method": "POST",
+      "request_path_and_query": "/lab_cases/S022/submit.php",
+      "request_fields": {
+        "title": "BurpD_20261013T112752Z_74fa28fe_S022_normal",
+        "body": "Hello"
+      },
+      "status": 303,
+      "response_headers": {
+        "Content-Type": "text/html; charset=UTF-8",
+        "Location": "preview.php?id=13"
+      },
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_body_utf8": "",
+      "created_row_id": 13
+    },
+    {
+      "sample_id": "S022",
+      "label": "marker_submit",
+      "method": "POST",
+      "request_path_and_query": "/lab_cases/S022/submit.php",
+      "request_fields": {
+        "title": "BurpD_20261013T112752Z_74fa28fe_S022_marker",
+        "body": "<script>document.documentElement.dataset.labXss='yes'</script>"
+      },
+      "status": 303,
+      "response_headers": {
+        "Content-Type": "text/html; charset=UTF-8",
+        "Location": "preview.php?id=14"
+      },
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_body_utf8": "",
+      "created_row_id": 14
+    },
+    {
+      "sample_id": "S022",
+      "label": "list_after_posts",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S022/list.php",
+      "request_fields": null,
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "text/html; charset=UTF-8"
+      },
+      "response_sha256": "25e413543a14722f9fb4db66742c3eac2694441ce2291a56dc262c52cd323137",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>草稿列表</title></head>\n<body>\n<h1>草稿列表</h1>\n<p><a href=\"submit.php\">新建草稿</a></p>\n<ul>\n  <li><a href=\"preview.php?id=14\">BurpD_20261013T112752Z_74fa28fe_S022_marker</a></li>\n  <li><a href=\"preview.php?id=13\">BurpD_20261013T112752Z_74fa28fe_S022_normal</a></li>\n</ul>\n</body>\n</html>\n"
+    },
+    {
+      "sample_id": "S022",
+      "label": "normal_preview",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S022/preview.php?id=13",
+      "request_fields": null,
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "text/html; charset=UTF-8"
+      },
+      "response_sha256": "915779991f89a47dcc96bb1244e8069900f5c361c5d33def6353bd4216632c8d",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>草稿预览</title></head>\n<body>\n<h1>BurpD_20261013T112752Z_74fa28fe_S022_normal</h1>\n<div class=\"draft-body\" style=\"white-space: pre-wrap\">Hello</div>\n<p><a href=\"list.php\">返回草稿列表</a></p>\n</body>\n</html>\n"
+    },
+    {
+      "sample_id": "S022",
+      "label": "marker_preview",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S022/preview.php?id=14",
+      "request_fields": null,
+      "status": 200,
+      "response_headers": {
+        "Content-Type": "text/html; charset=UTF-8"
+      },
+      "response_sha256": "be1b8e9c6d4c2f43efa0891a50fe7c3ce8a98c12c9d59961d8db71e757f4e2fe",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>草稿预览</title></head>\n<body>\n<h1>BurpD_20261013T112752Z_74fa28fe_S022_marker</h1>\n<div class=\"draft-body\" style=\"white-space: pre-wrap\">&lt;script&gt;document.documentElement.dataset.labXss=&#039;yes&#039;&lt;/script&gt;</div>\n<p><a href=\"list.php\">返回草稿列表</a></p>\n</body>\n</html>\n"
+    }
+  ],
+  "browser_observations": [
+    {
+      "sample_id": "S021",
+      "url": "http://127.0.0.1:4280/lab_cases/S021/preview.php?id=12",
+      "title": "草稿预览",
+      "html_data_lab_xss": "yes",
+      "rendered_dom": "<html lang=\"zh-CN\" data-lab-xss=\"yes\"><head><meta charset=\"utf-8\"><title>草稿预览</title></head>\n<body>\n<h1>BurpD_20261013T112752Z_74fa28fe_S021_marker</h1>\n<div class=\"draft-body\" style=\"white-space: pre-wrap\"><script>document.documentElement.dataset.labXss='yes'</script></div>\n<p><a href=\"list.php\">返回草稿列表</a></p>\n\n\n</body></html>",
+      "visible_text": "BurpD_20261013T112752Z_74fa28fe_S021_marker\n\n返回草稿列表",
+      "screenshot_path": "demo/burp_xss_S021_20261013T112752Z_74fa28fe.png"
+    },
+    {
+      "sample_id": "S022",
+      "url": "http://127.0.0.1:4280/lab_cases/S022/preview.php?id=14",
+      "title": "草稿预览",
+      "html_data_lab_xss": null,
+      "rendered_dom": "<html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><title>草稿预览</title></head>\n<body>\n<h1>BurpD_20261013T112752Z_74fa28fe_S022_marker</h1>\n<div class=\"draft-body\" style=\"white-space: pre-wrap\">&lt;script&gt;document.documentElement.dataset.labXss='yes'&lt;/script&gt;</div>\n<p><a href=\"list.php\">返回草稿列表</a></p>\n\n\n</body></html>",
+      "visible_text": "BurpD_20261013T112752Z_74fa28fe_S022_marker\n<script>document.documentElement.dataset.labXss='yes'</script>\n\n返回草稿列表",
+      "screenshot_path": "demo/burp_xss_S022_20261013T112752Z_74fa28fe.png"
+    }
+  ],
+  "cleanup": {
+    "method": "delete only rows matching this run unique titles and sample ids",
+    "final_sample_row_counts": {
+      "S021": 0,
+      "S022": 0
+    },
+    "matches_initial_counts": true
+  },
+  "browser_version": "Chrome/154.0.8037.99",
+  "browser_method_note": "Temporary headless Chrome with explicit Burp proxy and loopback proxy bypass disabled; not the Burp integrated browser window.",
+  "result": "passed",
+  "d_source_commit": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06"
+}
