@@ -1,16 +1,16 @@
 {
-  "checked_at_utc": "2026-10-13T12:33:13Z",
+  "checked_at_utc": "2026-10-13T13:02:36Z",
   "a_source": {
-    "ref": "d498903da01d89a695fa49d5392d3776eb901e2f",
+    "ref": "origin/a/criteria-and-sql01",
     "commit": "d498903da01d89a695fa49d5392d3776eb901e2f"
   },
   "c_source": {
-    "ref": "8da63f7b8e169e5037626b0362d005ba7ba5ede0",
+    "ref": "origin/c/samples",
     "commit": "8da63f7b8e169e5037626b0362d005ba7ba5ede0"
   },
   "d_source": {
-    "ref": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06",
-    "commit": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06"
+    "ref": "origin/d/environment-reference",
+    "commit": "a90708be2a4a53f732b3cabea37f7feed5f04125"
   },
   "dvwa_commit": "068d974487a297c155c48722f9fcf7180a83adc4",
   "summary": {
