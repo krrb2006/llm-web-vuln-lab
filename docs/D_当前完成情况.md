@@ -12,7 +12,7 @@
 ## 本轮环境故障修复与 Burp 准备
 
 - 复查发现 DVWA 登录页虽然返回 HTTP 200，正文实际为 `lab_user` 无权访问 `dvwa` 数据库的错误。根因是主站与教学样本读取了同名数据库环境变量。D 生成只读挂载的独立 DVWA 配置，让主站使用官方账户、样本继续使用仅有教学表权限的账户；A/C/D 样本源码未改动。修复后登录页有表单且无数据库错误，S001、S010、S017 的普通 GET 均无 PHP 致命错误。`capture_environment.py` 已增加正文健康断言，避免只凭 200 误报。
-- 本机已安装 Burp Suite Community Edition v2026.9.2。10 月 13 日用户打开 Burp 自带浏览器后，D 确认 `127.0.0.1:8080` listener 已监听。首轮 S009/S010 的 SQL 对照和 S021/S022 的普通/marker 提交、列表与预览请求经 Burp 代理完成，证据分别见 `demo/burp_sqli_proxy_observation.json`、`demo/burp_xss_proxy_observation.json`。临时 Chrome 代理观察确认 S021 执行页面标记、S022 显示转义文本；首轮两张浏览器截图已保存且教学行已清理。之后 D 在 Burp Repeater 手工重放 S021 `id=15` 与 S022 `id=16`，以及 S009/S010 四条只读 SQL 对照请求；所有请求均返回 200，响应行数符合配对预期。SQLi Repeater 的可见观察摘要和 S010 控制条件截图在 `demo/burp_sqli_repeater_observation.json` 及对应 JPG；完整 raw Repeater 响应和 S009 配对截图尚未另存。另记录一条录入格式错误导致的 408，不计作样本结果。S021/S022 两条重试草稿暂留供复核。第二台电脑复现仍待完成。详见 `demo/burp_readiness.md`。
+- 本机已安装 Burp Suite Community Edition v2026.9.2。10 月 13 日用户打开 Burp 自带浏览器后，D 确认 `127.0.0.1:8080` listener 已监听。首轮 S009/S010 的 SQL 对照和 S021/S022 的普通/marker 提交、列表与预览请求经 Burp 代理完成，证据分别见 `demo/burp_sqli_proxy_observation.json`、`demo/burp_xss_proxy_observation.json`。临时 Chrome 代理观察确认 S021 执行页面标记、S022 显示转义文本；首轮两张浏览器截图已保存且教学行已清理。之后 D 在 Burp Repeater 手工重放 S021 `id=15` 与 S022 `id=16`，以及 S009/S010 四条只读 SQL 对照请求；所有请求均返回 200，响应行数符合配对预期。SQLi Repeater 观察摘要、S010 控制条件截图，以及 10 月 13 日补存的 S009 受控条件与响应头截图见 `demo/burp_sqli_repeater_observation.json` 和相应 JPG。完整 raw Repeater 响应正文尚未另存。另记录一条录入格式错误导致的 408，不计作样本结果。S021/S022 两条重试草稿暂留供复核。第二台电脑复现仍待完成。详见 `demo/burp_readiness.md`。
 
 ## 已保存的参考观察
 
@@ -30,7 +30,7 @@ S017–S024 的普通业务检查由 `environment/check_d_business.py` 生成；
 1. `dataset/manifest.json` 的 24 个 `ground_truth` 目前全部为 `null`；A/C 的独立复核与签署尚未完成。D 样本的构造目标和本机观察不能直接变成真值。S021/S022 的跨页实现与 C 手册“第二条读取路径”的措辞差异，须由 C、A 确认是否符合蓝图，暂不改动已固定源码。
 2. C 已修订 S009/S010 并推送 `c/samples`；D 已按新源码复核参考行为，但 S009 v2 输入包哈希与 B 通知的前缀不一致，暂停冻结，待 B/C 核对。D 已选择保留 mysqli 严格模式，并建议所有查询、预处理和执行流程使用 `try/catch (Throwable)`、错误仅写日志；该方案待 A 确认，随后由 A 补齐 S001–S008、C 对齐 S011/S012，D 再按新提交重建和复验。B 仍需完成六份 Prompt 的版本确认、输出字段核对、模型原文与冻结哈希。环境、样本、真值和 Prompt 未一起冻结前不开始正式测试。
 3. `runs/formal.json` 现有 36 条均为 `planned`。D 负责 S010、S011、S022 各 V0/V1/V2 的 9 条正式记录，并复核 A 的 9 条；D 的 9 条由 C 复核。这些记录目前未执行。
-4. SQLi/XSS 的请求、响应已有 Burp 代理观察；XSS 页面 DOM 对照、浏览器截图和两条 Repeater 手工重放已完成。SQLi 的四条只读 Repeater 请求也已完成并记录观察摘要；S010 控制条件的 Repeater 截图已保存。首轮演示写入已清理，重试的 S021/S022 草稿暂留供复核。完整 raw Repeater 输出、S009 配对截图尚未留存；第二台电脑按同一版本复现也未完成。
+4. SQLi/XSS 的请求、响应已有 Burp 代理观察；XSS 页面 DOM 对照、浏览器截图和两条 Repeater 手工重放已完成。SQLi 的四条只读 Repeater 请求也已完成并记录观察摘要；S010 控制条件截图和补存的 S009 受控条件/响应头截图均已留存。首轮演示写入已清理，重试的 S021/S022 草稿暂留供复核。完整 raw Repeater 正文尚未留存；第二台电脑按同一版本复现也未完成。
 
 下一步先由 A/D 定统一 MySQLi 错误处理口径、A/C 完成真值复核并裁定 XSS05 蓝图；B/C 核对 S009 v2 输入包哈希。随后完成中性输入包和 Prompt 冻结，再开始正式记录。具体交给各人的文件和行动见 `docs/D_给A-B-C_交接说明.md`。
 
@@ -43,3 +43,13 @@ S017–S024 的普通业务检查由 `environment/check_d_business.py` 生成；
 - 更新后的观察只写入 `evidence/truth/S009/http_reference.json` 和 `evidence/truth/S010/http_reference.json`；两份记录的 `c_source_commit` 均为上述完整 C 提交号，`ground_truth` 仍为 `null`。当前源码 SHA-256：S009 `2b5e2f2506eef63fb39a2f5e00cdedfcaa3453a05c294f1b03b3d8af08deb0f2`；S010 `bffb5fc5bf93deac2ea04397af540daa0847678386318a9ccaec6fae2bd6ad2`。
 - 从 C 分支计算的 `code_input.txt` SHA-256：S009 v2 `7a9dd6065e6bd074801d293c94520d93b3f71f7ece14d3244daad1f765f8a5c4`；S010 v2 `1e32adc03620cfd699350fb5399083304cc75277420eba51697672374c06f58f`。B 通知中的 S009 前缀为 `7a95dd606…`，与仓库文件前缀不一致；S009 v2 冻结前须由 B/C 核对。S010 前缀相符。
 - `environment/check_sql_http.py` 增加了 `--sample` 过滤，避免单例复核覆盖其他样本记录。D 的 MySQLi 口径选择为严格模式 + 查询/预处理/执行完整流程 `try/catch`，由 A 确认后再让 C 对齐 S011/S012；D 收到新提交后重建并复验。
+
+## 最新现场刷新（2026-10-13）
+
+- D 已刷新远端分支并按 A `d498903da01d89a695fa49d5392d3776eb901e2f`、C `8da63f7b8e169e5037626b0362d005ba7ba5ede0`、D `a90708be2a4a53f732b3cabea37f7feed5f04125` 重跑环境检查：37/37 个 PHP 文件通过语法与源码/本地/容器哈希核对，DVWA 配置也通过；本轮环境版本、服务和脱敏 Compose 信息已刷新。
+- S009/S010 共 11 个 HTTP 参考场景已重跑，返回行数分别为 `2,1,1,0,3` 和 `2,1,0,0,0,1`；均 HTTP 200、无 PHP Fatal error，`ground_truth` 仍为 `null`。两份记录固定到 C 提交 `8da63f7b8e169e5037626b0362d005ba7ba5ede0`。
+- D 的 S017–S024 普通业务 24 请求和浏览器 8 例观察已重跑，证据 JSON 已刷新；脚本执行通过。`check_d_business.py` 原先把运行报告字段集合写死，因新增 `dvwa_config_passed` 而误报失败；现改为逐项核对 37/37、无意外运行文件及 DVWA 配置检查，之后业务复跑通过。
+- S001–S006 的 B 草稿代码、行号映射与输入哈希技术初核记录已整合到 `docs/D_S001-S006输入上下文技术核验.md`。结论仍是待 C 标准化并出正式中性输入包；六份草稿中尚需去掉过时的“待 D 核验”语句、补充入口路径和 LIKE 通配符语义。
+- Burp Repeater 的 S009 受控条件重新发送成功：HTTP 200、225 字节、Alice/Bob/Carol 三行、无 Fatal error；两张新截图见 `demo/burp_sqli_repeater_S009_headers_20261013.jpg` 和 `demo/burp_sqli_repeater_S009_20261013.jpg`。完整 raw Repeater 响应正文尚未另存；先前的 408 是请求头后缺少空行造成的录入错误，不计作样本结果。
+- D 对 XSS05 的书面判断：当前三页面数据流符合“提交后经另一预览入口读取”的表述——`submit.php` 写入、`list.php` 列标题、独立 `preview.php?id=...` 读取正文；S021 在预览正文输出点不编码，S022 对应编码。此技术判断供 A/C 共同裁定；若蓝图要求列表页也输出正文，需先修改蓝图和样本后重新冻结与验证。
+- 正式测试仍未获准启动：36 条正式计划保持 `planned`，24 个真值保持 `null`；S009 v2 完整哈希 `7a9dd6065e6bd074801d293c94520d93b3f71f7ece14d3244daad1f765f8a5c4` 与 B 通知的 `7a95dd606…` 前缀不一致，尚待 B/C 对齐。具体逐角色行动见 `docs/D_角色交接_2026-10-13.md`。

@@ -2,7 +2,7 @@
   "kind": "reference_http_observation",
   "review_status": "pending_independent_review",
   "ground_truth": null,
-  "observed_at_utc": "2026-10-13T12:34:58Z",
+  "observed_at_utc": "2026-10-13T13:02:50Z",
   "base_url": "http://127.0.0.1:4280",
   "sample_id": "S009",
   "a_source_commit": "d498903da01d89a695fa49d5392d3776eb901e2f",

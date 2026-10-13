@@ -181,7 +181,15 @@ def check_link(sample: str) -> None:
 
 def main() -> int:
     runtime = json.loads((ROOT / "environment" / "runtime_check.json").read_text(encoding="utf-8"))
-    require(runtime["summary"] == {"total": 37, "passed": 37, "failed": 0, "unexpected_runtime_files": []}, "37/37 runtime checks required")
+    summary = runtime.get("summary", {})
+    require(
+        summary.get("total") == 37
+        and summary.get("passed") == 37
+        and summary.get("failed") == 0
+        and summary.get("unexpected_runtime_files") == []
+        and summary.get("dvwa_config_passed") is True,
+        "37/37 runtime checks and the DVWA configuration check are required",
+    )
     require("d_source" in runtime, "D source commit missing from runtime report")
     try:
         for sample in ("S017", "S018"):
