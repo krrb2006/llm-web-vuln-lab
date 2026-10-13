@@ -12,3 +12,4 @@ runs/**/input.txt text eol=lf
 *.docx binary
 *.png binary
 *.pdf binary
+demo/*.raw.txt -text

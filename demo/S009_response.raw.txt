@@ -1,0 +1,24 @@
+HTTP/1.1 200 OK
+Date: Tue, 13 Oct 2026 13:00:44 GMT
+Server: Apache/2.4.68 (Debian)
+X-Powered-By: PHP/8.5.11
+Vary: Accept-Encoding
+Content-Length: 225
+Connection: close
+Content-Type: text/html; charset=UTF-8
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>教学人员列表</title>
+</head>
+<body>
+<h1>教学人员列表</h1>
+<ul>
+<li>1：Alice</li>
+<li>2：Bob</li>
+<li>3：Carol</li>
+</ul>
+</body>
+</html>
