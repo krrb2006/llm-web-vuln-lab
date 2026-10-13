@@ -30,7 +30,7 @@
 
 ## D 接下来的依赖
 
-D 配合 A/C 复核争议，按冻结提交重做任何受影响的语法、哈希、正常业务与浏览器检查。冻结完成后，D 执行 S010/S011/S022 的九条正式记录并复核 A 的九条，交 C 复核本人记录。本机 Burp 已安装。10 月 13 日经 Burp Proxy 完成首轮 S009/S010 SQL 对照以及 S021/S022 的普通/marker 提交、列表与预览请求；XSS 的代理正文、DOM 和两张浏览器截图保存在 demo 观察记录中，首轮演示行已清理。D 已在 Burp Repeater 手工重放 S021 `id=15` 和 S022 `id=16`，并完成 S009/S010 四条只读 SQL 对照；全部返回 HTTP 200，正文观察符合预期。SQLi 的 Repeater 观察摘要和 S010 控制条件截图见 `demo/burp_sqli_repeater_observation.json` 与对应 JPG；完整 raw Repeater 响应和 S009 配对截图尚未保存。S021/S022 重试行暂留供复核。第二台电脑复现也未完成。
+D 配合 A/C 复核争议，按冻结提交重做任何受影响的语法、哈希、正常业务与浏览器检查。冻结完成后，D 执行 S010/S011/S022 的九条正式记录并复核 A 的九条，交 C 复核本人记录。本机 Burp 已安装。10 月 13 日经 Burp Proxy 完成首轮 S009/S010 SQL 对照以及 S021/S022 的普通/marker 提交、列表与预览请求；XSS 的代理正文、DOM 和两张浏览器截图保存在 demo 观察记录中，首轮演示行已清理。D 已在 Burp Repeater 手工重放 S021 `id=15` 和 S022 `id=16`，并完成 S009/S010 四条只读 SQL 对照；全部返回 HTTP 200，正文观察符合预期。SQLi 的 Repeater 观察摘要和截图见 `demo/burp_sqli_repeater_observation.json` 与对应 JPG；最新 S009 受控条件的 raw 请求/响应已保存于 `demo/S009_request.raw.txt`、`demo/S009_response.raw.txt`，其余三条 SQLi Repeater raw 消息与第二台电脑复现仍未完成。S021/S022 重试行暂留供复核。
 
 ## MySQLi 异常处理口径（D 选择，待 A 确认）
 

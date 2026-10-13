@@ -70,6 +70,11 @@
     "observed_rows": ["Alice", "Bob", "Carol"],
     "php_fatal_error_visible": false,
     "cookies_sent": false,
+    "raw_request_file": "demo/S009_request.raw.txt",
+    "raw_request_sha256": "b6d29afc49b1365f4a0342a49b5752cf63ba292e1bcdb7cf6172b7d1cd7608b1",
+    "raw_response_file": "demo/S009_response.raw.txt",
+    "raw_response_sha256": "9f40edd0e8a729ac9cf7436e44717e75ee4e75edf1b0298c41261e8aff8230bf",
+    "raw_pair_complete": true,
     "screenshot_files": [
       "demo/burp_sqli_repeater_S009_headers_20261013.jpg",
       "demo/burp_sqli_repeater_S009_20261013.jpg"
@@ -86,7 +91,7 @@
     }
   ],
   "limitations": [
-    "This file records the visible Repeater observations; it does not contain complete raw response bodies or response hashes.",
-    "S010 control and the fresh S009 controlled-condition Repeater observations have screenshots. Complete raw Repeater response bodies are still not saved. Proxy-chain request and response evidence is recorded separately in burp_sqli_proxy_observation.json."
+    "This JSON records visible Repeater observations; the complete raw request and response for the fresh S009 controlled-condition rerun are stored separately at the paths and hashes above.",
+    "Raw Repeater messages for the other three SQLi observations have not been saved separately. Proxy-chain request and response evidence is recorded in burp_sqli_proxy_observation.json."
   ]
 }

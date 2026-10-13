@@ -11,7 +11,7 @@
 
 此前同一路径虽然返回 HTTP 200，正文却是数据库权限错误。D 已将 DVWA 主站与教学样本的数据库配置隔离，并在 `environment/capture_environment.py` 增加正文健康断言。`environment/runtime_check.json` 单独核对生成配置的来源、本地与容器哈希和 PHP 语法。
 
-本轮 SQLi 与 XSS 代理请求和页面观察分别保存在 `demo/burp_sqli_proxy_observation.json`、`demo/burp_xss_proxy_observation.json`。XSS 浏览器截图也一并保存。Burp 原生窗口已完成 XSS 的两条 Repeater 重放，以及下方记录的四条 SQLi Repeater 请求。SQLi Repeater 观察摘要见 `demo/burp_sqli_repeater_observation.json`；S010 控制条件界面截图已保存，S009 配对截图尚缺。该 JSON 不包含完整 raw Repeater 响应正文。
+本轮 SQLi 与 XSS 代理请求和页面观察分别保存在 `demo/burp_sqli_proxy_observation.json`、`demo/burp_xss_proxy_observation.json`。XSS 浏览器截图也一并保存。Burp 原生窗口已完成 XSS 的两条 Repeater 重放，以及下方记录的四条 SQLi Repeater 请求。SQLi Repeater 观察摘要见 `demo/burp_sqli_repeater_observation.json`；S010 控制条件界面截图以及 S009 配对截图已保存。10 月 13 日新发送的 S009 受控条件请求与完整响应正文已另存到 `demo/S009_request.raw.txt` 和 `demo/S009_response.raw.txt`，SHA-256 见 Repeater 观察 JSON；其余三条 SQLi Repeater 消息的 raw 文件尚未保存。
 
 ## Listener 状态与启动方法（2026-10-13）
 
@@ -31,7 +31,7 @@ Burp 自带浏览器会自动使用当前 Burp listener。访问教学靶场时�
 
 ## SQLi Repeater 现场结果（2026-10-13）
 
-Burp 原生 Repeater 标签 1 对本机 DVWA 发出四条无 Cookie 的只读 GET，均返回 HTTP 200：S009 `ids=1` 返回 Alice，`ids=1) OR 1=1 #` 返回 Alice、Bob、Carol；S010 `ids=1,2` 返回 Alice、Bob，同一受控条件无结果。页面均未显示 PHP Fatal error。请求行、响应时间、Content-Length 和观察行数见 `demo/burp_sqli_repeater_observation.json`。该文件是 GUI 现场摘要，不是完整 raw 输入/输出。另有一次手工输入缺少请求头终止空行，Burp 警告后 Apache 返回 408；此项是请求录入失败，不计作样本观察。S010 控制条件的 Repeater 截图已保存，S009 配对截图尚未保存。
+Burp 原生 Repeater 标签 1 对本机 DVWA 发出四条无 Cookie 的只读 GET，均返回 HTTP 200：S009 `ids=1` 返回 Alice，`ids=1) OR 1=1 #` 返回 Alice、Bob、Carol；S010 `ids=1,2` 返回 Alice、Bob，同一受控条件无结果。页面均未显示 PHP Fatal error。请求行、响应时间、Content-Length 和观察行数见 `demo/burp_sqli_repeater_observation.json`。该 JSON 是 GUI 现场摘要，不包含 raw 全文；S009 最新受控条件请求/响应已另存到 `demo/S009_request.raw.txt`、`demo/S009_response.raw.txt`。另有一次手工输入缺少请求头终止空行，Burp 警告后 Apache 返回 408；此项是请求录入失败，不计作样本观察。S010 控制条件的 Repeater 截图已保存，S009 配对截图也已保存。其余三条 SQLi Repeater 消息的 raw 文件尚未保存。
 
 ## 两例演示的 Repeater 请求草稿
 
@@ -62,7 +62,7 @@ GET /lab_cases/S010/index.php?ids=1%29%20OR%201%3D1%20%23 HTTP/1.1
 Host: 127.0.0.1:4280
 ```
 
-实际观察：S009 普通输入和卡片输入 `1 OR 1=1` 均返回 Alice 一行，受控条件返回三行；同一受控条件在 S010 无结果。响应状态码本身不作为结论。代理链路实测与完整正文见 `demo/burp_sqli_proxy_observation.json`。
+实际观察：S009 普通输入和卡片输入 `1 OR 1=1` 均返回 Alice 一行，受控条件返回三行；同一受控条件在 S010 无结果。响应状态码本身不作为结论。代理链路实测与完整正文见 `demo/burp_sqli_proxy_observation.json`。S009 最新一次受控条件 Repeater 的完整请求与响应另存于 `demo/S009_request.raw.txt`、`demo/S009_response.raw.txt`；其余三条 Repeater 消息仍只有结构化观察和已有截图。
 
 ### XSS：S021 与 S022 对照
 

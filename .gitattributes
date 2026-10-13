@@ -8,3 +8,4 @@
 *.docx binary
 *.png binary
 *.pdf binary
+demo/*.raw.txt -text
