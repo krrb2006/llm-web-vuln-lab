@@ -1,6 +1,6 @@
 # Apply after third_party/DVWA/compose.yml. The first Compose file is the
 # path base, so ../../local/lab_cases resolves to this repository's local/.
-# Only runtime PHP files are mounted; sample cards and truth notes stay private.
+# Runtime PHP and a generated DVWA config are mounted; sample cards and truth notes stay private.
 services:
   dvwa:
     image: ghcr.io/digininja/dvwa@sha256:1af2cedda7617e4d22937e61c98bbf71d8b74b98e46f5e41dd6aa0a5183311b0
@@ -13,6 +13,7 @@ services:
       DB_PASSWORD: ${LAB_DB_PASSWORD:?Create local/lab.env with environment/init_lab_db.py}
     volumes:
       - ../../local/lab_cases:/var/www/html/lab_cases:ro
+      - ../../local/dvwa_config.inc.php:/var/www/html/config/config.inc.php:ro
   db:
     image: ghcr.io/mariadb/mariadb@sha256:9d7f7220a4d9b9f5a70a845241bba5ffe94788fb2f7913ff7c8fa3cf28b5715a
     pull_policy: missing

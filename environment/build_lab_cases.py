@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Build the PHP-only local lab tree from pinned A and C Git revisions.
+"""Build the PHP-only local lab tree from pinned A, C, and D Git revisions.
 
 Run from anywhere with ``python environment/build_lab_cases.py``. The output
 is ``local/lab_cases`` under this repository and is ignored by Git. Only the
 listed PHP files are copied; sample cards and internal truth notes never enter
-the web document root.
+the web document root. A separate local DVWA configuration keeps the official
+site database account separate from the teaching sample account.
 """
 
 from __future__ import annotations
@@ -20,7 +21,49 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_ROOT = REPO_ROOT / "local" / "lab_cases"
+DVWA_CONFIG_SOURCE = REPO_ROOT / "third_party" / "DVWA" / "config" / "config.inc.php.dist"
+DVWA_CONFIG_OUTPUT = REPO_ROOT / "local" / "dvwa_config.inc.php"
 BOOTSTRAP = b"<?php\nrequire_once __DIR__ . '/../common/db_connect.php';\n"
+
+
+def dvwa_config_bytes() -> bytes:
+    """Derive the official config, changing only two environment key names.
+
+    The official DVWA account keeps its documented defaults. The lab samples
+    continue to read DB_USER/DB_PASSWORD from the A-owned connector without
+    modifying any sample source or granting lab_user access to DVWA's database.
+    """
+    config = DVWA_CONFIG_SOURCE.read_bytes()
+    substitutions = (
+        (b"getenv('DB_USER')", b"getenv('DVWA_DB_USER')"),
+        (b"getenv('DB_PASSWORD')", b"getenv('DVWA_DB_PASSWORD')"),
+    )
+    for old, new in substitutions:
+        if config.count(old) != 1:
+            raise RuntimeError(f"unexpected official DVWA config format: {old!r}")
+        config = config.replace(old, new)
+    return config
+
+
+def write_dvwa_config(content: bytes) -> tuple[str, bool]:
+    destination = DVWA_CONFIG_OUTPUT
+    if destination.is_symlink() or destination.parent.is_symlink():
+        raise RuntimeError(f"refusing to write through symlink: {destination}")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    expected_sha256 = hashlib.sha256(content).hexdigest()
+    if destination.is_file() and destination.read_bytes() == content:
+        return expected_sha256, False
+    descriptor, temporary_name = tempfile.mkstemp(prefix=".dvwa-config-", dir=destination.parent)
+    try:
+        with os.fdopen(descriptor, "wb") as temporary_file:
+            temporary_file.write(content)
+        os.replace(temporary_name, destination)
+    finally:
+        if os.path.exists(temporary_name):
+            os.unlink(temporary_name)
+    if hashlib.sha256(destination.read_bytes()).hexdigest() != expected_sha256:
+        raise RuntimeError("SHA-256 mismatch after writing DVWA config")
+    return expected_sha256, True
 
 
 def git_bytes(*arguments: str) -> bytes:
@@ -161,7 +204,10 @@ def main() -> int:
             digest, changed = write_and_verify(relative_path, content)
             changed_count += changed
             print(f"{digest}  {relative_path.as_posix()}")
+        config_digest, config_changed = write_dvwa_config(dvwa_config_bytes())
+        print(f"{config_digest}  local/dvwa_config.inc.php (derived from official DVWA config)")
         print(f"Verified {len(files)} PHP files; wrote {changed_count}.")
+        print(f"DVWA config written: {config_changed}.")
         return 0
     except (OSError, RuntimeError, ValueError) as error:
         print(f"build_lab_cases: {error}", file=sys.stderr)

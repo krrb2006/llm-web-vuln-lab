@@ -74,6 +74,13 @@
           "target": "/var/www/html/lab_cases",
           "read_only": true,
           "bind": {}
+        },
+        {
+          "type": "bind",
+          "source": "<repo>\\local\\dvwa_config.inc.php",
+          "target": "/var/www/html/config/config.inc.php",
+          "read_only": true,
+          "bind": {}
         }
       ]
     }

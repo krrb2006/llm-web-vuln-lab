@@ -18,7 +18,10 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-from build_lab_cases import OUTPUT_ROOT, REPO_ROOT, resolve_commit, wanted_files
+from build_lab_cases import (
+    DVWA_CONFIG_OUTPUT, OUTPUT_ROOT, REPO_ROOT, dvwa_config_bytes,
+    resolve_commit, wanted_files,
+)
 
 
 DVWA_ROOT = REPO_ROOT / "third_party" / "DVWA"
@@ -123,6 +126,27 @@ def check_file(container: str, relative: Path, source: bytes) -> dict[str, objec
     }
 
 
+def check_dvwa_config(container: str) -> dict[str, object]:
+    """Verify the separate DVWA config without recording database credentials."""
+    expected_hash = sha256(dvwa_config_bytes())
+    local_hash = sha256(DVWA_CONFIG_OUTPUT.read_bytes()) if DVWA_CONFIG_OUTPUT.is_file() else None
+    container_path = "/var/www/html/config/config.inc.php"
+    lint_code, _ = run_command(["docker", "exec", container, "php", "-l", container_path])
+    hash_code, hash_output = run_command(["docker", "exec", container, "sha256sum", container_path])
+    match = SHA256_PATTERN.match(hash_output)
+    container_hash = match.group(1).decode("ascii") if hash_code == 0 and match else None
+    return {
+        "path": "local/dvwa_config.inc.php",
+        "derived_from_official_config_sha256": expected_hash,
+        "local_sha256": local_hash,
+        "container_sha256": container_hash,
+        "source_matches_local": local_hash == expected_hash,
+        "container_matches_local": local_hash is not None and container_hash == local_hash,
+        "php_lint_exit_code": lint_code,
+        "passed": local_hash == expected_hash and container_hash == local_hash and lint_code == 0,
+    }
+
+
 def write_report(report: dict[str, object]) -> None:
     descriptor, temporary_name = tempfile.mkstemp(prefix=".runtime-check-", dir=REPORT_PATH.parent)
     try:
@@ -156,6 +180,7 @@ def main() -> int:
             check_file(container, relative, source)
             for relative, source in sorted(sources.items())
         ]
+        dvwa_config = check_dvwa_config(container)
         passed = sum(item["passed"] is True for item in results)
         report = {
             "checked_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds").replace(
@@ -170,13 +195,15 @@ def main() -> int:
                 "passed": passed,
                 "failed": len(results) - passed,
                 "unexpected_runtime_files": unexpected,
+                "dvwa_config_passed": dvwa_config["passed"],
             },
+            "dvwa_config": dvwa_config,
             "files": results,
         }
         write_report(report)
         print(f"Runtime check: {passed}/{len(results)} PHP files passed.")
         print(f"Report: {REPORT_PATH}")
-        return 0 if passed == len(results) and not unexpected else 1
+        return 0 if passed == len(results) and not unexpected and dvwa_config["passed"] else 1
     except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired) as error:
         print(f"check_runtime: {error}", file=sys.stderr)
         return 1

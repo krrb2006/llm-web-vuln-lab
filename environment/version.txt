@@ -1,7 +1,7 @@
-captured_at_utc: "2026-10-11T12:45:36Z"
+captured_at_utc: "2026-10-13T12:34:37Z"
 team_repo_base_commit: "3c3c4139d0646d5162b619f3bdeeee32d3acd57e"
 a_source_commit: "d498903da01d89a695fa49d5392d3776eb901e2f"
-c_source_commit: "a04a83218e7999acd03d8a20422cf4b405903479"
+c_source_commit: "8da63f7b8e169e5037626b0362d005ba7ba5ede0"
 d_source_commit: "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06"
 dvwa_checkout_commit: "068d974487a297c155c48722f9fcf7180a83adc4"
 dvwa_image: "ghcr.io/digininja/dvwa@sha256:1af2cedda7617e4d22937e61c98bbf71d8b74b98e46f5e41dd6aa0a5183311b0"
@@ -16,6 +16,9 @@ browser_used_for_xss_reference: {"name": "Chrome", "version": "154.0.8037.99", "
 browser_used_for_d_reference: "Chrome/154.0.8037.99"
 host_binding: "127.0.0.1:4280"
 dvwa_login_http_status: 200
+dvwa_login_form_present: true
+dvwa_config_local_sha256: "1317e0129b3e5df511686d81630b60d1392836ef7212de4e9ef269a767eb945d"
+dvwa_config_container_sha256: "1317e0129b3e5df511686d81630b60d1392836ef7212de4e9ef269a767eb945d"
 official_low_php_local_sha256: "652bb44d14a9d81c9245f05ed8440beecf7977e982e00d3ddb916126a72e85bf"
 official_low_php_container_sha256: "652bb44d14a9d81c9245f05ed8440beecf7977e982e00d3ddb916126a72e85bf"
-runtime_php_checks: {"total": 37, "passed": 37, "failed": 0, "unexpected_runtime_files": []}
+runtime_php_checks: {"total": 37, "passed": 37, "failed": 0, "unexpected_runtime_files": [], "dvwa_config_passed": true}

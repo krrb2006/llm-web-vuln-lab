@@ -1,0 +1,71 @@
+{
+  "kind": "manual_burp_repeater_observation",
+  "observed_date": "2026-10-13",
+  "tool": "Burp Suite Community Edition v2026.9.2",
+  "surface": "native Repeater tab 1",
+  "target": "http://127.0.0.1:4280",
+  "transport": "manual requests sent from Burp Repeater",
+  "read_only": true,
+  "cookies_sent": false,
+  "full_raw_request_response_saved": false,
+  "screenshot_files": ["demo/burp_sqli_repeater_S010_control_20261013.jpg"],
+  "requests": [
+    {
+      "sample_id": "S009",
+      "label": "normal_hit",
+      "request_line": "GET /lab_cases/S009/index.php?ids=1 HTTP/1.1",
+      "request_headers": ["Host: 127.0.0.1:4280", "Connection: close"],
+      "response_status": 200,
+      "response_date_utc": "2026-10-13T12:14:46Z",
+      "response_content_length": 189,
+      "observed_rows": ["Alice"],
+      "php_fatal_error_visible": false
+    },
+    {
+      "sample_id": "S009",
+      "label": "controlled_condition",
+      "request_line": "GET /lab_cases/S009/index.php?ids=1%29+OR+1%3D1+%23 HTTP/1.1",
+      "request_headers": ["Host: 127.0.0.1:4280", "Connection: close"],
+      "response_status": 200,
+      "response_date_utc": "2026-10-13T12:16:08Z",
+      "response_content_length": 225,
+      "observed_rows": ["Alice", "Bob", "Carol"],
+      "php_fatal_error_visible": false
+    },
+    {
+      "sample_id": "S010",
+      "label": "normal_hit",
+      "request_line": "GET /lab_cases/S010/index.php?ids=1%2C2 HTTP/1.1",
+      "request_headers": ["Host: 127.0.0.1:4280", "Connection: close"],
+      "response_status": 200,
+      "response_date_utc": "2026-10-13T12:17:07Z",
+      "response_content_length": 206,
+      "observed_rows": ["Alice", "Bob"],
+      "php_fatal_error_visible": false
+    },
+    {
+      "sample_id": "S010",
+      "label": "controlled_condition",
+      "request_line": "GET /lab_cases/S010/index.php?ids=1%29+OR+1%3D1+%23 HTTP/1.1",
+      "request_headers": ["Host: 127.0.0.1:4280", "Connection: close"],
+      "response_status": 200,
+      "response_date_utc": "2026-10-13T12:18:16Z",
+      "response_content_length": 191,
+      "observed_rows": [],
+      "php_fatal_error_visible": false
+    }
+  ],
+  "excluded_repeater_entry_errors": [
+    {
+      "request_line": "GET /lab_cases/S009/index.php?ids=1%29+OR+1%3D1+%23 HTTP/1.1",
+      "response_status": 408,
+      "response_date_utc": "2026-10-13T12:29:23Z",
+      "response_content_length": 337,
+      "reason": "The manually entered request did not end with a complete blank line after the headers; Burp displayed a warning and Apache returned Request Timeout. This setup error is excluded from the S009 behavioral observation."
+    }
+  ],
+  "limitations": [
+    "This file records the visible Repeater observations; it does not contain complete raw response bodies or response hashes.",
+    "One screenshot of the S010 controlled-condition response is saved. A matching S009 Repeater screenshot is not saved. Proxy-chain request and response evidence is recorded separately in burp_sqli_proxy_observation.json."
+  ]
+}

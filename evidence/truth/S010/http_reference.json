@@ -2,11 +2,11 @@
   "kind": "reference_http_observation",
   "review_status": "pending_independent_review",
   "ground_truth": null,
-  "observed_at_utc": "2026-10-11T09:55:14Z",
+  "observed_at_utc": "2026-10-13T12:34:58Z",
   "base_url": "http://127.0.0.1:4280",
   "sample_id": "S010",
   "a_source_commit": "d498903da01d89a695fa49d5392d3776eb901e2f",
-  "c_source_commit": "a04a83218e7999acd03d8a20422cf4b405903479",
+  "c_source_commit": "8da63f7b8e169e5037626b0362d005ba7ba5ede0",
   "requests": [
     {
       "label": "normal_hit",
