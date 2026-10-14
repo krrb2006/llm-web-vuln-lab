@@ -5,5 +5,5 @@
 - 改动说明：在最小片段基础上补齐完整入口、共享连接引用、错误日志与 HTML 编码输出。
 - 许可：自建，无第三方许可约束。
 - case_code_sha256（当前文件；冻结前需与容器内运行文件两端一致）：
-  `6df870a193ee6bcbeeb9f26a136a8789d0a0ba731b9d45e4332f54353d89f34e`
+  `d23d5474024b3fc86f134dfc639820d0ee11aeebf3442b2fbb74ea1413a1d3d9`
 - source_url / source_commit：自建样本，暂为空。

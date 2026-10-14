@@ -7,5 +7,5 @@
   与 S003 的唯一差异为查询构造方式（严格校验 + 绑定替换未约束拼接）。
 - 许可：自建，无第三方许可约束。
 - case_code_sha256（当前文件；冻结前需与容器内运行文件两端一致）：
-  `940d656663a13f0eb5f3cd3d65d3994c8ac1a38d0f829fb23d3f53e4e85cca41`
+  `0cc29019f9de563ed1ade45cf2f2982112f3a24c121f14206dc1b57c67bf45c9`
 - source_url / source_commit：自建样本，暂为空。

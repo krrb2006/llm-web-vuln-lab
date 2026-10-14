@@ -7,6 +7,6 @@
   保留完整调用链；代码注释保持中性，不含「漏洞/修复」等标签。
 - 许可：自建，无第三方许可约束。
 - case_code_sha256（当前文件；冻结前需与容器内运行文件两端一致）：
-  - `index.php`：`ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8`
-  - `repository.php`：`b33407ca4d868a1138918262af3b0fd65ca6e39f1c4b0843b2f9a3ff36067373`
+  - `index.php`：`07bcaef84920da5049221df902d52a946f4951da0c6fbd1b10bd4ab4a0cc2d45`
+  - `repository.php`：`e195f676c58fce2e7fb02c890e3646f320af4702a4dd4f05e819288bd26ea465`
 - source_url / source_commit：自建样本，暂为空。

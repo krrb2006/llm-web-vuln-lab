@@ -4,7 +4,7 @@
 
 sample_id：S006
 family_id：SQL03
-代码来源、提交号与文件哈希：自建；sha256 见 source_note.md；源码提交号 d498903（A 分支 origin/a/criteria-and-sql01）
+代码来源、提交号与文件哈希：自建；sha256 见 source_note.md；当前源码提交号 `6b522ea`（严格异常处理修订）
 入口URL、参数、登录状态：GET `?q=`；登录状态：无（D 证据直接 200 返回业务结果，无需会话）
 目标漏洞类型：SQLi
 构造目标：fixed（设计目标，非真实标签）
@@ -12,7 +12,7 @@ family_id：SQL03
 ## 分析思路（A 撰写）
 
 - 输入来源 `index.php:7`（`$_GET['q']`）为外部可控字符串。
-- `index.php:9` 组装 `$pattern = '%' . $q . '%'`，经 `prepare`（`:11`）+ `bind_param`（`:17`）
+- `index.php:9` 组装 `$pattern = '%' . $q . '%'`，经 `prepare`（`:12`）+ `bind_param`（`:13`）
   作为单个绑定值进入，无法打破引号改写语法。
 - **LIKE 通配符区分**：绑定值中的 `%`/`_` 仍作为 LIKE 通配符生效（改变匹配范围），
   不构成 SQL 注入；结论需与 S005 的注入证据明确区分。
@@ -27,16 +27,16 @@ family_id：SQL03
 
 普通业务参考请求及结果：`q=li` → id=1（Alice）；`q=zz` → 空
 参考测试请求及结果：`q=x' OR 1=1 #` → 空；`q=x' AND 1=2 #` → 空（注入输入被作为字面值，不改变结果集）；`q=%` → 全 3 行、`q=_` → 全 3 行（LIKE 通配符，非注入，与 S005 一致）
-源头代码位置：`dataset/raw/S006/index.php:11/17`（prepare/bind_param）
-调用链：`index.php:7` `$_GET['q']` → `:9` `$pattern` → `:11` `prepare` → `:17` `bind_param` → `:18` `execute`
-危险操作或浏览器输出位置：`index.php:11/18`（查询以绑定值方式执行）
+源头代码位置：`dataset/raw/S006/index.php:12/13`（prepare/bind_param）
+调用链：`index.php:7` `$_GET['q']` → `:9` `$pattern` → `:12` `prepare` → `:13` `bind_param` → `:14` `execute`
+危险操作或浏览器输出位置：`index.php:12/14`（查询以绑定值方式执行）
 沿途安全措施及其适用范围：预处理 + 完整匹配值绑定（C 复核确认覆盖危险点）
 是否需要额外文件或模板：`../common/db_connect.php`（共享 bootstrap）
 初步判断（仅代码分析，待 D 参考验证）：安全（完整匹配值作为单个参数绑定；`%`/`_` 通配符行为属 LIKE 而非注入）
 结论（true、false或待判定）：false（安全，不构成 SQLi）
-结论解释（附文件与行号）：SQLi 四项检查——①输入来源：满足（`index.php:7` `$_GET['q']`）；②影响语法结构：不满足（`index.php:11/17` prepare + bind_param，`q` 作为完整匹配值绑定，无法打破引号）；③可达且执行：满足（`index.php:18` execute）；④无有效约束：满足（绑定覆盖，未见其他拼接分支）。检查②不满足 → 不构成 SQLi（false）。`%`/`_` 作为绑定值仍作 LIKE 通配符生效，属匹配范围变化，非注入。
+结论解释（附文件与行号）：SQLi 四项检查——①输入来源：满足（`index.php:7` `$_GET['q']`）；②影响语法结构：不满足（`index.php:12/13` prepare + bind_param，`q` 作为完整匹配值绑定，无法打破引号）；③可达且执行：满足（`index.php:14` execute）；④无有效约束：不满足（绑定覆盖，未见其他拼接分支）。检查②、④不满足 → 不构成 SQLi（false）。`%`/`_` 作为绑定值仍作 LIKE 通配符生效，属匹配范围变化，非注入。
 证据文件相对路径：evidence/truth/S006/http_reference.json
-异常是否回显页面：否（D 证据 php_fatal_error_visible=false）；代码为 `if($stmt===false)` 判错（`index.php:12`），PHP 8.1+ 默认异常模式接不住（潜在隐患，纳入问题清单，不影响本样本 SQLi 结论）
-初审人及日期：A，未进行
-复核人及日期：C，2026-10-13
+异常是否回显页面：提交 `6b522ea` 已捕获 prepare/bind/execute/get_result/fetch，异常只写日志并显示普通提示；待 D 容器回归。
+初审人及日期：A，2026-10-14（已按新源码复核）
+复核人及日期：C，2026-10-13（结论针对旧基线 `d498903`；第④项由 A 整合时按判定标准纠正，新提交待 C 确认）
 争议与解决记录：无（同意 A 初步判断，代码与 D 证据一致；`%`/`_` 通配符已按非注入处理）
