@@ -13,19 +13,22 @@ if ($id_raw === '' || !ctype_digit($id_raw)) {
 }
 $id = (int)$id_raw;
 
-$stmt = $db->prepare('SELECT id, name FROM lab_people WHERE id = ?');
-if ($stmt === false) {
-    error_log('S004 prepare failed: ' . $db->error);
+try {
+    $stmt = $db->prepare('SELECT id, name FROM lab_people WHERE id = ?');
+    $stmt->bind_param('i', $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $rows = $result->fetch_all(MYSQLI_ASSOC);
+    $result->free();
+    $stmt->close();
+} catch (Throwable $e) {
+    error_log('S004 query failed: ' . $e->getMessage());
     echo '<p>查询失败，请检查输入后重试。</p>';
     exit;
 }
-$stmt->bind_param('i', $id);
-$stmt->execute();
-$result = $stmt->get_result();
 
 echo '<h1>查询结果</h1>';
-while ($row = $result->fetch_assoc()) {
+foreach ($rows as $row) {
     echo '<p>ID ' . htmlspecialchars((string)$row['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
        . '：' . htmlspecialchars($row['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
 }
-$stmt->close();

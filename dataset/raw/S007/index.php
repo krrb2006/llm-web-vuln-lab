@@ -7,16 +7,18 @@ require_once __DIR__ . '/repository.php';
 
 $name = $_GET['name'] ?? '';
 
-$result = find_people_by_name($db, $name);
-if ($result === false) {
-    error_log('name query failed: ' . $db->error);
+try {
+    $result = find_people_by_name($db, $name);
+    $rows = $result->fetch_all(MYSQLI_ASSOC);
+    $result->free();
+} catch (Throwable $e) {
+    error_log('name query failed: ' . $e->getMessage());
     echo '<p>查询失败，请检查输入后重试。</p>';
     exit;
 }
 
 echo '<h1>查询结果</h1>';
-while ($row = $result->fetch_assoc()) {
+foreach ($rows as $row) {
     echo '<p>ID ' . htmlspecialchars((string)$row['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
        . '：' . htmlspecialchars($row['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
 }
-$result->free();

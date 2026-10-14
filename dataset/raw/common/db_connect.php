@@ -17,17 +17,17 @@
  * 本文件不含任何真实密码。
  */
 
-$db = @new mysqli(
-    getenv('DB_HOST') ?: '127.0.0.1',
-    getenv('DB_USER') ?: 'lab_user',
-    getenv('DB_PASSWORD'),
-    getenv('DB_NAME') ?: 'teaching_lab',
-    (int)(getenv('DB_PORT') ?: 3306)
-);
-
-if ($db->connect_errno) {
-    error_log('lab db connect failed: ' . $db->connect_error);
+try {
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    $db = new mysqli(
+        getenv('DB_HOST') ?: '127.0.0.1',
+        getenv('DB_USER') ?: 'lab_user',
+        getenv('DB_PASSWORD'),
+        getenv('DB_NAME') ?: 'teaching_lab',
+        (int)(getenv('DB_PORT') ?: 3306)
+    );
+    $db->set_charset('utf8mb4');
+} catch (Throwable $e) {
+    error_log('lab db connection failed: ' . $e->getMessage());
     exit('数据库不可用，请稍后重试。');
 }
-
-$db->set_charset('utf8mb4');

@@ -5,10 +5,9 @@
  */
 function find_people_by_name($db, $name) {
     $stmt = $db->prepare('SELECT id, name FROM lab_people WHERE name = ?');
-    if ($stmt === false) {
-        return false;
-    }
     $stmt->bind_param('s', $name);
     $stmt->execute();
-    return $stmt->get_result();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result;
 }
