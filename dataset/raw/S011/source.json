@@ -12,7 +12,7 @@
     {
       "file": "index.php",
       "role": "入口与查询（危险 sink：排序字段直接拼入 ORDER BY）",
-      "sha256": "0ec694a2296ee71631b66f99b571680304e43a83f830611bf5fe038a918ee6f6"
+      "sha256": "3028eb9cd8c08e3678f586cdb417c22957fd156c5f757f8ad9b3aee2c97b6ecb"
     }
   ],
   "dependencies": [
