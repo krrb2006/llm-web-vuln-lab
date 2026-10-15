@@ -1,10 +1,12 @@
 # B 执行与交接（2026-10-12）
 
-## 审计状态
+## 初始审计状态（2026-10-12）
 
 当前仓库有六份候选 Prompt、`prepare_input.py`、`evaluate.py`、24 条计划 manifest 和 36 条计划 formal 记录。`dataset/raw`、`dataset/packets`、`dataset/specs` 无样本内容；`runs` 无模型原文；`evidence`、`pocs`、`demo` 无实验证据。`ground_truth` 均未审核。本分支没有读取正式测试答案、冻结 Prompt 或填写正式结果。
 
 六份 Prompt 均是可复制的四段候选，字段相同。V0 已有不可信代码边界；V1 加强证据；V2 已完整重述证据要求并加强验证阶段区分。V1、V2 的候选约束尚无开发集实测支持，不能称作有效优化。仅在真实 V0 输出中发现问题后，按迭代日志确定 V1 修改；V2 同理。保留修改前后 Git diff 和哈希。正式冻结须等开发集对照与用户确认；届时再生成 `environment/prompt_hashes.txt`。
+
+当前跨分支版本、四条 DeepSeek V0 原文和冻结阻塞项以 `results/B_freeze_readiness_2026-10-15.md` 为准；本节保留初始仓库审计快照。
 
 ## 运行约定
 
