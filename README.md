@@ -40,8 +40,14 @@
 
 ```bash
 python3 tools/prepare_input.py --help
+python3 tools/check_freeze.py --report-only
 python3 tools/evaluate.py --help
 ```
+
+`check_freeze.py` 在正式测试前只读检查 24 例真值与证据、36 条运行计划、
+执行/复核分工以及源码、输入包、Prompt 哈希。只有自动检查为 `READY`，并完成
+冻结单列出的环境验证与四人签字后，才能开始正式测试；`--report-only` 用于在
+准备阶段查看全部阻塞项而不返回失败退出码。
 
 环境部署按 D 手册进行。辅助脚本不部署靶场、不调用模型、不执行 POC。手册中的 `~/llm-web-lab` 可替换为你自己的仓库路径；已有克隆仓库不需要再运行 `git init`。
 
