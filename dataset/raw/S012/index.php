@@ -13,13 +13,14 @@ $allowed = array(
 $column = isset($allowed[$sort]) ? $allowed[$sort] : 'id';
 
 $sql = "SELECT id, name FROM lab_people ORDER BY $column";
-$result = $db->query($sql);
-if ($result === false) {
-    error_log('lab_people order query failed: ' . $db->error);
-    $rows = [];
-} else {
+try {
+    $result = $db->query($sql);
     $rows = $result->fetch_all(MYSQLI_ASSOC);
     $result->free();
+} catch (Throwable $e) {
+    // 查询失败仅写入日志，不向页面回显数据库错误细节
+    error_log('lab_people order query failed: ' . $e->getMessage());
+    $rows = [];
 }
 ?>
 <!DOCTYPE html>
