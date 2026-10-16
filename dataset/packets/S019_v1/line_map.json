@@ -1,0 +1,21 @@
+{
+  "sample_id": "S019",
+  "code_lines": 27,
+  "packet_sha256": "4ee21e7ded087864991df5d86192e1291e222e410d040b83b1b37aa90b19d9ab",
+  "files": [
+    {
+      "alias": "F01",
+      "source_file": "index.php",
+      "start": 1,
+      "end": 8,
+      "sha256": "bdbb3389553b3116745ff869f28aa9fd0fa0b498ecc07cabf36bd470f1c6de8c"
+    },
+    {
+      "alias": "F02",
+      "source_file": "templates/preview.php",
+      "start": 1,
+      "end": 19,
+      "sha256": "357661b2fe763a8dd29a931196e385835eea339ee7aa80f3c7cdb0247548e09c"
+    }
+  ]
+}
