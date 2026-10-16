@@ -1,0 +1,16 @@
+{
+  "sample_id": "S019",
+  "context": "PHP 8.5 本机环境，入口 http://127.0.0.1:4280/lab_cases/S019/index.php。GET 显示表单，POST 字段 content 提交后，入口 index.php 将字符串变量 $content 交给 templates/preview.php，在同一响应的 HTML 正文中渲染预览。表单 textarea 与预览结果区是两个不同输出位置。无数据库、无登录、无会话或持久化依赖。",
+  "fragments": [
+    {
+      "file": "index.php",
+      "start": 1,
+      "end": 8
+    },
+    {
+      "file": "templates/preview.php",
+      "start": 1,
+      "end": 19
+    }
+  ]
+}
