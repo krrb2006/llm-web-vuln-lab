@@ -1,0 +1,24 @@
+{
+  "sample_id": "S014",
+  "family_id": "XSS01",
+  "author": "C",
+  "date": "2026-10-10",
+  "source_type": "self-built",
+  "basis": "docs/C_样本与预处理操作手册.md 二（XSS01 蓝图：搜索词显示在 HTML 正文，正文上下文编码）",
+  "source_url": "",
+  "source_commit": "",
+  "license": "本组自建教学样本；无第三方源码复制",
+  "files": [
+    {
+      "file": "index.php",
+      "role": "入口与输出（对 q 做 htmlspecialchars 正文上下文编码后输出到 <p>）",
+      "sha256": "c098e3db8a9e03e3b6e85d09ec545ebf7f7d974a134866839e4ccd862b7c78ac"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "运行环境",
+      "note": "PHP 任意版本，无数据库、无登录；php -l 待D容器内执行"
+    }
+  ]
+}
