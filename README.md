@@ -2,7 +2,7 @@
 
 网络安全课程四人小组实验：面向 SQL 注入和 XSS 的提示词迭代及误漏报分析。
 
-**当前状态：项目初始化。尚未完成样本实现、LLM 实验和漏洞验证，没有实测结论。**
+**当前状态：实验基础设施和 S001—S008 已进入复核阶段；正式 36 条运行尚未冻结。仓库不预填实测结论。**
 
 ## 从这里开始
 
@@ -10,6 +10,7 @@
 2. A 确定判定标准，B 准备 V0，C 整理首例源码，D 启动本地靶场。
 3. 全组先跑通一例 SQLi 和一例 XSS，再扩展到 24 个样本。
 4. 在开发集完成 V0 → V1 → V2 两轮迭代，冻结后完成 36 条正式记录。
+5. 用[高分冲刺路线与证据矩阵](docs/00_高分冲刺路线与证据矩阵.md)核对基础 80% 和加分 20% 的证据闭环。
 
 |成员|职责|操作文档|正式样本|记录数|
 |---|---|---|---|---|
@@ -31,6 +32,7 @@
 |results/、demo/|实际统计结果、演示材料|
 |environment/|版本信息、部署说明|
 |tools/|标准库辅助脚本：输入编号、记录校验与评估|
+|experiments/|Prompt 注入、Burp 联动、上下文消融、二次注入与逻辑漏洞加分实验|
 
 `dataset/manifest.json` 和 `runs/formal.json` 已从计划模板初始化。未知结果保留 null，不要重复复制覆盖工作记录。
 
@@ -41,7 +43,10 @@
 ```bash
 python3 tools/prepare_input.py --help
 python3 tools/check_freeze.py --report-only
+python3 tools/audit_submission.py
 python3 tools/evaluate.py --help
+python3 tools/build_evidence_index.py --help
+python3 -m unittest discover -s tests -v
 ```
 
 `check_freeze.py` 在正式测试前只读检查 24 例真值与证据、36 条运行计划、
