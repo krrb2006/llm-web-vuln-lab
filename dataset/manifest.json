@@ -147,10 +147,10 @@
     "source_url": "",
     "source_commit": "",
     "case_code_sha256": "2b5e2f2506eef63fb39a2f5e00cdedfcaa3453a05c294f1b03b3d8af08deb0f2",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "ground_truth": true,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S009/truth_review.md", "evidence/truth/S009/http_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S010",
@@ -164,10 +164,10 @@
     "source_url": "",
     "source_commit": "",
     "case_code_sha256": "bffb5fc5bf93deac2ea04397af540daa0847678386318a9ccaec6fae2bd6ad2d",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "ground_truth": false,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S010/truth_review.md", "evidence/truth/S010/http_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S011",
@@ -181,10 +181,10 @@
     "source_url": "",
     "source_commit": "",
     "case_code_sha256": "3028eb9cd8c08e3678f586cdb417c22957fd156c5f757f8ad9b3aee2c97b6ecb",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "ground_truth": true,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S011/truth_review.md", "evidence/truth/S011/http_reference.json", "evidence/truth/S011/current_source_review.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S012",
@@ -198,10 +198,10 @@
     "source_url": "",
     "source_commit": "",
     "case_code_sha256": "08a09dccfdf19f49f072ca960013703c729f89a49782e8acaab56da6430c1c4f",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "ground_truth": false,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S012/truth_review.md", "evidence/truth/S012/http_reference.json", "evidence/truth/S012/current_source_review.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S013",
@@ -215,10 +215,10 @@
     "source_url": "",
     "source_commit": "",
     "case_code_sha256": "515bd62babff0492e9ad40692f415b06524ba82141735310d171a7d89d5c9f43",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "ground_truth": true,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S013/truth_review.md", "evidence/truth/S013/browser_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S014",
@@ -232,10 +232,10 @@
     "source_url": "",
     "source_commit": "",
     "case_code_sha256": "c098e3db8a9e03e3b6e85d09ec545ebf7f7d974a134866839e4ccd862b7c78ac",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "ground_truth": false,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S014/truth_review.md", "evidence/truth/S014/browser_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S015",
@@ -249,10 +249,10 @@
     "source_url": "",
     "source_commit": "",
     "case_code_sha256": "1270539fa9afa232e32a272568c2198f0a3bfd819de8a7765535e215fdab2d46",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "ground_truth": true,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S015/truth_review.md", "evidence/truth/S015/browser_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S016",
@@ -266,10 +266,10 @@
     "source_url": "",
     "source_commit": "",
     "case_code_sha256": "9e7b0e527c04c22b9166eb6ab0c632c6301e56b38e94debaea11e3d869a0862f",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "ground_truth": false,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S016/truth_review.md", "evidence/truth/S016/browser_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S017",
@@ -283,10 +283,10 @@
     "source_url": "",
     "source_commit": "",
     "case_code_sha256": "360525bf60246fdbf13554a63e1fa1d2bbd80d8aa5787deba264f670f5a16855",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "ground_truth": true,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S017/truth_review.md", "evidence/truth/S017/browser_reference.json", "evidence/truth/S017/business_http.json", "evidence/truth/S017/current_source_review.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S018",
@@ -300,10 +300,10 @@
     "source_url": "",
     "source_commit": "",
     "case_code_sha256": "910088373fcdad2e6df3dd9e83cccf3653b069dfa22c1d09b923860ebe188fab",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "ground_truth": false,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S018/truth_review.md", "evidence/truth/S018/browser_reference.json", "evidence/truth/S018/business_http.json", "evidence/truth/S018/current_source_review.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S019",
@@ -351,10 +351,10 @@
     "source_url": "",
     "source_commit": "",
     "case_code_sha256": "25b8c4949b372a9beae8e4b2e7a44899318f745d4e97c99aeedd8fc4e7d734b6",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "ground_truth": true,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S021/truth_review.md", "evidence/truth/S021/browser_reference.json", "evidence/truth/S021/business_http.json", "evidence/truth/S021/current_source_review.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S022",
@@ -368,10 +368,10 @@
     "source_url": "",
     "source_commit": "",
     "case_code_sha256": "c80d5c884abbf698ab9621e8b85788e2f8bdaf8e83c666e15d92ba31a78dc943",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "ground_truth": false,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S022/truth_review.md", "evidence/truth/S022/browser_reference.json", "evidence/truth/S022/business_http.json", "evidence/truth/S022/current_source_review.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S023",

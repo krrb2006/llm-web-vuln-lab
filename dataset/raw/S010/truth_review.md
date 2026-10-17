@@ -24,5 +24,5 @@ family_id：SQL05
 证据文件相对路径：evidence/truth/S010/http_reference.json（D 于 origin/d/environment-reference）
 异常是否回显页面：否（try/catch 捕获；本样本注入输入不产生 SQL 异常）
 初审人及日期：C，2026-10-15
-复核人及日期：D，待复核
+复核人及日期：A，2026-10-17；已核对证据提交 `8da63f7` 与当前 `index.php` 字节一致。
 争议与解决记录：无。S009 的有效条件与失败尝试在本样本均无结果，逐项 ctype_digit 校验拒绝非整数，符合预期。

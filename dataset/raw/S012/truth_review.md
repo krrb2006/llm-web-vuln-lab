@@ -21,5 +21,5 @@ family_id：SQL06
 证据文件相对路径：evidence/truth/S012/http_reference.json（D 于 origin/d/environment-reference）
 异常是否回显页面：否（try/catch 捕获；本样本证据请求不产生 SQL 异常）
 初审人及日期：C，2026-10-15
-复核人及日期：D，待复核
-争议与解决记录：无。D 现有证据基于旧提交号 a04a832（本次 try/catch 对齐前），但不影响白名单阻断结论；待 D 按新提交号（case_code_sha256 已变）重跑参考验证。
+复核人及日期：A，2026-10-17。
+争议与解决记录：D 的运行证据基于 `a04a832`；A 对照当前源码确认差异仅把查询错误处理改为 `try/catch(Throwable)`，排序字段白名单、查询执行和输出数据流未变，详见 `evidence/truth/S012/current_source_review.json`。当前机器未安装 Docker Desktop，因此不把该差异审计称为新一轮容器复跑。

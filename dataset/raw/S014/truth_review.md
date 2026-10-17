@@ -21,5 +21,5 @@ family_id：XSS01
 证据文件相对路径：evidence/truth/S014/browser_reference.json（D 于 origin/d/environment-reference）
 异常是否回显页面：不适用（无数据库查询）
 初审人及日期：C，2026-10-15
-复核人及日期：D，待复核
+复核人及日期：A，2026-10-17；浏览器证据中的 source/local/container SHA-256 与当前 `index.php` 完全一致。
 争议与解决记录：无。

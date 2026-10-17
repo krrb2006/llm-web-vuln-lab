@@ -24,5 +24,5 @@ family_id：SQL05
 证据文件相对路径：evidence/truth/S009/http_reference.json（D 于 origin/d/environment-reference）
 异常是否回显页面：否（try/catch 捕获，D 证据 php_fatal_error_visible=false）
 初审人及日期：C，2026-10-15
-复核人及日期：D，待复核
+复核人及日期：A，2026-10-17；已核对证据提交 `8da63f7` 与当前 `index.php` 字节一致。
 争议与解决记录：无。语法错误尝试真值记录：`ids=1) OR 1=1 -- `（尾随空格）经 `trim()` 去尾随空格后 `--` 失效引发语法错误；try/catch 修复后页面显示“未找到匹配记录”（空结果），不回显 Fatal error，且不得把 HTTP 200 当作注入成功。
