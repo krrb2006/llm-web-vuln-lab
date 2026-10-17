@@ -1,0 +1,48 @@
+{
+  "sample_id": "S016",
+  "review_status": "reviewed_by_A",
+  "ground_truth": false,
+  "checked_at_utc": "2026-10-11T09:09:21Z",
+  "browser": {
+    "name": "Chrome",
+    "version": "154.0.8037.99",
+    "fresh_temporary_profile_per_request": true
+  },
+  "source": {
+    "c_commit": "a04a83218e7999acd03d8a20422cf4b405903479",
+    "source_path": "dataset/raw/S016/index.php",
+    "source_sha256": "9e7b0e527c04c22b9166eb6ab0c632c6301e56b38e94debaea11e3d869a0862f",
+    "local_sha256": "9e7b0e527c04c22b9166eb6ab0c632c6301e56b38e94debaea11e3d869a0862f",
+    "container_sha256": "9e7b0e527c04c22b9166eb6ab0c632c6301e56b38e94debaea11e3d869a0862f"
+  },
+  "normal": {
+    "request_path_query": "/lab_cases/S016/index.php?q=hello",
+    "http_status": 200,
+    "rendered_dom": "<!DOCTYPE html>\r\n<html lang=\"zh-CN\"><head>\r\n<meta charset=\"utf-8\">\r\n<title>教学表单</title>\r\n</head>\r\n<body>\r\n<h1>留言输入</h1>\r\n<form method=\"get\">\r\n<label>内容：</label>\r\n<input type=\"text\" name=\"q\" value=\"hello\">\r\n<input type=\"submit\" value=\"提交\">\r\n</form>\r\n\r\n\r\n</body></html>\r\n",
+    "dom": {
+      "html_data_lab_xss": null,
+      "script_element_count": 0,
+      "marker_script_element_present": false,
+      "paragraph_text": [],
+      "q_input_value": "hello"
+    }
+  },
+  "marker": {
+    "request_path_query": "/lab_cases/S016/index.php?q=%22%3E%3Cscript%3Edocument.documentElement.dataset.labXss%3D%27yes%27%3C%2Fscript%3E",
+    "http_status": 200,
+    "rendered_dom": "<!DOCTYPE html>\r\n<html lang=\"zh-CN\"><head>\r\n<meta charset=\"utf-8\">\r\n<title>教学表单</title>\r\n</head>\r\n<body>\r\n<h1>留言输入</h1>\r\n<form method=\"get\">\r\n<label>内容：</label>\r\n<input type=\"text\" name=\"q\" value=\"&quot;&gt;&lt;script&gt;document.documentElement.dataset.labXss='yes'&lt;/script&gt;\">\r\n<input type=\"submit\" value=\"提交\">\r\n</form>\r\n\r\n\r\n</body></html>\r\n",
+    "dom": {
+      "html_data_lab_xss": null,
+      "script_element_count": 0,
+      "marker_script_element_present": false,
+      "paragraph_text": [],
+      "q_input_value": "\"><script>document.documentElement.dataset.labXss='yes'</script>"
+    }
+  },
+  "observations": {
+    "normal_business_observed": true,
+    "normal_dom_marker_present": false,
+    "marker_dom_marker_present": false
+  },
+  "note": "Observed DOM only; C review is required before any ground_truth update."
+}

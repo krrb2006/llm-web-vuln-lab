@@ -1,0 +1,17 @@
+{
+  "run_id": "DEV_S005_V0_R1",
+  "phase": "DEV",
+  "sample_id": "S005",
+  "variant": "Original",
+  "prompt_version": "V0",
+  "vulnerability_type": "SQLi",
+  "status": "input_prepared",
+  "model_display_name": null,
+  "model_settings": null,
+  "submitted_at": null,
+  "prompt_sha256": "94e49bd85019123577dc8e4664d074e468487fd8e42bcb62d48fa8baefab03ed",
+  "packet_sha256": "b229827144f951e72a1f1851709487753473a0c92b34a85787db39a81bf48b5e",
+  "input_sha256": "7130fd689f167d1a3b2d31096c48a7ca085b37df169802ccc664bfeba66cec10",
+  "source_code_input": "D:\\桌面\\网络安全课\\大作业\\llm-web-vuln-lab-starter\\llm-web-vuln-lab\\dataset\\packets\\S005_v1\\code_input.txt",
+  "raw_output_sha256": null
+}

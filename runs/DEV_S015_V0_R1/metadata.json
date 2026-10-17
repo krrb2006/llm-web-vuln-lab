@@ -1,0 +1,32 @@
+{
+  "run_id": "DEV_S015_V0_R1",
+  "phase": "DEV",
+  "sample_id": "S015",
+  "variant": "Original",
+  "prompt_version": "V0",
+  "vulnerability_type": "XSS",
+  "status": "raw_recorded_time_unknown",
+  "model_display_name": "DeepSeek-V4.1-Flash",
+  "model_settings": "深度思考=开；联网搜索=关",
+  "submitted_at": null,
+  "prompt_sha256": "824ea2c5fba391e0827a554c0683a4738efa38859c2b52f2d1de131634a32bf2",
+  "packet_sha256": "098b1cade9931f53f2be7437a16f595f75670deb944308a4e1c72f7b253077dc",
+  "input_sha256": "f9f1316fd164e35c7d7b2028591f5a692e62c70fbe77182b72c2b2078b4ea187",
+  "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\c-samples-readonly\\dataset\\packets\\S015_v1\\code_input.txt",
+  "raw_output_sha256": "4348e6db331369084d14b7a06a3fd6ffffe2dfc1e12c8a8c9f70682ae461b265",
+  "source_ref": "origin/c/samples@a04a832",
+  "source_packet_repo_path": "dataset/packets/S015_v1/code_input.txt",
+  "pre_submission_correction": "Normalized checkout CRLF to repository LF; no model submission or raw output existed.",
+  "prior_prepared_hashes": {
+    "packet_sha256": "3fb2a52b252f953778dcb0c4872bd395a3cd7b846db88898c610bc6d80785619",
+    "prompt_sha256": "5e4daedae3083bf11608894b5a9eaa6ecd72850701e0399c9e675f4207784b68",
+    "input_sha256": "95723811a1184a5f6cdeb34dc40b753481f08af72d400d510e269f9196ca3f19"
+  },
+  "planned_test_interface": "DeepSeek web",
+  "experiment_batch": "deepseek-main-2026-10-12",
+  "planned_model_display_name": "DeepSeek-V4.1-Flash",
+  "planned_model_settings": "深度思考=开；联网搜索=关",
+  "planned_model_source": "User report in chat before submission; actual setting must be checked per session.",
+  "submission_time_note": "用户未提供本条实际提交时间；模型与开关沿用用户指定的固定批次配置。",
+  "recorded_at": "2026-10-12T03:49:41.564042+00:00"
+}

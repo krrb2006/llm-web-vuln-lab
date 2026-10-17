@@ -1,0 +1,16 @@
+{
+  "sample_id": "S007",
+  "context": "PHP 8.5 本机环境，入口 http://127.0.0.1:4280/lab_cases/S007/index.php。GET 参数 name 进入入口 index.php，作为查询条件传给 repository.php 中定义的查询函数，查询教学表 lab_people，返回匹配行的 id 与 name 并在页面展示。数据库连接变量 $db 由共享 bootstrap 在入口加载前建立（mysqli 连接，连接字符集 utf8mb4），连接建立代码不在本片段内。lab_people 表含三行虚构数据：id=1 name=Alice、id=2 name=Bob、id=3 name=Carol。无登录、无会话或持久化依赖；每次请求从干净 URL 开始，无历史遗留状态。",
+  "fragments": [
+    {
+      "file": "index.php",
+      "start": 1,
+      "end": 24
+    },
+    {
+      "file": "repository.php",
+      "start": 1,
+      "end": 9
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+PHP 内容预览。GET index.php 显示表单；POST content 后，index.php 将字符串变量 $content 交给 templates/preview.php，在同一响应的 HTML 正文中显示预览。表单 textarea 与预览区是两个不同的输出位置。无数据库、登录或持久化依赖；审阅时需同时查看入口和模板。

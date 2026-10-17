@@ -1,0 +1,78 @@
+{
+  "kind": "ordinary_business_http_observation",
+  "review_status": "reviewed_by_A",
+  "ground_truth": false,
+  "observed_at_utc": "2026-10-13T13:04:18Z",
+  "base_url": "http://127.0.0.1:4280",
+  "sample_id": "S024",
+  "d_source_commit": "a90708be2a4a53f732b3cabea37f7feed5f04125",
+  "runtime_check": {
+    "passed": 37,
+    "total": 37
+  },
+  "notes": [
+    "External example.org address was inspected in HTML only; it was not requested or clicked."
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/lab_cases/S024/index.php",
+      "form_fields": null,
+      "status": 200,
+      "location": null,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "67b4111941b41467ac656456163deca5740dae4ad26f322e7802936a11efd57c",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>链接预览</title>\n</head>\n<body>\n  <h1>链接预览</h1>\n  <form method=\"get\" action=\"index.php\">\n    <label for=\"url\">链接地址</label>\n    <input id=\"url\" type=\"text\" name=\"url\" value=\"https://example.org/\">\n    <button type=\"submit\">预览</button>\n  </form>\n  <p><a href=\"https://example.org/\">打开链接</a></p>\n</body>\n</html>\n",
+      "parsed_links": [
+        "https://example.org/"
+      ],
+      "parsed_inputs": {
+        "url": "https://example.org/"
+      },
+      "parsed_text": "链接预览 链接预览 链接地址 预览 打开链接",
+      "php_fatal_error_visible": false
+    },
+    {
+      "method": "GET",
+      "path": "/lab_cases/S024/index.php?url=http%3A%2F%2F127.0.0.1%3A4280%2Flogin.php",
+      "form_fields": null,
+      "status": 200,
+      "location": null,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "cbb6b5e71d545b207ac80d155c5de838f4de13e1ab473d60293c96de9d1a7a46",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>链接预览</title>\n</head>\n<body>\n  <h1>链接预览</h1>\n  <form method=\"get\" action=\"index.php\">\n    <label for=\"url\">链接地址</label>\n    <input id=\"url\" type=\"text\" name=\"url\" value=\"http://127.0.0.1:4280/login.php\">\n    <button type=\"submit\">预览</button>\n  </form>\n  <p><a href=\"http://127.0.0.1:4280/login.php\">打开链接</a></p>\n</body>\n</html>\n",
+      "parsed_links": [
+        "http://127.0.0.1:4280/login.php"
+      ],
+      "parsed_inputs": {
+        "url": "http://127.0.0.1:4280/login.php"
+      },
+      "parsed_text": "链接预览 链接预览 链接地址 预览 打开链接",
+      "php_fatal_error_visible": false,
+      "query_parameters": {
+        "url": "http://127.0.0.1:4280/login.php"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/lab_cases/S024/index.php?url=https%3A%2F%2Fexample.org%2F",
+      "form_fields": null,
+      "status": 200,
+      "location": null,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "67b4111941b41467ac656456163deca5740dae4ad26f322e7802936a11efd57c",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>链接预览</title>\n</head>\n<body>\n  <h1>链接预览</h1>\n  <form method=\"get\" action=\"index.php\">\n    <label for=\"url\">链接地址</label>\n    <input id=\"url\" type=\"text\" name=\"url\" value=\"https://example.org/\">\n    <button type=\"submit\">预览</button>\n  </form>\n  <p><a href=\"https://example.org/\">打开链接</a></p>\n</body>\n</html>\n",
+      "parsed_links": [
+        "https://example.org/"
+      ],
+      "parsed_inputs": {
+        "url": "https://example.org/"
+      },
+      "parsed_text": "链接预览 链接预览 链接地址 预览 打开链接",
+      "php_fatal_error_visible": false,
+      "query_parameters": {
+        "url": "https://example.org/"
+      }
+    }
+  ]
+}

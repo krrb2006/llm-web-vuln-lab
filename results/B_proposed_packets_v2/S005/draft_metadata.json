@@ -1,0 +1,11 @@
+{
+  "sample_id": "S005",
+  "status": "draft_pending_C_standardization_and_D_revalidation",
+  "source_commit": "26637fb325905e00ad0466c22386d4f78771cc0c",
+  "source_path": "dataset/raw/S005/index.php",
+  "packet_sha256": "9bd76100069f0adcd39173bd21ec842eb1acb6cb5387dcc57a7beea0c0fb0139",
+  "v0_input_sha256": "4711449c7480a76c1479b74c1d4cd5e9df645947e139ad4b19565d989e499812",
+  "code_lines": 24,
+  "model_submitted": false,
+  "environment_note": "D reference evidence covers older A source d498903; current A source must be revalidated."
+}

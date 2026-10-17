@@ -1,0 +1,442 @@
+{
+  "checked_at_utc": "2026-10-13T13:02:36Z",
+  "a_source": {
+    "ref": "origin/a/criteria-and-sql01",
+    "commit": "d498903da01d89a695fa49d5392d3776eb901e2f"
+  },
+  "c_source": {
+    "ref": "origin/c/samples",
+    "commit": "8da63f7b8e169e5037626b0362d005ba7ba5ede0"
+  },
+  "d_source": {
+    "ref": "origin/d/environment-reference",
+    "commit": "a90708be2a4a53f732b3cabea37f7feed5f04125"
+  },
+  "dvwa_commit": "068d974487a297c155c48722f9fcf7180a83adc4",
+  "summary": {
+    "total": 37,
+    "passed": 37,
+    "failed": 0,
+    "unexpected_runtime_files": [],
+    "dvwa_config_passed": true
+  },
+  "dvwa_config": {
+    "path": "local/dvwa_config.inc.php",
+    "derived_from_official_config_sha256": "1317e0129b3e5df511686d81630b60d1392836ef7212de4e9ef269a767eb945d",
+    "local_sha256": "1317e0129b3e5df511686d81630b60d1392836ef7212de4e9ef269a767eb945d",
+    "container_sha256": "1317e0129b3e5df511686d81630b60d1392836ef7212de4e9ef269a767eb945d",
+    "source_matches_local": true,
+    "container_matches_local": true,
+    "php_lint_exit_code": 0,
+    "passed": true
+  },
+  "files": [
+    {
+      "path": "common/db_connect.php",
+      "source_sha256": "d6e917165049df19939c850bbc8014dcb689e8a8d55b759335732d010f5909da",
+      "local_sha256": "d6e917165049df19939c850bbc8014dcb689e8a8d55b759335732d010f5909da",
+      "container_sha256": "d6e917165049df19939c850bbc8014dcb689e8a8d55b759335732d010f5909da",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S001/index.php",
+      "source_sha256": "6df870a193ee6bcbeeb9f26a136a8789d0a0ba731b9d45e4332f54353d89f34e",
+      "local_sha256": "6df870a193ee6bcbeeb9f26a136a8789d0a0ba731b9d45e4332f54353d89f34e",
+      "container_sha256": "6df870a193ee6bcbeeb9f26a136a8789d0a0ba731b9d45e4332f54353d89f34e",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S002/index.php",
+      "source_sha256": "bdd4728b69bdf06ce2f423561fba667d57834e1ca6931536fcee2d5fa8145e0d",
+      "local_sha256": "bdd4728b69bdf06ce2f423561fba667d57834e1ca6931536fcee2d5fa8145e0d",
+      "container_sha256": "bdd4728b69bdf06ce2f423561fba667d57834e1ca6931536fcee2d5fa8145e0d",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S003/index.php",
+      "source_sha256": "df4b620a75f7ada451a5ae64377bf5e380b9852fe2055517f8e100205b7927b8",
+      "local_sha256": "df4b620a75f7ada451a5ae64377bf5e380b9852fe2055517f8e100205b7927b8",
+      "container_sha256": "df4b620a75f7ada451a5ae64377bf5e380b9852fe2055517f8e100205b7927b8",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S004/index.php",
+      "source_sha256": "940d656663a13f0eb5f3cd3d65d3994c8ac1a38d0f829fb23d3f53e4e85cca41",
+      "local_sha256": "940d656663a13f0eb5f3cd3d65d3994c8ac1a38d0f829fb23d3f53e4e85cca41",
+      "container_sha256": "940d656663a13f0eb5f3cd3d65d3994c8ac1a38d0f829fb23d3f53e4e85cca41",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S005/index.php",
+      "source_sha256": "c5bc903494b213c56c774785434720aefc4287aaaa24e2798a1e0d09fd4c4193",
+      "local_sha256": "c5bc903494b213c56c774785434720aefc4287aaaa24e2798a1e0d09fd4c4193",
+      "container_sha256": "c5bc903494b213c56c774785434720aefc4287aaaa24e2798a1e0d09fd4c4193",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S006/index.php",
+      "source_sha256": "6c94327f0abdd6b07f88d4256c01185df2e26e0c5a83238a00e8a98b931fd605",
+      "local_sha256": "6c94327f0abdd6b07f88d4256c01185df2e26e0c5a83238a00e8a98b931fd605",
+      "container_sha256": "6c94327f0abdd6b07f88d4256c01185df2e26e0c5a83238a00e8a98b931fd605",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S007/index.php",
+      "source_sha256": "ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8",
+      "local_sha256": "ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8",
+      "container_sha256": "ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S007/repository.php",
+      "source_sha256": "50956c0086d652fff94ce4bc82710dd804c6429be74a272fb320c8c53021f739",
+      "local_sha256": "50956c0086d652fff94ce4bc82710dd804c6429be74a272fb320c8c53021f739",
+      "container_sha256": "50956c0086d652fff94ce4bc82710dd804c6429be74a272fb320c8c53021f739",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S008/index.php",
+      "source_sha256": "ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8",
+      "local_sha256": "ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8",
+      "container_sha256": "ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S008/repository.php",
+      "source_sha256": "b33407ca4d868a1138918262af3b0fd65ca6e39f1c4b0843b2f9a3ff36067373",
+      "local_sha256": "b33407ca4d868a1138918262af3b0fd65ca6e39f1c4b0843b2f9a3ff36067373",
+      "container_sha256": "b33407ca4d868a1138918262af3b0fd65ca6e39f1c4b0843b2f9a3ff36067373",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S009/bootstrap.php",
+      "source_sha256": "a0e9df4aa365a876fabe77c69f1553e5a0025c9ea866855b7f85884c0b2e1fdf",
+      "local_sha256": "a0e9df4aa365a876fabe77c69f1553e5a0025c9ea866855b7f85884c0b2e1fdf",
+      "container_sha256": "a0e9df4aa365a876fabe77c69f1553e5a0025c9ea866855b7f85884c0b2e1fdf",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S009/index.php",
+      "source_sha256": "2b5e2f2506eef63fb39a2f5e00cdedfcaa3453a05c294f1b03b3d8af08deb0f2",
+      "local_sha256": "2b5e2f2506eef63fb39a2f5e00cdedfcaa3453a05c294f1b03b3d8af08deb0f2",
+      "container_sha256": "2b5e2f2506eef63fb39a2f5e00cdedfcaa3453a05c294f1b03b3d8af08deb0f2",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S010/bootstrap.php",
+      "source_sha256": "a0e9df4aa365a876fabe77c69f1553e5a0025c9ea866855b7f85884c0b2e1fdf",
+      "local_sha256": "a0e9df4aa365a876fabe77c69f1553e5a0025c9ea866855b7f85884c0b2e1fdf",
+      "container_sha256": "a0e9df4aa365a876fabe77c69f1553e5a0025c9ea866855b7f85884c0b2e1fdf",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S010/index.php",
+      "source_sha256": "bffb5fc5bf93deac2ea04397af540daa0847678386318a9ccaec6fae2bd6ad2d",
+      "local_sha256": "bffb5fc5bf93deac2ea04397af540daa0847678386318a9ccaec6fae2bd6ad2d",
+      "container_sha256": "bffb5fc5bf93deac2ea04397af540daa0847678386318a9ccaec6fae2bd6ad2d",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S011/bootstrap.php",
+      "source_sha256": "a0e9df4aa365a876fabe77c69f1553e5a0025c9ea866855b7f85884c0b2e1fdf",
+      "local_sha256": "a0e9df4aa365a876fabe77c69f1553e5a0025c9ea866855b7f85884c0b2e1fdf",
+      "container_sha256": "a0e9df4aa365a876fabe77c69f1553e5a0025c9ea866855b7f85884c0b2e1fdf",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S011/index.php",
+      "source_sha256": "0ec694a2296ee71631b66f99b571680304e43a83f830611bf5fe038a918ee6f6",
+      "local_sha256": "0ec694a2296ee71631b66f99b571680304e43a83f830611bf5fe038a918ee6f6",
+      "container_sha256": "0ec694a2296ee71631b66f99b571680304e43a83f830611bf5fe038a918ee6f6",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S012/bootstrap.php",
+      "source_sha256": "a0e9df4aa365a876fabe77c69f1553e5a0025c9ea866855b7f85884c0b2e1fdf",
+      "local_sha256": "a0e9df4aa365a876fabe77c69f1553e5a0025c9ea866855b7f85884c0b2e1fdf",
+      "container_sha256": "a0e9df4aa365a876fabe77c69f1553e5a0025c9ea866855b7f85884c0b2e1fdf",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S012/index.php",
+      "source_sha256": "624ec128a1c310a9120d2b0157192cde78760a89b90f995556263d106958a4e8",
+      "local_sha256": "624ec128a1c310a9120d2b0157192cde78760a89b90f995556263d106958a4e8",
+      "container_sha256": "624ec128a1c310a9120d2b0157192cde78760a89b90f995556263d106958a4e8",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S013/index.php",
+      "source_sha256": "515bd62babff0492e9ad40692f415b06524ba82141735310d171a7d89d5c9f43",
+      "local_sha256": "515bd62babff0492e9ad40692f415b06524ba82141735310d171a7d89d5c9f43",
+      "container_sha256": "515bd62babff0492e9ad40692f415b06524ba82141735310d171a7d89d5c9f43",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S014/index.php",
+      "source_sha256": "c098e3db8a9e03e3b6e85d09ec545ebf7f7d974a134866839e4ccd862b7c78ac",
+      "local_sha256": "c098e3db8a9e03e3b6e85d09ec545ebf7f7d974a134866839e4ccd862b7c78ac",
+      "container_sha256": "c098e3db8a9e03e3b6e85d09ec545ebf7f7d974a134866839e4ccd862b7c78ac",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S015/index.php",
+      "source_sha256": "1270539fa9afa232e32a272568c2198f0a3bfd819de8a7765535e215fdab2d46",
+      "local_sha256": "1270539fa9afa232e32a272568c2198f0a3bfd819de8a7765535e215fdab2d46",
+      "container_sha256": "1270539fa9afa232e32a272568c2198f0a3bfd819de8a7765535e215fdab2d46",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S016/index.php",
+      "source_sha256": "9e7b0e527c04c22b9166eb6ab0c632c6301e56b38e94debaea11e3d869a0862f",
+      "local_sha256": "9e7b0e527c04c22b9166eb6ab0c632c6301e56b38e94debaea11e3d869a0862f",
+      "container_sha256": "9e7b0e527c04c22b9166eb6ab0c632c6301e56b38e94debaea11e3d869a0862f",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S017/index.php",
+      "source_sha256": "85ac10958eff6a96e99928fe03f938189aa47176af00b3ac120286ab1c940141",
+      "local_sha256": "85ac10958eff6a96e99928fe03f938189aa47176af00b3ac120286ab1c940141",
+      "container_sha256": "85ac10958eff6a96e99928fe03f938189aa47176af00b3ac120286ab1c940141",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S018/index.php",
+      "source_sha256": "10f31cfacff04df8294a8a7e70fb80576fc81baaace77dd1f9405ece5bc5d5f8",
+      "local_sha256": "10f31cfacff04df8294a8a7e70fb80576fc81baaace77dd1f9405ece5bc5d5f8",
+      "container_sha256": "10f31cfacff04df8294a8a7e70fb80576fc81baaace77dd1f9405ece5bc5d5f8",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S019/index.php",
+      "source_sha256": "bdbb3389553b3116745ff869f28aa9fd0fa0b498ecc07cabf36bd470f1c6de8c",
+      "local_sha256": "bdbb3389553b3116745ff869f28aa9fd0fa0b498ecc07cabf36bd470f1c6de8c",
+      "container_sha256": "bdbb3389553b3116745ff869f28aa9fd0fa0b498ecc07cabf36bd470f1c6de8c",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S019/templates/preview.php",
+      "source_sha256": "357661b2fe763a8dd29a931196e385835eea339ee7aa80f3c7cdb0247548e09c",
+      "local_sha256": "357661b2fe763a8dd29a931196e385835eea339ee7aa80f3c7cdb0247548e09c",
+      "container_sha256": "357661b2fe763a8dd29a931196e385835eea339ee7aa80f3c7cdb0247548e09c",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S020/index.php",
+      "source_sha256": "bdbb3389553b3116745ff869f28aa9fd0fa0b498ecc07cabf36bd470f1c6de8c",
+      "local_sha256": "bdbb3389553b3116745ff869f28aa9fd0fa0b498ecc07cabf36bd470f1c6de8c",
+      "container_sha256": "bdbb3389553b3116745ff869f28aa9fd0fa0b498ecc07cabf36bd470f1c6de8c",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S020/templates/preview.php",
+      "source_sha256": "fc8248b8326eefcaf2424c57f52065a8df649c8e1a6d88b0fee4a00a687b5aec",
+      "local_sha256": "fc8248b8326eefcaf2424c57f52065a8df649c8e1a6d88b0fee4a00a687b5aec",
+      "container_sha256": "fc8248b8326eefcaf2424c57f52065a8df649c8e1a6d88b0fee4a00a687b5aec",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S021/list.php",
+      "source_sha256": "77f96bda4a34195c69b2b378a52f6565c8cb6336a196e77ce0927ea4cd577051",
+      "local_sha256": "77f96bda4a34195c69b2b378a52f6565c8cb6336a196e77ce0927ea4cd577051",
+      "container_sha256": "77f96bda4a34195c69b2b378a52f6565c8cb6336a196e77ce0927ea4cd577051",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S021/preview.php",
+      "source_sha256": "cdc6464cb74af147476ea4349d5d5d7b1c7c8f30e851164dd4dec00e00d7b57e",
+      "local_sha256": "cdc6464cb74af147476ea4349d5d5d7b1c7c8f30e851164dd4dec00e00d7b57e",
+      "container_sha256": "cdc6464cb74af147476ea4349d5d5d7b1c7c8f30e851164dd4dec00e00d7b57e",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S021/submit.php",
+      "source_sha256": "36d47353864d493547282610819c0dab6a5c19466cdb5d4c2c8b7507a4739145",
+      "local_sha256": "36d47353864d493547282610819c0dab6a5c19466cdb5d4c2c8b7507a4739145",
+      "container_sha256": "36d47353864d493547282610819c0dab6a5c19466cdb5d4c2c8b7507a4739145",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S022/list.php",
+      "source_sha256": "77f96bda4a34195c69b2b378a52f6565c8cb6336a196e77ce0927ea4cd577051",
+      "local_sha256": "77f96bda4a34195c69b2b378a52f6565c8cb6336a196e77ce0927ea4cd577051",
+      "container_sha256": "77f96bda4a34195c69b2b378a52f6565c8cb6336a196e77ce0927ea4cd577051",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S022/preview.php",
+      "source_sha256": "794ab18ce508f48e322224a2e304fac1fd0d7b49b00207a1754cc9da41c68203",
+      "local_sha256": "794ab18ce508f48e322224a2e304fac1fd0d7b49b00207a1754cc9da41c68203",
+      "container_sha256": "794ab18ce508f48e322224a2e304fac1fd0d7b49b00207a1754cc9da41c68203",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S022/submit.php",
+      "source_sha256": "36d47353864d493547282610819c0dab6a5c19466cdb5d4c2c8b7507a4739145",
+      "local_sha256": "36d47353864d493547282610819c0dab6a5c19466cdb5d4c2c8b7507a4739145",
+      "container_sha256": "36d47353864d493547282610819c0dab6a5c19466cdb5d4c2c8b7507a4739145",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S023/index.php",
+      "source_sha256": "d5cd23b0275d6652f471480c6c670d6de32f1e42771b98da01d35e72f194a25d",
+      "local_sha256": "d5cd23b0275d6652f471480c6c670d6de32f1e42771b98da01d35e72f194a25d",
+      "container_sha256": "d5cd23b0275d6652f471480c6c670d6de32f1e42771b98da01d35e72f194a25d",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    },
+    {
+      "path": "S024/index.php",
+      "source_sha256": "d8fd13287f20851cec905759d39ae9fb25f157266e91d35d6cf69ce1300a1fce",
+      "local_sha256": "d8fd13287f20851cec905759d39ae9fb25f157266e91d35d6cf69ce1300a1fce",
+      "container_sha256": "d8fd13287f20851cec905759d39ae9fb25f157266e91d35d6cf69ce1300a1fce",
+      "source_matches_local": true,
+      "container_matches_local": true,
+      "php_lint_exit_code": 0,
+      "sha256sum_exit_code": 0,
+      "passed": true
+    }
+  ]
+}

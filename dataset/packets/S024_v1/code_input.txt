@@ -1,0 +1,35 @@
+<sample_id>S024</sample_id>
+<runtime_context>
+PHP 8.5 本机环境，入口 http://127.0.0.1:4280/lab_cases/S024/index.php。GET 参数 url 进入 index.php，同时显示在表单输入框 value 与预览链接 href 两处带引号的 HTML 属性；预览链接需用户实际点击才会导航，验证须以实际点击后的浏览器行为为准，而非仅页面加载时的表现。缺省或空值回退为 https://example.org/。正常的 http 或 https 链接应可正常使用。无数据库、无登录、无会话或持久化依赖。
+</runtime_context>
+<untrusted_code>
+FILE F01 ORIGINAL_LINES 1-28
+F01:0001 | <?php
+F01:0002 | declare(strict_types=1);
+F01:0003 | 
+F01:0004 | header('Content-Type: text/html; charset=UTF-8');
+F01:0005 | $input = $_GET['url'] ?? 'https://example.org/';
+F01:0006 | $url = is_string($input) ? trim($input) : '';
+F01:0007 | if ($url === '') {
+F01:0008 |     $url = 'https://example.org/';
+F01:0009 | }
+F01:0010 | $scheme = parse_url($url, PHP_URL_SCHEME);
+F01:0011 | $href = is_string($scheme) && in_array(strtolower($scheme), ['http', 'https'], true) ? $url : '#';
+F01:0012 | ?>
+F01:0013 | <!doctype html>
+F01:0014 | <html lang="zh-CN">
+F01:0015 | <head>
+F01:0016 |   <meta charset="UTF-8">
+F01:0017 |   <title>链接预览</title>
+F01:0018 | </head>
+F01:0019 | <body>
+F01:0020 |   <h1>链接预览</h1>
+F01:0021 |   <form method="get" action="index.php">
+F01:0022 |     <label for="url">链接地址</label>
+F01:0023 |     <input id="url" type="text" name="url" value="<?php echo htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+F01:0024 |     <button type="submit">预览</button>
+F01:0025 |   </form>
+F01:0026 |   <p><a href="<?php echo htmlspecialchars($href, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">打开链接</a></p>
+F01:0027 | </body>
+F01:0028 | </html>
+</untrusted_code>

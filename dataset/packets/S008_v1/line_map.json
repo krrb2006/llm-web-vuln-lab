@@ -1,0 +1,21 @@
+{
+  "sample_id": "S008",
+  "code_lines": 37,
+  "packet_sha256": "0b3a718318ce598616ff47aab0a25b110d8f9cd303378d2c20d941110db09dac",
+  "files": [
+    {
+      "alias": "F01",
+      "source_file": "index.php",
+      "start": 1,
+      "end": 24,
+      "sha256": "07bcaef84920da5049221df902d52a946f4951da0c6fbd1b10bd4ab4a0cc2d45"
+    },
+    {
+      "alias": "F02",
+      "source_file": "repository.php",
+      "start": 1,
+      "end": 13,
+      "sha256": "e195f676c58fce2e7fb02c890e3646f320af4702a4dd4f05e819288bd26ea465"
+    }
+  ]
+}

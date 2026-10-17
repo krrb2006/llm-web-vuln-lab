@@ -1,8 +1,20 @@
 * text=auto
+.gitattributes text eol=lf
 *.py text eol=lf
+*.php text eol=lf
+*.txt text eol=lf
 *.sh text eol=lf
 *.md text eol=lf
 *.json text eol=lf
+prompts/*.txt text eol=lf
+dataset/packets/**/*.txt text eol=lf
+runs/**/input.txt text eol=lf
 *.docx binary
 *.png binary
 *.pdf binary
+demo/*.raw.txt -text
+results/B_proposed_packets/**/*.txt text eol=lf whitespace=-blank-at-eol
+results/B_proposed_packets_v2/**/*.txt text eol=lf whitespace=-blank-at-eol
+runs/**/raw_output.txt -text whitespace=-blank-at-eol
+runs/**/user_paste*.txt -text whitespace=-blank-at-eol
+pocs/**/original* -text whitespace=-blank-at-eol
