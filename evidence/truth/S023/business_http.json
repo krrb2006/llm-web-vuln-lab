@@ -1,7 +1,7 @@
 {
   "kind": "ordinary_business_http_observation",
-  "review_status": "pending_independent_review",
-  "ground_truth": null,
+  "review_status": "reviewed_by_A",
+  "ground_truth": true,
   "observed_at_utc": "2026-10-13T13:04:18Z",
   "base_url": "http://127.0.0.1:4280",
   "sample_id": "S023",

@@ -1,7 +1,7 @@
 {
   "kind": "reference_browser_dom_observation",
-  "review_status": "pending_independent_review",
-  "ground_truth": null,
+  "review_status": "reviewed_by_A",
+  "ground_truth": false,
   "observed_at_utc": "2026-10-13T13:05:21.311Z",
   "sample_id": "S020",
   "base_url": "http://127.0.0.1:4280",

@@ -10,11 +10,11 @@
     "owner": "",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "case_code_sha256": "d23d5474024b3fc86f134dfc639820d0ee11aeebf3442b2fbb74ea1413a1d3d9",
+    "ground_truth": true,
+    "truth_reviewer": "C",
+    "truth_evidence": ["dataset/raw/S001/truth_review.md", "evidence/truth/S001/http_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S002",
@@ -27,11 +27,11 @@
     "owner": "",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "case_code_sha256": "9a212ab2ff33580ec9d420c0b5d7266e5ec3aa670856eba9e9f9efe4b25b9621",
+    "ground_truth": false,
+    "truth_reviewer": "C",
+    "truth_evidence": ["dataset/raw/S002/truth_review.md", "evidence/truth/S002/http_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S003",
@@ -44,11 +44,11 @@
     "owner": "",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "case_code_sha256": "f9fa0783d791544e31d9ce4a09fa4649c1020c313aff3b1983b74d66083eb42c",
+    "ground_truth": true,
+    "truth_reviewer": "C",
+    "truth_evidence": ["dataset/raw/S003/truth_review.md", "evidence/truth/S003/http_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S004",
@@ -61,11 +61,11 @@
     "owner": "",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "case_code_sha256": "0cc29019f9de563ed1ade45cf2f2982112f3a24c121f14206dc1b57c67bf45c9",
+    "ground_truth": false,
+    "truth_reviewer": "C",
+    "truth_evidence": ["dataset/raw/S004/truth_review.md", "evidence/truth/S004/http_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S005",
@@ -78,11 +78,11 @@
     "owner": "",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "case_code_sha256": "5ecc4904536ac3611895d80b06ed21e668f8a988a320446532df9ddca17d7922",
+    "ground_truth": true,
+    "truth_reviewer": "C",
+    "truth_evidence": ["dataset/raw/S005/truth_review.md", "evidence/truth/S005/http_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S006",
@@ -95,11 +95,11 @@
     "owner": "",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "case_code_sha256": "f543854aa3fd6945ea76b2ad9df25faaa308e20d8fc3a708a7b5b22a31c7d7ab",
+    "ground_truth": false,
+    "truth_reviewer": "C",
+    "truth_evidence": ["dataset/raw/S006/truth_review.md", "evidence/truth/S006/http_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S007",
@@ -112,11 +112,11 @@
     "owner": "A",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "case_code_sha256": "f7be23ad8855253d8affd5a68f635506a783ae3ac37a86ea639019e4bccb2de0",
+    "ground_truth": true,
+    "truth_reviewer": "C",
+    "truth_evidence": ["dataset/raw/S007/truth_review.md", "evidence/truth/S007/http_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S008",
@@ -129,11 +129,11 @@
     "owner": "B",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "case_code_sha256": "a59deb2bc557a233f8d7d08e104c166515eb0c1aaeb44dfa916389587fc5605e",
+    "ground_truth": false,
+    "truth_reviewer": "C",
+    "truth_evidence": ["dataset/raw/S008/truth_review.md", "evidence/truth/S008/http_reference.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S009",
@@ -282,7 +282,7 @@
     "owner": "",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
+    "case_code_sha256": "360525bf60246fdbf13554a63e1fa1d2bbd80d8aa5787deba264f670f5a16855",
     "ground_truth": null,
     "truth_reviewer": "",
     "truth_evidence": [],
@@ -299,7 +299,7 @@
     "owner": "",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
+    "case_code_sha256": "910088373fcdad2e6df3dd9e83cccf3653b069dfa22c1d09b923860ebe188fab",
     "ground_truth": null,
     "truth_reviewer": "",
     "truth_evidence": [],
@@ -316,11 +316,11 @@
     "owner": "B",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "case_code_sha256": "3fbb251009e0258892f83356f94abf723fe7416308e6fb840e0f3b273cd110b1",
+    "ground_truth": true,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S019/truth_review.md", "evidence/truth/S019/browser_reference.json", "evidence/truth/S019/business_http.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S020",
@@ -333,11 +333,11 @@
     "owner": "A",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "case_code_sha256": "930e9088fc960cd6299d78e561c4b1a01fdea93b9ac3892e2dd33435be8b8a24",
+    "ground_truth": false,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S020/truth_review.md", "evidence/truth/S020/browser_reference.json", "evidence/truth/S020/business_http.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S021",
@@ -350,7 +350,7 @@
     "owner": "A",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
+    "case_code_sha256": "25b8c4949b372a9beae8e4b2e7a44899318f745d4e97c99aeedd8fc4e7d734b6",
     "ground_truth": null,
     "truth_reviewer": "",
     "truth_evidence": [],
@@ -367,7 +367,7 @@
     "owner": "D",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
+    "case_code_sha256": "c80d5c884abbf698ab9621e8b85788e2f8bdaf8e83c666e15d92ba31a78dc943",
     "ground_truth": null,
     "truth_reviewer": "",
     "truth_evidence": [],
@@ -384,11 +384,11 @@
     "owner": "C",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "case_code_sha256": "d5cd23b0275d6652f471480c6c670d6de32f1e42771b98da01d35e72f194a25d",
+    "ground_truth": true,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S023/truth_review.md", "evidence/truth/S023/browser_reference.json", "evidence/truth/S023/business_http.json"],
+    "status": "ready"
   },
   {
     "sample_id": "S024",
@@ -401,10 +401,10 @@
     "owner": "B",
     "source_url": "",
     "source_commit": "",
-    "case_code_sha256": "",
-    "ground_truth": null,
-    "truth_reviewer": "",
-    "truth_evidence": [],
-    "status": "planned"
+    "case_code_sha256": "d8fd13287f20851cec905759d39ae9fb25f157266e91d35d6cf69ce1300a1fce",
+    "ground_truth": false,
+    "truth_reviewer": "A",
+    "truth_evidence": ["dataset/raw/S024/truth_review.md", "evidence/truth/S024/browser_reference.json", "evidence/truth/S024/business_http.json"],
+    "status": "ready"
   }
 ]

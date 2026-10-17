@@ -12,17 +12,17 @@
     {
       "file": "submit.php",
       "role": "草稿写入入口",
-      "sha256": "36d47353864d493547282610819c0dab6a5c19466cdb5d4c2c8b7507a4739145"
+      "sha256": "92e4535c1a30e24ae0f239b2bdd4964676bbe9376611aecee1279b352d0c2029"
     },
     {
       "file": "list.php",
       "role": "草稿标题列表",
-      "sha256": "77f96bda4a34195c69b2b378a52f6565c8cb6336a196e77ce0927ea4cd577051"
+      "sha256": "842876bddf02e11b623bd3f854815581461b8a8c7cb645458303d68f4a49fb85"
     },
     {
       "file": "preview.php",
       "role": "草稿标题和正文预览",
-      "sha256": "cdc6464cb74af147476ea4349d5d5d7b1c7c8f30e851164dd4dec00e00d7b57e"
+      "sha256": "e94973f1756fc8e93bdc2fae22d0c266d7dee57710189a854cf4c00119d14fd5"
     }
   ],
   "dependencies": [

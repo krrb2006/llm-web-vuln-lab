@@ -12,7 +12,7 @@
     {
       "file": "index.php",
       "role": "留言写入、同页读取和展示",
-      "sha256": "85ac10958eff6a96e99928fe03f938189aa47176af00b3ac120286ab1c940141"
+      "sha256": "360525bf60246fdbf13554a63e1fa1d2bbd80d8aa5787deba264f670f5a16855"
     }
   ],
   "dependencies": [

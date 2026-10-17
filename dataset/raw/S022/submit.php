@@ -12,13 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit('标题或正文为空，或内容超过长度限制。');
     }
 
-    $insert = $db->prepare(
-        'INSERT INTO lab_preview_drafts (sample_id, title, body) VALUES (?, ?, ?)'
-    );
-    $insert->bind_param('sss', $sampleId, $title, $body);
-    $insert->execute();
-    $draftId = $db->insert_id;
-    $insert->close();
+    try {
+        $insert = $db->prepare(
+            'INSERT INTO lab_preview_drafts (sample_id, title, body) VALUES (?, ?, ?)'
+        );
+        $insert->bind_param('sss', $sampleId, $title, $body);
+        $insert->execute();
+        $draftId = $db->insert_id;
+        $insert->close();
+    } catch (Throwable $exception) {
+        error_log('S022 draft insert failed: ' . $exception->getMessage());
+        http_response_code(500);
+        exit('草稿暂时无法保存，请稍后重试。');
+    }
     header('Location: preview.php?id=' . $draftId, true, 303);
     exit;
 }

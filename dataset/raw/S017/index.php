@@ -11,19 +11,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit('留言不能为空且不能超过 2000 字节。');
     }
 
-    $insert = $db->prepare('INSERT INTO lab_guestbook (sample_id, body) VALUES (?, ?)');
-    $insert->bind_param('ss', $sampleId, $body);
-    $insert->execute();
-    $insert->close();
+    try {
+        $insert = $db->prepare('INSERT INTO lab_guestbook (sample_id, body) VALUES (?, ?)');
+        $insert->bind_param('ss', $sampleId, $body);
+        $insert->execute();
+        $insert->close();
+    } catch (Throwable $exception) {
+        error_log('S017 guestbook insert failed: ' . $exception->getMessage());
+        http_response_code(500);
+        exit('留言暂时无法保存，请稍后重试。');
+    }
     header('Location: index.php', true, 303);
     exit;
 }
 
-$list = $db->prepare('SELECT body FROM lab_guestbook WHERE sample_id = ? ORDER BY id DESC LIMIT 20');
-$list->bind_param('s', $sampleId);
-$list->execute();
-$messages = $list->get_result()->fetch_all(MYSQLI_ASSOC);
-$list->close();
+$messages = [];
+try {
+    $list = $db->prepare('SELECT body FROM lab_guestbook WHERE sample_id = ? ORDER BY id DESC LIMIT 20');
+    $list->bind_param('s', $sampleId);
+    $list->execute();
+    $messages = $list->get_result()->fetch_all(MYSQLI_ASSOC);
+    $list->close();
+} catch (Throwable $exception) {
+    error_log('S017 guestbook list failed: ' . $exception->getMessage());
+}
 header('Content-Type: text/html; charset=UTF-8');
 ?>
 <!doctype html>

@@ -10,13 +10,20 @@ if ($draftId === null || $draftId === false || $draftId < 1) {
     exit('草稿编号无效。');
 }
 
-$lookup = $db->prepare(
-    'SELECT title, body FROM lab_preview_drafts WHERE sample_id = ? AND id = ?'
-);
-$lookup->bind_param('si', $sampleId, $draftId);
-$lookup->execute();
-$draft = $lookup->get_result()->fetch_assoc();
-$lookup->close();
+$draft = null;
+try {
+    $lookup = $db->prepare(
+        'SELECT title, body FROM lab_preview_drafts WHERE sample_id = ? AND id = ?'
+    );
+    $lookup->bind_param('si', $sampleId, $draftId);
+    $lookup->execute();
+    $draft = $lookup->get_result()->fetch_assoc();
+    $lookup->close();
+} catch (Throwable $exception) {
+    error_log('S021 draft lookup failed: ' . $exception->getMessage());
+    http_response_code(500);
+    exit('草稿暂时无法读取，请稍后重试。');
+}
 if ($draft === null || $draft === false) {
     http_response_code(404);
     exit('草稿不存在。');

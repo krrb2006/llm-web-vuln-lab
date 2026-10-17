@@ -12,6 +12,7 @@
 | 待D对齐后出包 | 源码尚未按统一 `try/catch(Throwable)` 口径对齐，C 暂不产包，对齐后由 C 出正式包。 |
 
 - `packet_sha256` 为 `code_input.txt` 的 LF 内容哈希（与 line_map.json 记录的 `packet_sha256` 及 git 提交后 blob 一致）。
+- `case_code_sha256`：单文件样本取该 PHP 文件的 UTF-8/LF SHA-256；多文件样本按相对路径排序，将每行 `相对路径<TAB>文件SHA256\n` 拼接后再计算 SHA-256。
 - `源码基线提交` 为该样本 PHP 源码最后一次修改的提交；后续对齐会更新此值。
 - `正式包版本目录` 相对 `dataset/packets/`。
 
@@ -35,12 +36,12 @@
 | S014 | dev | XSS01 | S014_v1 | `7e68e97273ddb20a30ce51c1f1ad1dc0fcb4bc30c248340e41296030cce59f03` | `d4f7147` | 已锁定 |
 | S015 | dev | XSS02 | S015_v1 | `098b1cade9931f53f2be7437a16f595f75670deb944308a4e1c72f7b253077dc` | `d4f7147` | 已锁定 |
 | S016 | dev | XSS02 | S016_v1 | `71dbcaaa311f580897e7b2109160e34db33614ad625d3287563fd278672eef24` | `d4f7147` | 已锁定 |
-| S017 | dev | XSS03 | — | — | `a296e4b` | 待D对齐后出包 |
-| S018 | dev | XSS03 | — | — | `a296e4b` | 待D对齐后出包 |
+| S017 | dev | XSS03 | S017_v1 | `81f3c30168c5012ee06ce8a4adb6ba0930ac20dfab5e8170cc8862fbe94980f8` | A本轮异常对齐 | 待D重验 |
+| S018 | dev | XSS03 | S018_v1 | `0daa5625730551f204c738eea7b9c23e3a31c5bbd0efff23e94535e006e6c350` | A本轮异常对齐 | 待D重验 |
 | S019 | test | XSS04 | S019_v1 | `4ee21e7ded087864991df5d86192e1291e222e410d040b83b1b37aa90b19d9ab` | `a296e4b` | 已锁定 |
 | S020 | test | XSS04 | S020_v1 | `64ec2ee56ba873938292418f4342eb3c3233f181e7ed879c2caac4eaa38d953e` | `a296e4b` | 已锁定 |
-| S021 | test | XSS05 | — | — | `a296e4b` | 待D对齐后出包 |
-| S022 | test | XSS05 | — | — | `a296e4b` | 待D对齐后出包 |
+| S021 | test | XSS05 | S021_v1 | `e881e86713926107fa7db458b38c0e9fc824f5a8d916e2ebb799833e7e7122a5` | A本轮异常对齐 | 待D重验 |
+| S022 | test | XSS05 | S022_v1 | `ccf37ff8d9b045f365659a9c66896b669cbd6e5b424defd56c5e385b86bba5bd` | A本轮异常对齐 | 待D重验 |
 | S023 | test | XSS06 | S023_v1 | `e47750fd9ff681dc105db0d409800d915a6dd5adfe41d452113e35680b4c3781` | `a296e4b` | 已锁定 |
 | S024 | test | XSS06 | S024_v1 | `c78a31862f547c160a20fee6a84e09172afc8da441deed8ff543ad76783a109c` | `a296e4b` | 已锁定 |
 
@@ -50,6 +51,8 @@
 |---|---|---|---|
 | S001–S008 | `6b522ea`（A 严格异常处理修订：查询/取数套 `try/catch(Throwable)`，异常只写日志、页面普通提示） | 旧基线 `d498903` | 按新 `case_code_sha256` 复跑普通请求与语法错误请求，确认异常不回显、业务结论不变 |
 | S011/S012 | `9d5a234`（SQL06 ORDER BY 对齐 try/catch，`case_code_sha256` 变化） | 旧提交 `a04a832` | 按新哈希确认运行文件一致并复跑参考请求 |
+| S017/S018 | A按统一口径补齐写入和读取全流程 `try/catch(Throwable)` | D旧基线 `a296e4b` | 部署新源码，复跑普通留言、受控XSS及数据库异常，确认错误不回显 |
+| S021/S022 | A按统一口径补齐 submit/list/preview 数据库流程异常隔离 | D旧基线 `a296e4b` | 复跑三页面业务、存储XSS与数据库异常，确认页面仅普通提示 |
 
 > 说明：以上变更均不改 SQL/XSS 的核心结论路径（拼接/绑定位置不变），只改异常隔离，故输入包仍按当前源码冻结；D 复跑确认后即可转"已锁定"。
 
@@ -65,6 +68,8 @@
 - S009–S016：`c/samples` 的 `line_map.json`（S009–S012 取 v2，S013–S016 取 v1）
 - S019/S020/S023/S024：`c/packets-s017-s024` 的 `line_map.json`
 - S007/S008：本分支 `c/packets-s007-s008` 新生成（见下）
+- S017/S018/S021/S022：A按统一异常口径修改源码后重新生成 v1；需 D 按新哈希复跑后冻结。
+- S009–S012 的旧 v1 包已移至 `dataset/archive/packets/`，只保留审计历史，不参与冻结扫描。
 
 ## 六、本次（c/packets-s007-s008）新增与冻结范围
 
