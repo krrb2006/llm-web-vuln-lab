@@ -23,12 +23,10 @@ REVIEWER_BY_OPERATOR = {"A": "D", "B": "A", "C": "B", "D": "C"}
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
-def sha256_file(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as stream:
-        for chunk in iter(lambda: stream.read(65536), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
+def sha256_lf_text(path):
+    """Hash UTF-8 text using the repository's canonical LF representation."""
+    text = Path(path).read_text(encoding="utf-8-sig")
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def _inside_file(root, value):
@@ -38,7 +36,14 @@ def _inside_file(root, value):
     return path if path.is_relative_to(root) and path.is_file() else None
 
 
-def audit(manifest, runs, root, prompts_dir="prompts", packets_dir="dataset/packets"):
+def audit(
+    manifest,
+    runs,
+    root,
+    prompts_dir="prompts",
+    packets_dir="dataset/packets",
+    source_dir="dataset/raw",
+):
     """Return a deterministic, JSON-serializable freeze-readiness report."""
     root = Path(root).resolve()
     blockers = []
@@ -193,7 +198,7 @@ def audit(manifest, runs, root, prompts_dir="prompts", packets_dir="dataset/pack
             if not path.read_text(encoding="utf-8-sig").strip():
                 block("EMPTY_PROMPT_FILE", f"冻结 Prompt 为空：{Path(prompts_dir) / name}")
                 continue
-            prompt_hashes[(vuln_type, version)] = sha256_file(path)
+            prompt_hashes[(vuln_type, version)] = sha256_lf_text(path)
 
     for key, run in sorted(observed.items()):
         sid, version = key
@@ -204,12 +209,79 @@ def audit(manifest, runs, root, prompts_dir="prompts", packets_dir="dataset/pack
             block("PROMPT_HASH_MISMATCH", "记录哈希与冻结 Prompt 文件不一致", run.get("run_id"))
 
     packet_root = (root / packets_dir).resolve()
+    source_root = (root / source_dir).resolve()
+    if not source_root.is_relative_to(root):
+        block("INVALID_SOURCE_ROOT", "源码目录越出项目根目录")
+        source_root = root / "__invalid_source_root__"
     packet_index = defaultdict(list)
+    packet_metadata = {}
     if packet_root.is_relative_to(root) and packet_root.is_dir():
         for path in packet_root.glob("**/code_input.txt"):
             resolved = path.resolve()
             if resolved.is_relative_to(root) and resolved.is_file():
-                packet_index[sha256_file(resolved)].append(resolved)
+                digest = sha256_lf_text(resolved)
+                packet_index[digest].append(resolved)
+                subject = resolved.parent.relative_to(root).as_posix()
+                line_map = resolved.with_name("line_map.json")
+                if not line_map.is_file():
+                    block("MISSING_LINE_MAP", "输入包缺少 line_map.json", subject)
+                    continue
+                try:
+                    mapping = json.loads(line_map.read_text(encoding="utf-8-sig"))
+                except (OSError, json.JSONDecodeError, UnicodeError):
+                    block("INVALID_LINE_MAP", "line_map.json 无法解析", subject)
+                    continue
+                if not isinstance(mapping, dict):
+                    block("INVALID_LINE_MAP", "line_map.json 顶层必须是对象", subject)
+                    continue
+                packet_metadata[resolved] = mapping
+                sid = mapping.get("sample_id")
+                if not isinstance(sid, str) or not re.fullmatch(r"S\d{3}", sid):
+                    block("INVALID_PACKET_SAMPLE_ID", "line_map.sample_id 无效", subject)
+                    continue
+                if mapping.get("packet_sha256") != digest:
+                    block("PACKET_LINE_MAP_HASH_MISMATCH", "line_map 与 code_input.txt 哈希不一致", subject)
+                try:
+                    packet_text = resolved.read_text(encoding="utf-8-sig")
+                except (OSError, UnicodeError):
+                    block("INVALID_PACKET_TEXT", "code_input.txt 不是可读 UTF-8 文本", subject)
+                    packet_text = ""
+                if f"<sample_id>{sid}</sample_id>" not in packet_text:
+                    block("PACKET_SAMPLE_ID_MISMATCH", "输入包未包含 line_map 对应的 sample_id", subject)
+                files = mapping.get("files")
+                if not isinstance(files, list) or not files:
+                    block("EMPTY_LINE_MAP_FILES", "line_map.files 必须是非空数组", subject)
+                    continue
+                for index, item in enumerate(files, start=1):
+                    item_subject = f"{subject}#files[{index}]"
+                    if not isinstance(item, dict):
+                        block("INVALID_LINE_MAP_FILE", "源码映射必须是对象", item_subject)
+                        continue
+                    relative = item.get("source_file")
+                    if not isinstance(relative, str) or not relative.strip():
+                        block("INVALID_SOURCE_PATH", "source_file 缺失", item_subject)
+                        continue
+                    source = (source_root / sid / relative).resolve()
+                    if not source.is_relative_to(source_root) or not source.is_file():
+                        block("MISSING_SOURCE_FILE", f"映射源码不存在或越出源码目录：{relative}", item_subject)
+                        continue
+                    expected_source_hash = item.get("sha256")
+                    if not isinstance(expected_source_hash, str) or not SHA256_RE.fullmatch(expected_source_hash):
+                        block("INVALID_SOURCE_SHA256", "源码映射 SHA-256 格式无效", item_subject)
+                    elif sha256_lf_text(source) != expected_source_hash:
+                        block("SOURCE_HASH_MISMATCH", "源码文件 SHA-256 与 line_map 不一致", item_subject)
+                    start, end = item.get("start"), item.get("end")
+                    try:
+                        line_count = len(source.read_text(encoding="utf-8-sig").splitlines())
+                    except (OSError, UnicodeError):
+                        block("INVALID_SOURCE_TEXT", "映射源码不是可读 UTF-8 文本", item_subject)
+                        continue
+                    if (
+                        type(start) is not int
+                        or type(end) is not int
+                        or not 1 <= start <= end <= line_count
+                    ):
+                        block("INVALID_SOURCE_RANGE", "源码映射行范围无效", item_subject)
     if not packet_index:
         block("NO_PACKET_FILES", f"{packets_dir} 下没有可验收的 code_input.txt")
     for sid in sorted(EXPECTED_TEST_IDS):
@@ -234,17 +306,8 @@ def audit(manifest, runs, root, prompts_dir="prompts", packets_dir="dataset/pack
             if len(matching_sid) != 1:
                 block("PACKET_ID_AMBIGUOUS", "输入包哈希未唯一对应当前 sample_id", sid)
                 continue
-            line_map = matching_sid[0].with_name("line_map.json")
-            if not line_map.is_file():
-                block("MISSING_LINE_MAP", f"输入包缺少 line_map.json：{matching_sid[0].parent}", sid)
-                continue
-            try:
-                mapping = json.loads(line_map.read_text(encoding="utf-8-sig"))
-            except (OSError, json.JSONDecodeError):
-                block("INVALID_LINE_MAP", f"line_map.json 无法解析：{line_map}", sid)
-                continue
-            if not isinstance(mapping, dict):
-                block("INVALID_LINE_MAP", f"line_map.json 顶层必须是对象：{line_map}", sid)
+            mapping = packet_metadata.get(matching_sid[0])
+            if mapping is None:
                 continue
             if mapping.get("sample_id") != sid or mapping.get("packet_sha256") != digest:
                 block("LINE_MAP_MISMATCH", "line_map 的 sample_id 或 packet_sha256 不一致", sid)
@@ -297,7 +360,7 @@ def render_markdown(report):
         f"|已索引输入包|{summary['packet_files_indexed']}|",
         f"|阻塞项|{summary['blockers']}|",
         "",
-        "## 当前 Prompt SHA-256",
+        "## 当前工作树 Prompt SHA-256（非冻结）",
         "",
         "|Prompt|SHA-256|",
         "|---|---|",
@@ -338,6 +401,7 @@ def main():
     parser.add_argument("--root", default=".")
     parser.add_argument("--prompts-dir", default="prompts")
     parser.add_argument("--packets-dir", default="dataset/packets")
+    parser.add_argument("--source-dir", default="dataset/raw")
     parser.add_argument("--json-out")
     parser.add_argument("--md-out")
     parser.add_argument(
@@ -353,6 +417,7 @@ def main():
         args.root,
         args.prompts_dir,
         args.packets_dir,
+        args.source_dir,
     )
     if args.json_out:
         Path(args.json_out).write_text(

@@ -1,8 +1,13 @@
 * text=auto
+.gitattributes text eol=lf
 *.py text eol=lf
+*.php text eol=lf
 *.sh text eol=lf
 *.md text eol=lf
 *.json text eol=lf
+prompts/*.txt text eol=lf
+dataset/packets/**/*.txt text eol=lf
+runs/**/input.txt text eol=lf
 *.docx binary
 *.png binary
 *.pdf binary

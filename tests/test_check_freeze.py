@@ -30,6 +30,7 @@ class FreezeAuditTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         (self.root / "prompts").mkdir()
         (self.root / "dataset" / "packets").mkdir(parents=True)
+        (self.root / "dataset" / "raw").mkdir(parents=True)
         (self.root / "evidence" / "truth").mkdir(parents=True)
         self.prompt_hashes = {}
         for vuln_type in ("SQLi", "XSS"):
@@ -82,10 +83,20 @@ class FreezeAuditTests(unittest.TestCase):
             directory = self.root / "dataset" / "packets" / f"{sid}_v1"
             directory.mkdir()
             (directory / "code_input.txt").write_bytes(packet)
+            source_directory = self.root / "dataset" / "raw" / sid
+            source_directory.mkdir()
+            source = b"<?php\n"
+            (source_directory / "index.php").write_bytes(source)
             (directory / "line_map.json").write_text(json.dumps({
                 "sample_id": sid,
                 "packet_sha256": packet_hash,
-                "files": [],
+                "files": [{
+                    "alias": "F01",
+                    "source_file": "index.php",
+                    "start": 1,
+                    "end": 1,
+                    "sha256": digest(source),
+                }],
             }), encoding="utf-8")
             owner = OWNER_BY_ID[sid]
             for version in VERSIONS:
@@ -129,6 +140,21 @@ class FreezeAuditTests(unittest.TestCase):
         codes = {item["code"] for item in report["blockers"]}
         self.assertIn("PACKET_HASH_NOT_STABLE", codes)
         self.assertIn("PACKET_HASH_NOT_FOUND", codes)
+
+    def test_line_map_source_hash_must_match_repository_file(self):
+        path = self.root / "dataset" / "raw" / "S007" / "index.php"
+        path.write_bytes(b"<?php\n// changed after packet generation\n")
+        report = audit(self.manifest, self.runs, self.root)
+        codes = {item["code"] for item in report["blockers"]}
+        self.assertIn("SOURCE_HASH_MISMATCH", codes)
+
+    def test_crlf_checkout_uses_canonical_lf_hashes(self):
+        packet = self.root / "dataset" / "packets" / "S007_v1" / "code_input.txt"
+        packet.write_bytes(packet.read_bytes().replace(b"\n", b"\r\n"))
+        source = self.root / "dataset" / "raw" / "S007" / "index.php"
+        source.write_bytes(source.read_bytes().replace(b"\n", b"\r\n"))
+        report = audit(self.manifest, self.runs, self.root)
+        self.assertTrue(report["ready"], report["blockers"])
 
 
 if __name__ == "__main__":
