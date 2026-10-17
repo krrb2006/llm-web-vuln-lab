@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 
 from tools.check_freeze import audit
+from tools.freeze_plan import build_locked_runs
 
 
 VERSIONS = ("V0", "V1", "V2")
@@ -155,6 +156,35 @@ class FreezeAuditTests(unittest.TestCase):
         source.write_bytes(source.read_bytes().replace(b"\n", b"\r\n"))
         report = audit(self.manifest, self.runs, self.root)
         self.assertTrue(report["ready"], report["blockers"])
+
+    def test_freeze_plan_derives_identity_fields_without_mutating_input(self):
+        for run in self.runs:
+            run["model_display_name"] = ""
+            run["packet_sha256"] = ""
+            run["prompt_sha256"] = ""
+        locked = build_locked_runs(
+            self.manifest,
+            self.runs,
+            self.root,
+            "DeepSeek-V4.1-Flash",
+            "深度思考=开；联网搜索=关",
+        )
+        self.assertEqual(self.runs[0]["model_display_name"], "")
+        self.assertEqual(locked[0]["model_display_name"], "DeepSeek-V4.1-Flash")
+        self.assertEqual(locked[0]["model_settings"], "深度思考=开；联网搜索=关")
+        self.assertEqual(len({item["packet_sha256"] for item in locked}), 12)
+        self.assertTrue(audit(self.manifest, locked, self.root)["ready"])
+
+    def test_freeze_plan_refuses_unreviewed_truth(self):
+        self.manifest[0]["ground_truth"] = None
+        with self.assertRaisesRegex(ValueError, "真值门禁未通过"):
+            build_locked_runs(
+                self.manifest,
+                self.runs,
+                self.root,
+                "DeepSeek-V4.1-Flash",
+                "深度思考=开；联网搜索=关",
+            )
 
 
 if __name__ == "__main__":

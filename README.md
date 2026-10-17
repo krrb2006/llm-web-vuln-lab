@@ -43,6 +43,7 @@
 ```bash
 python3 tools/prepare_input.py --help
 python3 tools/check_freeze.py --report-only
+python3 tools/freeze_plan.py --help
 python3 tools/audit_submission.py
 python3 tools/evaluate.py --help
 python3 tools/build_evidence_index.py --help
