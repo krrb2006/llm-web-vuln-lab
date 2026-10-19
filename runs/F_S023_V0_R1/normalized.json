@@ -1,0 +1,34 @@
+{
+  "run_id": "F_S023_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S023",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0005",
+      "F01:0010",
+      "F01:0025"
+    ],
+    "evidence": {
+      "source": "F01:0005 从 $_GET['url'] 读取可控输入",
+      "flow": "F01:0006 去空白后经 F01:0010 赋给 $href，并在 F01:0025 写入 href 属性",
+      "guard": "无效：F01:0025 使用 htmlspecialchars 做了 HTML 属性编码，可阻止引号逃逸，但未对 URL 协议做白名单限制，javascript: 等协议仍可进入 href",
+      "sink": "F01:0025 的 <a> href 属性；用户实际点击“打开链接”后，javascript: URL 可在页面上下文执行脚本"
+    },
+    "prerequisites": [
+      "本机 PHP 8.5 环境可访问 http://127.0.0.1:4280/lab_cases/S023/index.php",
+      "浏览器允许点击 href 中的 javascript: URL 执行脚本",
+      "验证必须在页面加载后人工点击“打开链接”，页面加载本身不作为脚本执行证据"
+    ],
+    "missing_context": [],
+    "poc_generated": true,
+    "poc_language": "manual",
+    "poc_instructions": "按下方人工步骤运行；先做普通本机 URL 对照，再做 javascript: 测试输入；页面加载时不弹框，点击“打开链接”后需人工在浏览器确认弹框内容；该测试不外发数据。"
+  },
+  "human_verification": "pending",
+  "raw_source": "DeepSeek web session"
+}
