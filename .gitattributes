@@ -7,7 +7,7 @@
 *.png binary
 *.pdf binary
 prompts/*.txt text eol=lf
-runs/**/input.txt text eol=lf
+runs/**/input.txt text eol=lf whitespace=-blank-at-eol
 results/B_proposed_packets/**/*.txt text eol=lf whitespace=-blank-at-eol
 results/B_proposed_packets_v2/**/*.txt text eol=lf whitespace=-blank-at-eol
 runs/**/raw_output.txt -text whitespace=-blank-at-eol
