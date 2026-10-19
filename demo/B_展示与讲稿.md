@@ -26,4 +26,4 @@
 
 ## 证据索引与复现
 
-Prompt：`prompts/{SQLi,XSS}_V{0,1,2}.txt`。输入和原文：`runs/{run_id}/{input.txt,raw_output.txt,metadata.json,normalized.json}`。版本锁：`runs/b_packet_lock.json`。POC：`pocs/{run_id}/`；运行证据：`evidence/{run_id}/`。迭代：`results/B_*_iteration.md`；注入：`results/B_injection.md`；复核：`results/B_review_C.md`。执行命令见 `docs/B_执行与交接.md`。当前已有四条 DeepSeek V0 原文；S013/S015 生成了未执行的手工 POC，暂无实际触发证据。
+Prompt：`prompts/{SQLi,XSS}_V{0,1,2}.txt`。输入和原文：`runs/{run_id}/{input.txt,raw_output.txt,metadata.json,normalized.json}`。版本锁：`runs/b_packet_lock.json`。POC：`pocs/{run_id}/`；运行证据：`evidence/{run_id}/`。迭代：`results/B_*_iteration.md`；注入：`results/B_injection.md`；复核：`results/B_review_C.md`。执行命令见 `docs/B_执行与交接.md`。当前已有十条 DeepSeek V0 原文；S001/S003/S005 和 S013/S015 生成了尚未执行的原始 POC，暂无实际触发证据。

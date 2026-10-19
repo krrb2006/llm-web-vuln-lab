@@ -18,3 +18,5 @@ S013—S016：DeepSeek 主实验使用 `DEV_S013_V0_R2`、`DEV_S014_V0_R1`、`DE
 2026-10-15 更新：S001—S006 的旧草稿对应 A 源 `d498903`，已由 `results/B_proposed_packets_v2/` 基于 A 当前 `26637fb` 重建；旧 D 参考运行针对旧源码，不能直接复用。v2 草稿仍待 C 标准化和 D 新版本重验。S017/S018 源码字节目前未变，但数据库异常口径可能改变其最终版本。详见 `results/B_freeze_readiness_2026-10-15.md`。
 
 2026-10-19 更新：A 最新分支 `173b9af` 已合入并独立验收 S001—S006 的 C 正式包，B 已据此生成并锁定 `runs/DEV_S001_V0_R1` 至 `DEV_S006_V0_R1`；S005/S006 只用补足 LIKE 中性说明后的新哈希。S017/S018 虽在 A 分支有准备包，但 D 将修改数据库异常处理，B 暂不锁定或提交该两条。当前权威状态见 `results/B_dev_handoff_2026-10-19.md`。
+
+2026-10-19 再更新：A `173b9af` 已合入带 try/catch 的 S017/S018 当前源码与标准包，manifest 两例均为 ready；B 核对源码、line_map、packet、完整输入 SHA 一致，已锁定 `DEV_S017_V0_R1`、`DEV_S018_V0_R1`。D 同源码动态补跑及 C 最终行号复核仍需跟进；若更改源码或包，对应三版同包重跑。当前交接以 `demo/B_DeepSeek_XSS03_V0_提交清单.md` 为准。
