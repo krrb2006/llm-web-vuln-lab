@@ -1,0 +1,39 @@
+{
+  "run_id": "DEV_S017_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S017",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0008",
+      "F01:0015",
+      "F01:0016",
+      "F01:0030",
+      "F01:0033",
+      "F01:0053"
+    ],
+    "evidence": {
+      "source": "F01:0008 从 $_POST['body'] 原样取得留言，仅做空值和长度检查",
+      "flow": "F01:0015-F01:0016 参数化写入 lab_guestbook.body；F01:0030-F01:0033 读取 body；F01:0053 将 body 输出到 HTML 正文",
+      "guard": "无效：F01:0053 直接 echo，无 HTML 实体编码或净化；参数化仅防 SQL 注入，不防 XSS",
+      "sink": "F01:0053 在 div 正文内直接 echo $message['body']，未转义"
+    },
+    "prerequisites": [
+      "S017 页面可通过 http://127.0.0.1:4280/ 对应路径访问",
+      "数据库表 lab_guestbook 可用且 POST 保存成功",
+      "使用支持 JavaScript 的浏览器打开页面观察"
+    ],
+    "missing_context": [
+      "未提供 S017 页面具体 URL 路径；脚本默认使用 127.0.0.1:4280 根路径，需按实际 index.php 地址配置",
+      "未提供浏览器 CSP 等客户端上下文；脚本执行需人工在浏览器确认"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "将环境变量 S017_URL 设置为 S017 的实际 index.php 地址，默认 http://127.0.0.1:4280/。运行脚本会先 POST 普通标记 S017_NORMAL_MARKER，再 GET 页面；随后 POST 测试输入 <svg onload=alert('S017_XSS')></svg> 并 GET 页面。最后人工在浏览器打开同一 URL：普通输入应仅作为文本显示；测试输入若被执行会弹出 S017_XSS。HTTP 响应体包含 payload 字符串不等同于 JavaScript 执行。"
+  },
+  "human_verification": "pending"
+}

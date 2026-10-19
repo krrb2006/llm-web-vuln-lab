@@ -1,0 +1,35 @@
+{
+  "run_id": "DEV_S006_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S006",
+    "prediction": "safe",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0009",
+      "F01:0012",
+      "F01:0013",
+      "F01:0014"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['q'] 读取外部输入。",
+      "flow": "F01:0009 将 q 拼入 LIKE 模式 '%' . $q . '%'，随后在 F01:0013 作为字符串参数绑定。",
+      "guard": "有效：F01:0012 使用固定 SQL 模板和 ? 占位符；F01:0013 使用 bind_param('s', $pattern) 将模式作为值传递，未进入 SQL 结构。LIKE 中 % 与 _ 的通配符语义按运行上下文不作为 SQL 注入证据。",
+      "sink": "F01:0012 prepare 固定 SELECT 语句，F01:0014 execute 执行绑定后的语句。"
+    },
+    "prerequisites": [
+      "本地入口 http://127.0.0.1:4280/lab_cases/S006/index.php 可访问。",
+      "common/db_connect.php 已提供可用的 mysqli 变量 $db。",
+      "lab_people 表存在并包含 id、name 列。"
+    ],
+    "missing_context": [],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成POC。静态审计范围仅限 q 到 SQL 查询路径：外部输入经 LIKE 模式包装后由 bind_param('s', $pattern) 绑定到固定占位符，未拼接为 SQL 结构，因此未发现该目标类型漏洞。无影响本判断的关键缺失；common/db_connect.php 未展开不影响当前页面的参数绑定结论。"
+  },
+  "human_verification": "pending"
+}

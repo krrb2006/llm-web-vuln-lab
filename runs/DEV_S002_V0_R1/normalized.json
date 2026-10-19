@@ -15,22 +15,24 @@
       "F01:0012"
     ],
     "evidence": {
-      "source": "F01:0007 从 $_GET['name'] 读取外部输入并赋给 $name",
-      "flow": "F01:0007 的 $name 在 F01:0011 通过 bind_param('s', $name) 作为字符串绑定值传入",
-      "guard": "有效：F01:0010 使用固定 SQL 与 ? 占位符，F01:0011 使用 mysqli 预处理绑定参数，未发现动态拼接 SQL 结构",
-      "sink": "F01:0010 执行固定语句 SELECT id, name FROM lab_people WHERE name = ?，F01:0012 可达执行点仅接收绑定值"
+      "source": "F01:0007：$name = $_GET['name'] ?? ''; 外部GET参数name进入本页。",
+      "flow": "F01:0007的$name在F01:0011作为绑定值传入；F01:0010的SQL为固定模板，执行于F01:0012。",
+      "guard": "有效：F01:0010使用固定SQL模板和?占位符，F01:0011通过bind_param('s', $name)绑定，未将输入拼入SQL结构；本页不存在动态列名、排序表达式或IN列表拼接。",
+      "sink": "F01:0012：$stmt->execute()为实际执行点；F01:0010的prepare与F01:0011的bind仅说明构造与绑定，不冒充执行点。"
     },
     "prerequisites": [
-      "本地教学入口 http://127.0.0.1:4280/lab_cases/S002/index.php 可访问",
-      "common/db_connect.php 提供已连接的 mysqli 变量 $db",
-      "MariaDB 中存在教学表 lab_people 及预置数据"
+      "PHP与mysqli扩展可用",
+      "common/db_connect.php成功提供已连接的$db",
+      "MariaDB中lab_people表及预置数据存在",
+      "通过http://127.0.0.1:4280/lab_cases/S002/index.php?name=...访问"
     ],
     "missing_context": [
-      "输入包未展示 common/db_connect.php 的具体实现，但 runtime_context 已说明 $db 为已连接 mysqli 变量；这不影响本页 SQL 注入路径判断"
+      "common/db_connect.php未在输入包中提供，无法核验其连接与初始化实现；但不影响本页将name作为绑定值进入固定SQL的判断。"
     ],
     "poc_generated": false,
     "poc_language": "none",
-    "poc_instructions": "判断为 safe，不生成攻击性 POC。可在本地入口用普通输入 name=Alice 与不修改数据的测试输入 name=Alice' OR '1'='1 对照，预期后者仅按字面姓名精确匹配，不应返回额外记录；若结果异常，检查 MariaDB 连接、lab_people 表结构和预置数据，而不是以 HTTP 200 作为成功条件。"
+    "poc_instructions": "判断为safe，不生成攻击性POC。本地复核可访问?name=Alice，预期显示ID 1：Alice；再访问?name=Alice%27%20OR%20%271%27%3D%271，预期按字面姓名精确匹配而无记录。实际观察应以页面结果行或数据库记录变化为准，不以HTTP 200为成功条件；失败时检查db_connect.php、数据库连接和lab_people数据。"
   },
-  "human_verification": "pending"
+  "human_verification": "pending",
+  "raw_source": "R1-R12.docx"
 }

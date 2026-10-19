@@ -7,24 +7,28 @@
     "F01:0008",
     "F01:0015",
     "F01:0016",
+    "F01:0017",
     "F01:0030",
+    "F01:0031",
+    "F01:0032",
     "F01:0033",
     "F01:0053"
   ],
   "evidence": {
-    "source": "F01:0008 从 $_POST['body'] 读取可控字符串，仅做非空和长度限制。",
-    "flow": "F01:0015-F01:0016 通过预处理绑定写入 lab_guestbook.body；F01:0030-F01:0033 按 sample_id 读取留言；F01:0053 输出到 HTML 正文。",
-    "guard": "有效：F01:0053 使用 htmlspecialchars($message['body'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，在 HTML 正文文本上下文编码标签、引号并替换非法 UTF-8 序列。",
-    "sink": "F01:0053 的 <div> 正文文本节点回显；未发现输出到 HTML 属性、URL、JavaScript 或 DOM 执行上下文的路径。"
+    "source": "F01:0008 从 $_POST['body'] 读取可控字符串；F01:0015-F01:0017 使用参数化 INSERT 写入 lab_guestbook。",
+    "flow": "写入请求：F01:0008 接收 body，F01:0015-F01:0017 持久化到数据库；随后独立读取/渲染请求：F01:0030-F01:0033 按 sample_id 读取 body，F01:0052-F01:0053 在 HTML 正文的 div 中输出。",
+    "guard": "有效：F01:0053 在 HTML 正文输出时使用 htmlspecialchars($message['body'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')；本文件未发现绕过该调用的其他输出路径。",
+    "sink": "F01:0053 echo htmlspecialchars(...) 到 HTML 正文 div，不是 HTML 属性、URL、JavaScript 或 DOM 上下文；存储型 XSS 所需脚本执行条件不成立。"
   },
   "prerequisites": [
-    "PHP 与 MariaDB 按 runtime_context 运行。",
-    "数据库表 lab_guestbook 含 sample_id、body、id 字段。",
-    "GET 请求 index.php 会读取该 sample_id 最近 20 条留言。"
+    "PHP 与 MariaDB 教学留言板按给定上下文运行；无需登录。",
+    "POST body 保存留言后以 303 跳转到 index.php；GET 读取本样本最近留言并显示在 HTML 正文。"
   ],
   "missing_context": [],
   "poc_generated": false,
   "poc_language": "none",
-  "poc_instructions": "不生成攻击性 POC。可在本地正常提交普通留言（如 <b>test</b>）后访问同一页面观察：F01:0053 应将其显示为字面文本而非粗体标签。HTTP 响应体出现字符串不等同于 JavaScript 执行；本样本未提供属性、URL、JavaScript 或 DOM 输出路径，若后续新增此类输出需重新审计。"
+  "poc_instructions": "未生成 POC。该样本在 F01:0053 已对 HTML 正文输出使用 htmlspecialchars。若仅做人工静态核查，可确认普通文本与含 HTML 标记的测试文本都会经过该转义后输出；HTTP 返回体出现字符串不等同于 JavaScript 执行。本次未运行代码。"
 }
 ```
+
+判断范围：基于所给 F01 原始行，数据从 `$_POST['body']` 经参数化写入数据库，再读取并通过 `htmlspecialchars` 输出到 HTML 正文；未发现该目标类型 XSS 的可达危险 sink。防护建议：保持 `htmlspecialchars` 输出编码；若未来新增 HTML 属性、URL 或 JavaScript/DOM 上下文输出，应分别采用对应上下文编码、URL 协议约束或安全 DOM API，并考虑 CSP。以上为建议，不是已验证事实。

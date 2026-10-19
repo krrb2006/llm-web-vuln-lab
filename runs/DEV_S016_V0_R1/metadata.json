@@ -13,7 +13,7 @@
   "packet_sha256": "71dbcaaa311f580897e7b2109160e34db33614ad625d3287563fd278672eef24",
   "input_sha256": "68fcc8d3bd779835a3f45843a069bd60c614f4e32c9427ca05b9e69497c693d0",
   "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\c-samples-readonly\\dataset\\packets\\S016_v1\\code_input.txt",
-  "raw_output_sha256": "706009e7a439cbc685a0881000c9ac54d35b8af41706a827b60f56052d659ce5",
+  "raw_output_sha256": "791ae3a4833f1972e19ac77603f2014f5000038ae56a25654194f1ab42d1b937",
   "source_ref": "origin/c/samples@a04a832",
   "source_packet_repo_path": "dataset/packets/S016_v1/code_input.txt",
   "pre_submission_correction": "Normalized checkout CRLF to repository LF; no model submission or raw output existed.",
@@ -28,5 +28,10 @@
   "planned_model_settings": "深度思考=开；联网搜索=关",
   "planned_model_source": "User report in chat before submission; actual setting must be checked per session.",
   "submission_time_note": "用户未提供本条实际提交时间；模型与开关沿用用户指定的固定批次配置。",
-  "recorded_at": "2026-10-12T04:45:38.126527+00:00"
+  "recorded_at": "2026-10-12T04:45:38.126527+00:00",
+  "raw_source": "R1-R12.docx",
+  "raw_source_path": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\outputs\\R1-R12_S017-S018顺序修正版_v2.docx",
+  "raw_source_note": "Authoritative model-answer document supplied by user; S017/S018 order corrected before extraction.",
+  "raw_previous_chat_preserved": true,
+  "raw_replaced_at": "2026-10-19"
 }

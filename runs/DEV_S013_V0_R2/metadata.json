@@ -13,7 +13,7 @@
   "packet_sha256": "154456e20c0d4adc6febf6945c6d14c2b97722a38746a4c7ae1fa87a24a6cb4f",
   "input_sha256": "0961d4b981499db7dad360a33f0a980e60f7ad32667b709dc0a7ca991c94f7e5",
   "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\c-samples-readonly\\dataset\\packets\\S013_v1\\code_input.txt",
-  "raw_output_sha256": "ee5cd97cfba636ece66b469ce8eeb794a783dc8f92da217c40f4cc52d2cb087f",
+  "raw_output_sha256": "1dfbd25fa485ba213244eb027272b224b41ec19490add3888b01c0dcc3492d78",
   "planned_test_interface": "DeepSeek web",
   "experiment_batch": "deepseek-main-2026-10-12",
   "source_ref": "origin/c/samples@a04a832",
@@ -22,5 +22,10 @@
   "planned_model_settings": "深度思考=开；联网搜索=关",
   "planned_model_source": "User report in chat before submission; actual setting must be checked per session.",
   "submission_time_note": "用户无法取得本条实际提交时间；模型回答中的日期不是浏览器提交时间。",
-  "recorded_at": "2026-10-12T03:42:49.135930+00:00"
+  "recorded_at": "2026-10-12T03:42:49.135930+00:00",
+  "raw_source": "R1-R12.docx",
+  "raw_source_path": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\outputs\\R1-R12_S017-S018顺序修正版_v2.docx",
+  "raw_source_note": "Authoritative model-answer document supplied by user; S017/S018 order corrected before extraction.",
+  "raw_previous_chat_preserved": true,
+  "raw_replaced_at": "2026-10-19"
 }

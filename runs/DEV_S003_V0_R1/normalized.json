@@ -14,23 +14,24 @@
       "F01:0011"
     ],
     "evidence": {
-      "source": "F01:0007 从 $_GET['id'] 读取外部输入，未做类型校验或范围限制",
-      "flow": "F01:0010 将 $id 直接拼接到 SELECT 语句的 WHERE id = 后，形成动态SQL",
-      "guard": "无效：没有预处理、没有整数转换、没有白名单；F01:0022-F01:0023 的 htmlspecialchars 仅用于HTML输出转义，不能保护SQL构造",
-      "sink": "F01:0011 $db->query($sql) 执行拼接后的SQL，查询结果随后被取出并展示"
+      "source": "F01:0007 直接读取外部可控的 GET 参数 id，未做类型转换、过滤或白名单校验",
+      "flow": "F01:0010 将 $id 原样拼接到 SQL 字符串的 WHERE id = 子句中，动态内容进入 SQL 结构",
+      "guard": "无效：未见预处理绑定、整数校验、转义或白名单；F01:0010 直接字符串拼接，F01:0011 执行",
+      "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的 SQL；执行点在本页输入包中"
     },
     "prerequisites": [
-      "PHP 页面可通过 http://127.0.0.1:4280/lab_cases/S003/index.php 访问",
-      "公共连接文件已提供可用的 mysqli 变量 $db",
-      "MariaDB 中 lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
-      "GET 参数 id 可传入且无需登录"
+      "本地入口 http://127.0.0.1:4280/lab_cases/S003/index.php 可访问",
+      "common/db_connect.php 成功连接 MariaDB，$db 为可用 mysqli 连接",
+      "lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
+      "GET 参数 id 可由请求方控制"
     ],
     "missing_context": [
-      "common/db_connect.php 的具体实现未在输入中展示；运行上下文声明其提供已连接的 mysqli 变量 $db"
+      "common/db_connect.php 内容未包含在输入包中，连接参数与 mysqli 错误报告模式未知；但 F01:0011 的实际执行点已在本页提供"
     ],
     "poc_generated": true,
     "poc_language": "python3",
-    "poc_instructions": "将脚本保存为 s003_poc.py 后运行：python3 s003_poc.py。脚本只访问 http://127.0.0.1:4280/lab_cases/S003/index.php，不修改数据库。普通输入 id=1 预期正文包含 Alice 且不包含 Bob/Carol；测试输入 id=1 OR 1=1 预期正文包含 Alice、Bob、Carol，体现 WHERE 条件被改变。不要用 HTTP 200 作为成功条件，而应比较页面正文中的记录标记；失败时检查服务是否监听 127.0.0.1:4280、lab_people 是否已初始化、$db 是否能连接、页面是否返回“查询失败”。本方案未运行验证。"
+    "poc_instructions": "保存为 poc_s003.py 后运行 python3 poc_s003.py。脚本仅访问 127.0.0.1:4280 的本地教学入口，分别请求普通输入 id=1 和不修改数据的测试输入 id=1 OR 1=1，并比较响应正文中的姓名。预期普通输入只出现 Alice；测试输入使 WHERE 条件恒真，出现 Alice、Bob、Carol（或至少比普通输入多出 Bob/Carol），即表明输入改变了 SQL 条件。失败时检查服务是否监听 127.0.0.1:4280、URL 路径是否正确、common/db_connect.php 是否成功连接数据库、lab_people 是否已初始化；不以 HTTP 200 作为成功条件。修复方向是使用预处理绑定并将 id 校验为整数，不应把建议修复当作已验证事实。"
   },
-  "human_verification": "pending"
+  "human_verification": "pending",
+  "raw_source": "R1-R12.docx"
 }

@@ -13,7 +13,7 @@
   "packet_sha256": "81f3c30168c5012ee06ce8a4adb6ba0930ac20dfab5e8170cc8862fbe94980f8",
   "input_sha256": "73708825d31505dfb80463b0788c9028c2b86e5e41bffa95add5743ba79fd870",
   "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\b_a_integrated_packets\\S017\\code_input.txt",
-  "raw_output_sha256": "3afa3a343d04b978508d99f67468fe587f015972baa706ff2b06093fb8955a83",
+  "raw_output_sha256": "629edea52c0b7a35c9ba8522023df7c12506e93f64daceeb83a277029c275fdc",
   "source_ref": "origin/a/criteria-and-sql01@173b9af",
   "source_packet_repo_path": "dataset/packets/S017_v1/code_input.txt",
   "experiment_batch": "deepseek-main-2026-10-12",
@@ -23,5 +23,10 @@
   "prepared_against_a_input_sha256": "73708825d31505dfb80463b0788c9028c2b86e5e41bffa95add5743ba79fd870",
   "truth_and_packet_status": "A branch manifest ready and source/packet hash consistent; C line-map review and D same-source dynamic re-run remain follow-ups.",
   "submission_time_note": "用户未提供本条实际提交时间；模型与开关沿用用户指定的固定批次配置。",
-  "recorded_at": "2026-10-19T01:35:23.064760+00:00"
+  "recorded_at": "2026-10-19T01:35:23.064760+00:00",
+  "raw_source": "R1-R12.docx",
+  "raw_source_path": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\outputs\\R1-R12_S017-S018顺序修正版_v2.docx",
+  "raw_source_note": "Authoritative model-answer document supplied by user; S017/S018 order corrected before extraction.",
+  "raw_previous_chat_preserved": true,
+  "raw_replaced_at": "2026-10-19"
 }
