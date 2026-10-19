@@ -5,17 +5,20 @@
   "vulnerability_type": "XSS",
   "locations": ["F01:0003", "F01:0015"],
   "evidence": {
-    "source": "F01:0003：从 $_GET['q'] 读取可控输入 q，入口可达。",
-    "flow": "F01:0003 读取后在同一次响应中由 F01:0015 输出到 input 的 value 属性；无数据库写入和独立读取，非存储型。",
-    "guard": "有效：F01:0015 使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，在双引号属性上下文中转义 &、<、>、双引号和单引号，能阻止闭合属性和标签注入。",
-    "sink": "F01:0015：HTML input value 属性输出；输出经过上述编码，作为属性值文本处理。"
+    "source": "F01:0003：$q = $_GET['q'] ?? '';，GET 参数 q 是可控输入。",
+    "flow": "F01:0003 读取 $q，F01:0015 将其输出到 input 元素的 value 属性中。",
+    "guard": "有效：F01:0015 使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，在双引号包裹的 HTML 属性上下文中转义引号与特殊字符。",
+    "sink": "F01:0015：input 标签的 value 属性回显，未发现未编码输出到 HTML/JS/URL/DOM 的危险上下文。"
   },
-  "prerequisites": ["PHP 单页脚本可运行", "GET 参数 q 可控", "响应被浏览器按 HTML 解析"],
+  "prerequisites": [
+    "PHP 单页脚本可由本地 Web 服务器解析",
+    "GET 参数 q 可控"
+  ],
   "missing_context": [],
   "poc_generated": false,
   "poc_language": "none",
-  "poc_instructions": "无需生成攻击性POC。本地运行该PHP页面后，普通对照可用 q=hello，观察 F01:0015 生成 value=hello；测试对照可用 q=abc%3Cmark%3Etest%3C%2Fmark%3E，检查响应源码中尖括号被实体编码且页面不出现 mark 标记。人工浏览器只需确认无自定义标记或弹框；HTTP 响应体出现字符串不等同 JavaScript 执行。判断范围仅限 F01:0001-0019，未发现缺失的读取或模板代码。"
+  "poc_instructions": "无需POC。可普通输入 q=hello 观察 value 属性回显；测试输入 q 包含双引号和尖括号，观察其被转义为 HTML 实体，浏览器不执行脚本。由于判定为 safe，不生成攻击性 POC。"
 }
 ```
 
-防护建议：继续保持在 HTML 属性上下文中使用 `htmlspecialchars(..., ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')`；若未来把同一输入输出到 URL、JavaScript、CSS 或 DOM 等其他上下文，需要分别采用对应上下文的编码或安全 API。以上为静态审查结论，未运行代码。
+判断范围：本次仅审计从 GET 参数 `q` 到浏览器 HTML 属性输出的路径；代码中未发现存储、URL、JavaScript 或 DOM 上下文输出。防护建议：保持对属性上下文使用 `htmlspecialchars` 并配合 `ENT_QUOTES | ENT_SUBSTITUTE` 与明确 UTF-8；若未来输出进入 JavaScript、URL 或 DOM，应改用对应上下文的编码、白名单或安全 API。

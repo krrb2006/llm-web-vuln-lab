@@ -8,23 +8,26 @@
     "F01:0009",
     "F01:0014",
     "F01:0017",
-    "F01:0018",
-    "F01:0019"
+    "F01:0018"
   ],
   "evidence": {
-    "source": "F01:0007 通过 $_GET['id'] ?? '' 读取外部输入，是本案例 SQL 查询路径的唯一数据来源。",
-    "flow": "F01:0007 读取 id 后，F01:0009 要求非空且 ctype_digit 为真，F01:0014 强制转换为 int，再于 F01:0018 作为绑定参数传入。",
-    "guard": "有效：F01:0009 的数字字符校验与 F01:0014 的强制整型转换限制了输入形态；F01:0017 的 SQL 为固定语句并使用 ? 占位符，F01:0018 以 i 类型绑定，未发现动态列名、排序表达式或 IN 列表拼接。",
-    "sink": "F01:0019 的 $stmt->execute() 是实际执行点；F01:0017 仅构造固定参数化语句，F01:0018 仅绑定参数，不能单独冒充执行点。"
+    "source": "F01:0007 读取 GET 参数 id",
+    "flow": "F01:0009 对 id 做非空和 ctype_digit 校验，F01:0014 转为 int，F01:0018 以 i 类型绑定",
+    "guard": "有效：输入仅允许数字并强转整数；SQL 使用固定 prepare 与 bind_param，未将输入拼入列名、排序或 IN 列表等结构",
+    "sink": "F01:0017 固定语句 SELECT id, name FROM lab_people WHERE id = ?；F01:0018 绑定整数参数"
   },
   "prerequisites": [
-    "PHP 运行环境启用 mysqli 扩展。",
-    "common/db_connect.php 成功提供已连接的 mysqli 变量 $db。",
-    "lab_people 表存在且包含 id、name 列，并按运行上下文预置数据。"
+    "PHP 与 MariaDB/MySQLi 正常运行",
+    "common/db_connect.php 能提供已连接的 $db",
+    "lab_people 表及预置数据存在"
   ],
-  "missing_context": [],
+  "missing_context": [
+    "未提供 common/db_connect.php 源码；本页 SQL 注入路径判断不依赖其内部实现"
+  ],
   "poc_generated": false,
   "poc_language": "none",
-  "poc_instructions": "不生成POC。人工核验范围仅限当前页面输入到SQL执行路径：普通输入访问 /lab_cases/S004/index.php?id=1，预期显示 ID 1：Alice；不修改数据的对照输入访问 /lab_cases/S004/index.php?id=1%20OR%201=1，预期因 F01:0009 的 ctype_digit 校验失败而显示“非法的 ID 参数”。若结果不符，检查 db_connect.php 是否提供 $db、mysqli 扩展、lab_people 初始化及 URL 编码；不以响应 HTTP 200 作为成功条件。"
+  "poc_instructions": "不生成攻击性 POC。可手工用普通数字 id=1 与非法输入 id=1%27 对照：前者应展示 Alice，后者应显示“非法的 ID 参数”；不要以 HTTP 200 作为成功条件。若行为不符，检查 db_connect.php、lab_people 表和 mysqli 异常配置。"
 }
 ```
+
+判定范围：仅审计 `id` 到 SQL 查询的路径；当前代码使用数字校验、整数转换和参数绑定，未发现可注入 SQL 结构的路径。防护建议：继续保持参数化查询，并将数字校验作为纵深防御，不要改为字符串拼接或动态 SQL 结构。

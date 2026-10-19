@@ -1,0 +1,37 @@
+{
+  "run_id": "DEV_S005_V1_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S005",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['q'] 读取外部输入并赋给 $q，入口可达。",
+      "flow": "F01:0010 将 $q 直接拼接到 LIKE 模式 SQL 字符串中；F01:0011 将拼接后的 SQL 交给 $db->query 执行。",
+      "guard": "无效：输入路径未见 prepare/bind、mysqli_real_escape_string 或白名单；LIKE 的 %/_ 通配符语义本身不构成注入防护。",
+      "sink": "F01:0011 $db->query($sql) 是实际 SQL 执行点。"
+    },
+    "prerequisites": [
+      "本地入口 http://127.0.0.1:4280/lab_cases/S005/index.php 可达",
+      "common/db_connect.php 已正确提供已连接的 mysqli 变量 $db",
+      "lab_people 表存在且预置 1 Alice、2 Bob、3 Carol",
+      "无需登录"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的实际实现未包含在输入包中，未核对其连接细节；按 runtime_context 假定其提供已连接的 $db。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "运行 python3 poc.py。脚本仅请求 127.0.0.1:4280，先以普通输入 q=Alice 查询，预期仅返回 Alice；再以测试输入 q=' OR 1=1 -- （脚本自动 URL 编码）查询，预期返回 Alice、Bob、Carol。比较解析到的 ID/name 记录，不要以 HTTP 200 作为成功条件。失败时检查入口可达、common/db_connect.php 的 $db、lab_people 表及预置数据。"
+  },
+  "human_verification": "pending",
+  "raw_source": "R1-R12.docx"
+}

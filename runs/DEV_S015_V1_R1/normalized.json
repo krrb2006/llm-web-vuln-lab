@@ -1,0 +1,35 @@
+{
+  "run_id": "DEV_S015_V1_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S015",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0003",
+      "F01:0015"
+    ],
+    "evidence": {
+      "source": "F01:0003 从 $_GET['q'] 读取外部输入，未做过滤；该行支持“来源可控”结论。",
+      "flow": "同一请求内，F01:0003 的 q 直接传到 F01:0015 并拼入 input 的 value 属性；无数据库持久化，也无独立后续读取/渲染阶段。",
+      "guard": "无效：F01:0015 直接 echo $q，未见 htmlspecialchars、属性编码或其他净化；F01:0003 后也未见过滤。",
+      "sink": "F01:0015 在双引号 value 属性内输出未编码字符串，可用引号闭合属性并注入 onfocus 等事件处理器。"
+    },
+    "prerequisites": [
+      "脚本按给定代码部署在 http://127.0.0.1:4280/ 的实际路径下",
+      "使用浏览器访问页面并人工确认事件处理器是否执行",
+      "无需登录、数据库或外部依赖"
+    ],
+    "missing_context": [
+      "未给出实际部署路径；使用说明中以 <实际脚本路径> 代替，不猜测具体路径。"
+    ],
+    "poc_generated": true,
+    "poc_language": "manual",
+    "poc_instructions": "将脚本部署在 127.0.0.1:4280 的实际路径。普通对照：浏览器访问 http://127.0.0.1:4280/<实际脚本路径>?q=hello，预期 input 的 value 显示 hello，且无弹框。测试输入：浏览器访问 http://127.0.0.1:4280/<实际脚本路径>?q=%22%20autofocus%20onfocus%3Dalert%28%2FXSS_S015%2F.source%29%20x%3D%22，预期生成可闭合 value 属性的 input，人工在浏览器确认是否弹出 XSS_S015；若 autofocus 未自动聚焦，点击该输入框触发。仅 HTTP 返回体含 payload 不算 JavaScript 执行。无需登录、写入或额外读取步骤。"
+  },
+  "human_verification": "pending",
+  "raw_source": "R1-R12.docx"
+}

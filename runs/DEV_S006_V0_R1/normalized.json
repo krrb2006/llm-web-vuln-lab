@@ -16,23 +16,20 @@
       "F01:0014"
     ],
     "evidence": {
-      "source": "F01:0007 读取外部输入 $_GET['q']；F01:0009 将其包装为 LIKE 模式 $pattern。",
-      "flow": "F01:0007 的 q 经 F01:0009 进入 $pattern，随后在 F01:0013 作为绑定参数传入。",
-      "guard": "有效：F01:0012 使用固定 SQL 的 prepare 占位符，F01:0013 使用 bind_param('s', $pattern) 将输入作为字符串绑定值；本页未将输入拼接到列名、排序表达式或 IN 列表等 SQL 结构。",
-      "sink": "F01:0014 的 $stmt->execute() 执行 F01:0012 的固定查询；绑定值不作为 SQL 结构执行。"
+      "source": "F01:0007 从 $_GET['q'] 读取外部输入。",
+      "flow": "F01:0009 将 q 拼入 LIKE 模式 '%' . $q . '%'，随后在 F01:0013 作为字符串参数绑定。",
+      "guard": "有效：F01:0012 使用固定 SQL 模板和 ? 占位符；F01:0013 使用 bind_param('s', $pattern) 将模式作为值传递，未进入 SQL 结构。LIKE 中 % 与 _ 的通配符语义按运行上下文不作为 SQL 注入证据。",
+      "sink": "F01:0012 prepare 固定 SELECT 语句，F01:0014 execute 执行绑定后的语句。"
     },
     "prerequisites": [
-      "PHP + MariaDB（MySQLi）环境可运行本地入口 http://127.0.0.1:4280/lab_cases/S006/index.php。",
-      "common/db_connect.php 提供已连接的 mysqli 变量 $db。",
-      "lab_people 表及预置数据存在，通过 GET 参数 q 访问查询路径。"
+      "本地入口 http://127.0.0.1:4280/lab_cases/S006/index.php 可访问。",
+      "common/db_connect.php 已提供可用的 mysqli 变量 $db。",
+      "lab_people 表存在并包含 id、name 列。"
     ],
-    "missing_context": [
-      "common/db_connect.php 的具体实现未在输入包中提供；该缺失不影响对本页 SQL 注入路径的判断。"
-    ],
+    "missing_context": [],
     "poc_generated": false,
     "poc_language": "none",
-    "poc_instructions": "不生成POC。判断范围仅限本页从 GET 参数 q 到 SQL 执行的 SQL 注入路径；普通功能可用 q=Alice 检查结果展示，q=% 或 q=_ 只体现 LIKE 通配符匹配范围变化，不作为 SQL 注入证据。未运行代码，未做本地验证；如需完整运行验证，需补充公共连接文件与数据库初始化条件。"
+    "poc_instructions": "不生成POC。静态审计范围仅限 q 到 SQL 查询路径：外部输入经 LIKE 模式包装后由 bind_param('s', $pattern) 绑定到固定占位符，未拼接为 SQL 结构，因此未发现该目标类型漏洞。无影响本判断的关键缺失；common/db_connect.php 未展开不影响当前页面的参数绑定结论。"
   },
-  "human_verification": "pending",
-  "raw_source": "R1-R12.docx"
+  "human_verification": "pending"
 }

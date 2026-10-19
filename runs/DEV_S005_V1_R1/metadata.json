@@ -5,7 +5,7 @@
   "variant": "Original",
   "prompt_version": "V1",
   "vulnerability_type": "SQLi",
-  "status": "input_prepared",
+  "status": "raw_recorded_time_unknown",
   "model_display_name": null,
   "model_settings": null,
   "submitted_at": null,
@@ -13,7 +13,7 @@
   "packet_sha256": "b229827144f951e72a1f1851709487753473a0c92b34a85787db39a81bf48b5e",
   "input_sha256": "ab9267e290967a1f80be340e81c1d3fd2066ab92b6b2c0091d004692ac72bcb7",
   "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\b_locked_dev_packets\\S005\\code_input.txt",
-  "raw_output_sha256": null,
+  "raw_output_sha256": "9476d605ae04b821b0da2ce4715a8f9aac8d8ad2274bbc23a64bff89ffa9e40f",
   "source_ref": "origin/a/criteria-and-sql01@173b9af",
   "source_packet_repo_path": "dataset/packets/S005_v1/code_input.txt",
   "v0_reference_run_id": "DEV_S005_V0_R1",
@@ -22,5 +22,8 @@
   "planned_test_interface": "DeepSeek web",
   "planned_model_display_name": "DeepSeek-V4.1-Flash",
   "planned_model_settings": "深度思考=开；联网搜索=关",
-  "iteration_note": "V1 evidence-only revision; code_input bytes identical to V0 reference run."
+  "iteration_note": "V1 evidence-only revision; code_input bytes identical to V0 reference run.",
+  "raw_source": "R1-R12.docx",
+  "raw_source_path": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\outputs\\R1-R12_S017-S018顺序修正版_v2.docx",
+  "raw_source_note": "Authoritative V1 model-answer document supplied by user; S017/S018 order corrected before extraction."
 }

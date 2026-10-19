@@ -13,20 +13,22 @@
       "F01:0013"
     ],
     "evidence": {
-      "source": "F01:0003 使用 $_GET['q'] 读取攻击者可控的 GET 参数 q。",
-      "flow": "F01:0003 的 q 赋给 $q，随后 F01:0013 在同一请求中直接 echo 到 HTML 正文 <p> 内；属于反射型路径，无存储写入/独立读取阶段。",
-      "guard": "无效：F01:0013 直接输出 $q，未见 htmlspecialchars 等 HTML 上下文编码或净化；输入包中也未见 CSP。",
-      "sink": "F01:0013 将 $q 原样插入 <p>搜索词：...</p> 的 HTML 正文，可形成脚本注入。"
+      "source": "F01:0003 从 $_GET['q'] 读取可控搜索词，未过滤。",
+      "flow": "F01:0003 的 $q 直接传递到 F01:0013 的 echo $q。",
+      "guard": "无效：F01:0013 在 HTML 正文上下文中直接输出，无 htmlspecialchars 或上下文编码。",
+      "sink": "F01:0013 的 <p>搜索词：<?php echo $q; ?></p> 可注入 HTML/脚本。"
     },
     "prerequisites": [
-      "PHP 服务监听 127.0.0.1:4280，并将 F01 单页作为访问入口",
-      "使用浏览器访问本地页面；页面未设置会阻止内联脚本执行的 CSP（输入包未显示 CSP）"
+      "PHP 可运行，并可由 127.0.0.1:4280 访问该脚本",
+      "使用浏览器解析返回的 HTML",
+      "测试输入需进行 URL 编码"
     ],
-    "missing_context": [],
+    "missing_context": [
+      "原始文件路径与 Web 路由未知；POC 假设保存为 index.php 并由 php -S 127.0.0.1:4280 提供。若已有服务器，需确认其映射到该脚本。"
+    ],
     "poc_generated": true,
     "poc_language": "manual",
-    "poc_instructions": "前提：确保 PHP 服务已按运行上下文监听 127.0.0.1:4280 且 F01 为入口。普通对照：浏览器访问 http://127.0.0.1:4280/?q=hello ，人工观察页面显示“搜索词：hello”且无弹框。测试输入：浏览器访问 http://127.0.0.1:4280/?q=%3Cscript%3Ealert%28%27XSS-S013%27%29%3C%2Fscript%3E ，人工观察是否弹出提示框 XSS-S013。判定只看浏览器是否执行脚本/弹框，HTTP 返回体出现字符串不等同于 JavaScript 执行；本审计未运行代码，实际观察需由执行者记录，若未弹框则记为未复现。"
+    "poc_instructions": "保存为 index.php，在目录运行 php -S 127.0.0.1:4280。普通输入：浏览器访问 http://127.0.0.1:4280/?q=hello，预期仅显示 hello，无弹窗。测试输入：浏览器访问 http://127.0.0.1:4280/?q=%3Cscript%3Ealert(%27XSS-S013%27)%3C/script%3E，人工确认是否弹出 XSS-S013。HTTP 返回体含脚本不等于执行；本验证不外发数据。"
   },
-  "human_verification": "pending",
-  "raw_source": "R1-R12.docx"
+  "human_verification": "pending"
 }

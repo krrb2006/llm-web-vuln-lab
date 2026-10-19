@@ -14,25 +14,21 @@
       "F01:0011"
     ],
     "evidence": {
-      "source": "F01:0007 从 $_GET['name'] 读取外部输入，未经过滤。",
-      "flow": "F01:0010 将 $name 直接拼接到 SELECT 语句的 WHERE name = '...' 中。",
-      "guard": "无效：F01:0010 直接字符串拼接，F01:0011 前无 prepare/bind、转义、类型约束或白名单；name 作为 SQL 结构的一部分进入查询。",
-      "sink": "F01:0011 $db->query($sql) 是实际执行点。"
+      "source": "F01:0007：从 $_GET['name'] 读取外部输入并赋给 $name，未做类型或格式校验。",
+      "flow": "F01:0010：$name 被直接拼接到 WHERE name = '...' 的 SQL 字符串中。",
+      "guard": "无效：未使用预处理/绑定参数，未使用 mysqli_real_escape_string 等转义，也未使用白名单；单引号可改变 SQL 结构。",
+      "sink": "F01:0011：$db->query($sql) 执行拼接后的 SQL；F01:0012 读取结果并在 F01:0021-F01:0023 输出。"
     },
     "prerequisites": [
-      "本地 PHP 入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可达",
-      "公共连接文件已提供可用 mysqli 变量 $db",
-      "lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
-      "GET 参数 name 可由请求控制",
-      "无需登录"
+      "本地入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问。",
+      "common/db_connect.php 提供已连接的 mysqli 变量 $db。",
+      "lab_people 表存在，且预置 1 Alice、2 Bob、3 Carol。",
+      "PHP 环境支持 mysqli 的 fetch_all 及 Throwable 捕获。"
     ],
-    "missing_context": [
-      "common/db_connect.php 的具体实现未在输入包中提供；运行上下文声明其提供已连接 $db，因此本页 sink 判断不依赖猜测其实现。"
-    ],
+    "missing_context": [],
     "poc_generated": true,
     "poc_language": "python3",
-    "poc_instructions": "运行 python3 poc_s001.py。脚本仅访问 127.0.0.1:4280，先请求 name=Alice，再请求不修改数据的测试输入 name=' OR '1'='1（URL 编码后发送）。普通输入预期只出现 Alice；测试输入预期 WHERE 条件恒真并出现 Alice、Bob、Carol。成功条件依据正文记录变化，不以 HTTP 200 为成功。实际观察需本地运行确认；失败时检查入口路径、PHP/MariaDB 服务、lab_people 预置数据和 db_connect.php 的 $db 连接。防护建议：使用预处理绑定参数，将 name 作为绑定值而不是拼接进 SQL。"
+    "poc_instructions": "运行 python3 S001_poc.py。脚本先请求 name=Alice，再请求 name=' OR '1'='1（URL 编码后发送）；比较正文记录：普通请求预期只含 Alice，测试请求预期出现 Alice、Bob、Carol（记录数由 1 变为 3）。HTTP 200 仅作参考，不作为成功条件。失败时检查入口路径、common/db_connect.php、lab_people 预置数据、URL 编码及 PHP/MariaDB 错误日志。"
   },
-  "human_verification": "pending",
-  "raw_source": "R1-R12.docx"
+  "human_verification": "pending"
 }
