@@ -1,0 +1,39 @@
+{
+  "run_id": "F_S011_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S011",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0008",
+      "F01:0013",
+      "F01:0015"
+    ],
+    "evidence": {
+      "source": "F01:0008：$sort = trim($_GET['sort'] ?? '')，外部GET输入直接进入$sort。",
+      "flow": "F01:0008读取sort→F01:0009-F01:0011仅处理空值→F01:0013将$sort直接拼入\"ORDER BY $sort\"→F01:0015执行$db->query($sql)。",
+      "guard": "无效：F01:0008仅trim；未见白名单、类型限制或固定映射；F01:0037的HTML转义仅防XSS，不能保护ORDER BY语法结构。",
+      "sink": "F01:0015：$db->query($sql)执行含外部输入的SQL；F01:0018-F01:0020异常仅记录日志，不阻止注入表达式执行。"
+    },
+    "prerequisites": [
+      "入口脚本在127.0.0.1:4280可访问并执行F01:0004 require bootstrap.php",
+      "bootstrap.php提供已连接的mysqli $db，且账号可执行SELECT",
+      "lab_people表存在并预置1 Alice / 2 Bob / 3 Carol",
+      "GET参数sort可由请求控制，样本内未见样本外前置过滤"
+    ],
+    "missing_context": [
+      "输入包未给出入口URL路径；POC通过ENTRY_PATH环境变量指定本地路径",
+      "bootstrap.php具体实现及数据库权限未提供",
+      "部署层是否存在样本外WAF或前置过滤未提供；当前代码内未见"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "仅允许http://127.0.0.1:4280，脚本拒绝其他主机并拒绝重定向。运行前设置ENTRY_PATH为本地入口路径（必须以/开头且不含主机名），再执行脚本。普通对照：GET sort=id，预期解析记录为(1,Alice),(2,Bob),(3,Carol)；测试：GET sort=(CASE WHEN (SELECT COUNT(*) FROM lab_people)=3 THEN -id ELSE id END)，预期同一页面解析记录为(3,Carol),(2,Bob),(1,Alice)，数据库记录不应改变。成功断言比较解析后的(id,name)业务记录而非HTTP 200或字符串出现。若普通对照不是预置3行或测试与普通相同，则无法判断；检查ENTRY_PATH、bootstrap连接、lab_people预置数据、MariaDB日志及样本外过滤。观察者浏览器应看到列表顺序变化，数据库仍为原3行。防护建议：对sort使用固定白名单映射（如id/name），不要把任意输入拼入ORDER BY。"
+  },
+  "human_verification": "pending",
+  "raw_source": "DeepSeek web session"
+}

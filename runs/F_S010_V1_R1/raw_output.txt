@@ -1,0 +1,36 @@
+```json
+{
+  "sample_id": "S010",
+  "prediction": "safe",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0008",
+    "F01:0011",
+    "F01:0016",
+    "F01:0020",
+    "F01:0026",
+    "F01:0027",
+    "F01:0031",
+    "F01:0032"
+  ],
+  "evidence": {
+    "source": "F01:0008 从 $_GET['ids'] 读取外部输入，来源明确为 GET 参数 ids。",
+    "flow": "F01:0011 按逗号拆分，F01:0016 仅接受 ctype_digit 为真的项，F01:0020 再强制转换为 int 并加入 $ids；非数字项在 F01:0018 被忽略。",
+    "guard": "有效：F01:0016 的 ctype_digit 检查与 F01:0020 的 (int) 转换限制了进入查询的数据为整数；F01:0026-0027 仅根据数组长度生成 ? 占位符，未将用户字符串拼入 SQL 结构；F01:0030-0031 使用 i 类型 bind_param 绑定。",
+    "sink": "F01:0032 的 $stmt->execute() 是实际执行点；F01:0029 的 prepare 使用固定 SQL 模板和占位符，F01:0031 只完成绑定，不冒充执行点。"
+  },
+  "prerequisites": [
+    "运行环境为 PHP + MariaDB，并启用 MySQLi 接口。",
+    "bootstrap.php 成功提供已连接的 mysqli 连接 $db。",
+    "数据库中存在 lab_people 表，且包含 id INT 主键、name VARCHAR 字段。",
+    "GET 参数 ids 可为空；当过滤后 $ids 为空时 F01:0023-0024 不执行 SQL 查询。"
+  ],
+  "missing_context": [
+    "bootstrap.php 未包含在输入包中，无法核对其连接配置、异常模式以及 $db 的具体来源；本判断仅针对 F01 所示 SQL 构造与执行路径。",
+    "sample_card.md 未包含在输入包中，无法核对其中依赖约定。"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "无需生成攻击性 POC。判断范围限于 F01 所示从 GET ids 到 SQL 执行的路径。普通输入如 ids=1,2 预期返回 Alice、Bob；测试输入如 ids=1,abc 预期 abc 被忽略，仅查询 id=1；ids=1' 预期被忽略。若本地观察失败，应检查 bootstrap.php 的数据库登录、lab_people 表初始化以及 mysqli 扩展；不能仅以 HTTP 200 作为成功条件。"
+}
+```

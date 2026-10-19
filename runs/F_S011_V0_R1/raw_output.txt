@@ -1,0 +1,30 @@
+```json
+{
+  "sample_id": "S011",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0008", "F01:0013", "F01:0015"],
+  "evidence": {
+    "source": "F01:0008 从 $_GET['sort'] 读取外部输入并 trim 后赋给 $sort",
+    "flow": "F01:0013 将 $sort 原样拼入 ORDER BY 子句；F01:0015 交给 $db->query($sql) 执行",
+    "guard": "无效：trim 只去除空白，没有白名单、类型限制或排序表达式约束；HTML 转义只用于输出，不保护 SQL 结构",
+    "sink": "F01:0015 $db->query($sql) 执行包含动态 ORDER BY 的 SQL"
+  },
+  "prerequisites": [
+    "请求可到达包含 F01 代码的页面",
+    "攻击者可通过 GET 参数 sort 控制排序字段",
+    "bootstrap.php 已成功连接 MariaDB 且 $db 可用",
+    "lab_people 表存在并含预置数据"
+  ],
+  "missing_context": [
+    "F01 未给出入口脚本文件名或完整 URL，无法生成可直接运行的本地 POC",
+    "bootstrap.php 的具体数据库配置与 lab_people 初始化状态未提供",
+    "未确认 127.0.0.1:4280 上 Web 服务及入口路由是否已启动"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "未生成脚本，因为入口 URL 缺失。补齐入口后，普通请求可使用 http://127.0.0.1:4280/<入口>?sort=name，测试对照可使用 sort=(SELECT%20CASE%20WHEN%201%3D1%20THEN%20id%20ELSE%20-id%20END) 与将条件改为 1%3D2 的请求，比较返回列表顺序是否随 ORDER BY 表达式变化；预期普通排序与两种测试条件产生不同顺序。实际观察需由执行者记录，不能以 HTTP 200 作为成功条件；若顺序不变化，检查入口路径、URL 编码、bootstrap 连接、表数据和 MariaDB 对 ORDER BY 表达式的处理。"
+}
+```
+
+防护建议：对 `sort` 使用严格白名单，仅允许固定列名及可选的 `ASC/DESC`，拒绝子查询、表达式和任意拼接；`trim` 与 HTML 转义不能替代 SQL 结构控制。
