@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /** Observe harmless DOM markers in the eight local D teaching samples.
  *
- * A new headless Chromium profile is used. Chrome is preferred and Edge is a
- * local fallback. The only target is loopback; marker
+ * A new headless Chromium profile is used. Edge is preferred so the frozen
+ * evidence stays on the browser already reviewed by the group; Chrome is a
+ * fallback. The only target is loopback; marker
  * input changes an HTML data attribute and performs no network request.
  * Reports are D observations for independent review, not truth labels.
  */
@@ -17,9 +18,9 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const base = 'http://127.0.0.1:4280';
 const browserCandidates = [
-  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
   'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
   'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
 ];
 const browserPath = browserCandidates.find((candidate) => existsSync(candidate));
 const marker = "<script>document.documentElement.dataset.labXss='yes'</script>";
@@ -242,7 +243,7 @@ async function checkLink(page, sample, runtime) {
   const hrefBeforeClick = await page.clickPreviewLink();
   const afterClick = await page.snapshot();
   save(sample, runtime, page.version, { before_click: beforeClick, href_before_click: hrefBeforeClick, after_click: afterClick },
-    'A Chrome mouse press/release clicked the local preview link; no external URL was opened.');
+    'A mouse press/release clicked the local preview link; no external URL was opened.');
 }
 
 async function main() {
