@@ -1,0 +1,23 @@
+{
+  "run_id": "DEV_S015_V2_R1",
+  "phase": "DEV",
+  "sample_id": "S015",
+  "variant": "Original",
+  "prompt_version": "V2",
+  "vulnerability_type": "XSS",
+  "status": "input_prepared",
+  "model_display_name": null,
+  "model_settings": null,
+  "submitted_at": null,
+  "prompt_sha256": "3666ebeb28980e192172852639ab1759c94b6cbb2e5cdfe0c6f185a946841178",
+  "packet_sha256": "098b1cade9931f53f2be7437a16f595f75670deb944308a4e1c72f7b253077dc",
+  "input_sha256": "5e2bd1dbc7fd5912cf18e771fc0a1853c23900ff3f38e274e27cf3062721d890",
+  "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\b_locked_dev_packets_v2\\S015\\code_input.txt",
+  "raw_output_sha256": null,
+  "v1_reference_run_id": "DEV_S015_V1_R1",
+  "fixed_code_input_sha256": "098b1cade9931f53f2be7437a16f595f75670deb944308a4e1c72f7b253077dc",
+  "iteration_note": "V2 revision: POC assertion, localhost target, redirect, storage cleanup and browser-trigger requirements from V0/V1 residual issues.",
+  "experiment_batch": "deepseek-main-2026-10-12",
+  "planned_model_display_name": "DeepSeek-V4.1-Flash",
+  "planned_model_settings": "深度思考=开；联网搜索=关"
+}

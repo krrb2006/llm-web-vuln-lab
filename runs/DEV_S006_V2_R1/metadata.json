@@ -1,0 +1,23 @@
+{
+  "run_id": "DEV_S006_V2_R1",
+  "phase": "DEV",
+  "sample_id": "S006",
+  "variant": "Original",
+  "prompt_version": "V2",
+  "vulnerability_type": "SQLi",
+  "status": "input_prepared",
+  "model_display_name": null,
+  "model_settings": null,
+  "submitted_at": null,
+  "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
+  "packet_sha256": "86bbb4103876ae0b56ea28588ba7135eff8076028c87bf079b0455b6bab60bdb",
+  "input_sha256": "1d23fdaf17340ea03f2338c74092eb965170afd9d2d086ecea046c3c75602e8d",
+  "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\b_locked_dev_packets_v2\\S006\\code_input.txt",
+  "raw_output_sha256": null,
+  "v1_reference_run_id": "DEV_S006_V1_R1",
+  "fixed_code_input_sha256": "86bbb4103876ae0b56ea28588ba7135eff8076028c87bf079b0455b6bab60bdb",
+  "iteration_note": "V2 revision: POC assertion, localhost target, redirect, storage cleanup and browser-trigger requirements from V0/V1 residual issues.",
+  "experiment_batch": "deepseek-main-2026-10-12",
+  "planned_model_display_name": "DeepSeek-V4.1-Flash",
+  "planned_model_settings": "深度思考=开；联网搜索=关"
+}
