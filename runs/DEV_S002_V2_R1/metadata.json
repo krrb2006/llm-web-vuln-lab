@@ -5,7 +5,7 @@
   "variant": "Original",
   "prompt_version": "V2",
   "vulnerability_type": "SQLi",
-  "status": "input_prepared",
+  "status": "raw_recorded_time_unknown",
   "model_display_name": null,
   "model_settings": null,
   "submitted_at": null,
@@ -13,11 +13,14 @@
   "packet_sha256": "2a55ab105d2153549d248b39b40f22f7fdbbb3471133192ac46060a2ee1546a7",
   "input_sha256": "dc625b0ad23e296bf1bb8a3eb79165bc27aeeac99f145c117133c70728a7f6af",
   "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\b_locked_dev_packets_v2\\S002\\code_input.txt",
-  "raw_output_sha256": null,
+  "raw_output_sha256": "6dce4f2913366615986c8232ac3c922d14d83ef069ac6c13167ab15454682882",
   "v1_reference_run_id": "DEV_S002_V1_R1",
   "fixed_code_input_sha256": "2a55ab105d2153549d248b39b40f22f7fdbbb3471133192ac46060a2ee1546a7",
   "iteration_note": "V2 revision: POC assertion, localhost target, redirect, storage cleanup and browser-trigger requirements from V0/V1 residual issues.",
   "experiment_batch": "deepseek-main-2026-10-12",
   "planned_model_display_name": "DeepSeek-V4.1-Flash",
-  "planned_model_settings": "深度思考=开；联网搜索=关"
+  "planned_model_settings": "深度思考=开；联网搜索=关",
+  "raw_source": "S001.docx",
+  "raw_source_path": "D:\\网络安全\\S001.docx",
+  "raw_source_note": "Authoritative V2 answer document supplied by user; extracted by sample heading."
 }

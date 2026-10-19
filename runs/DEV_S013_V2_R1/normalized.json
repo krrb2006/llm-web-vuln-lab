@@ -1,0 +1,35 @@
+{
+  "run_id": "DEV_S013_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S013",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0003",
+      "F01:0013"
+    ],
+    "evidence": {
+      "source": "F01:0003 读取 GET 参数 q，未做过滤或类型约束",
+      "flow": "F01:0003 的 $q 在 F01:0013 被直接 echo 到 HTML 正文的 <p> 元素内",
+      "guard": "无效：F01:0013 未使用 htmlspecialchars 或等价 HTML 正文编码，未限制尖括号和脚本标记",
+      "sink": "F01:0013 浏览器将输出内容作为 HTML 正文解析，可控字符串可形成脚本标签"
+    },
+    "prerequisites": [
+      "PHP 单页脚本部署在 http://127.0.0.1:4280 可访问",
+      "q 参数可从请求到达 F01:0003",
+      "浏览器解析 F01:0013 返回的 HTML 正文"
+    ],
+    "missing_context": [
+      "未提供该单页脚本在 127.0.0.1:4280 上的具体 URL 路径；验证脚本默认根路径 /，需按实际部署调整路径，但主机和端口保持固定"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "运行 Python 脚本生成普通对照 URL 和测试 URL；目标固定为 http://127.0.0.1:4280，默认路径为 /，若实际部署路径不同仅修改 PATH。普通对照：浏览器打开普通 URL，预期显示搜索词 hello 且无弹窗。测试：浏览器打开测试 URL，人工观察是否弹出 XSS-S013 提示框；仅响应体含 payload 不算执行。若浏览器无弹窗则不能判定实际触发。反射型无需存储清理。修复建议未验证：输出到 HTML 正文前使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') 等上下文编码。"
+  },
+  "human_verification": "pending",
+  "raw_source": "S001.docx"
+}
