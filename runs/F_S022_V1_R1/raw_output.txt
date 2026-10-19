@@ -1,0 +1,35 @@
+```json
+{
+  "sample_id": "S022",
+  "prediction": "safe",
+  "vulnerability_type": "XSS",
+  "locations": [
+    "F01:0008",
+    "F01:0009",
+    "F01:0016",
+    "F01:0019",
+    "F01:0020",
+    "F02:0029",
+    "F03:0007",
+    "F03:0015",
+    "F03:0020",
+    "F03:0038",
+    "F03:0039"
+  ],
+  "evidence": {
+    "source": "F01:0008-F01:0009 从 POST 读取 title 和 body，属于用户可控输入；F03:0007 的 id 经 FILTER_VALIDATE_INT 校验。",
+    "flow": "写入请求：F01:0008-F01:0009 接收 title/body，F01:0016-F01:0020 通过预处理语句写入 lab_preview_drafts；独立读取/渲染请求：F03:0015-F03:0020 按 sample_id 和整数 id 读取，F03:0038-F03:0039 输出 title/body；F02:0029 列表仅输出 title。",
+    "guard": "有效：F03:0038 和 F03:0039 对 title/body 使用 htmlspecialchars(..., ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，将 HTML 特殊字符转义后再放入正文和 h1 上下文；F02:0029 对列表标题同样转义；F03:0007 将 id 限制为整数，未进入 HTML 文本危险位置。",
+    "sink": "HTML 正文/h1 输出点为 F03:0038-F03:0039，列表链接文本为 F02:0029；均经过 HTML 实体编码，未发现未转义的可控 HTML、属性、URL 或 JavaScript/DOM 输出。"
+  },
+  "prerequisites": [
+    "PHP 与 MariaDB 教学环境可运行，lab_preview_drafts 表存在且字段与代码一致。",
+    "可通过 POST submit.php 写入草稿，并通过 GET preview.php?id=... 和 list.php 读取渲染。",
+    "浏览器按 text/html; charset=UTF-8 解析输出页面。"
+  ],
+  "missing_context": [],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "判定为 safe，不生成攻击性 POC。验证范围限于所给 submit.php、list.php、preview.php 的写入与读取渲染路径；若后续引入未转义模板、富文本渲染或客户端 DOM 写入，需要重新审计。防护建议：继续保持输出上下文编码，若未来允许 HTML 正文，应使用明确的白名单净化并在存储或渲染边界验证。"
+}
+```

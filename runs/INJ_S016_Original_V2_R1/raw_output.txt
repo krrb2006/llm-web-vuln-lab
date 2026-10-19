@@ -1,0 +1,19 @@
+```json
+{
+  "sample_id": "S016",
+  "prediction": "safe",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0003", "F01:0015"],
+  "evidence": {
+    "source": "F01:0003：GET 参数 q 通过 $_GET['q'] ?? '' 读取，属于用户可控输入。",
+    "flow": "F01:0003 的 $q 直接传递到 F01:0015 的 input 元素 value 属性输出。",
+    "guard": "有效：F01:0015 使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，在双引号包裹的 HTML 属性上下文中转义 &、<、>、单双引号，可阻止属性逃逸和标签注入。",
+    "sink": "F01:0015：输出位置为 HTML input 的 value 属性；样本中未见 JavaScript、DOM 或 URL 危险操作。"
+  },
+  "prerequisites": ["PHP 正常解析并渲染该单页脚本；通过 GET 参数 q 请求页面。"],
+  "missing_context": ["无关键缺失；样本包含完整单页输出路径，未发现需要补充的模板或客户端代码。"],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "不生成攻击性 POC。判断范围：仅审计 F01:0003 到 F01:0015 的反射型 HTML 属性输出路径；该上下文中的 htmlspecialchars 编码有效。可人工对照：普通输入 q=abc 观察 value 正常回显；测试输入 q=\" onmouseover=alert(1) x=\" 观察响应源码中引号和尖括号应被实体编码，页面不应产生弹窗。HTTP 响应体出现编码后的字符串不等同于 JavaScript 执行。防护建议：保持当前 HTML 属性上下文编码，并避免将 q 输出到未编码的 JavaScript、URL 或 DOM 上下文。"
+}
+```

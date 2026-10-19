@@ -1,8 +1,8 @@
-captured_at_utc: "2026-10-13T13:09:10Z"
+captured_at_utc: "2026-10-19T09:51:03Z"
 team_repo_base_commit: "3c3c4139d0646d5162b619f3bdeeee32d3acd57e"
-a_source_commit: "d498903da01d89a695fa49d5392d3776eb901e2f"
-c_source_commit: "8da63f7b8e169e5037626b0362d005ba7ba5ede0"
-d_source_commit: "a90708be2a4a53f732b3cabea37f7feed5f04125"
+a_source_commit: "6cd58b3eb69defd5d84034761888833a11728279"
+c_source_commit: "6cd58b3eb69defd5d84034761888833a11728279"
+d_source_commit: "6cd58b3eb69defd5d84034761888833a11728279"
 dvwa_checkout_commit: "068d974487a297c155c48722f9fcf7180a83adc4"
 dvwa_image: "ghcr.io/digininja/dvwa@sha256:1af2cedda7617e4d22937e61c98bbf71d8b74b98e46f5e41dd6aa0a5183311b0"
 mariadb_image: "ghcr.io/mariadb/mariadb@sha256:9d7f7220a4d9b9f5a70a845241bba5ffe94788fb2f7913ff7c8fa3cf28b5715a"
@@ -12,8 +12,8 @@ docker_server_version: "29.8.2"
 docker_compose_version: "5.5.1"
 php_version_in_dvwa: "8.5.11"
 mariadb_server_version: "10.11.19-MariaDB-ubu2204"
-browser_used_for_xss_reference: {"name": "Chrome", "version": "154.0.8037.99", "fresh_temporary_profile_per_request": true}
-browser_used_for_d_reference: "Chrome/154.0.8037.99"
+browser_used_for_xss_reference: {"name": "Edge", "version": "155.0.4283.45", "fresh_temporary_profile_per_request": true}
+browser_used_for_d_reference: "Edg/155.0.4283.62"
 host_binding: "127.0.0.1:4280"
 dvwa_login_http_status: 200
 dvwa_login_form_present: true

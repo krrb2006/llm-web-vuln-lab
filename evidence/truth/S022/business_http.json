@@ -2,10 +2,10 @@
   "kind": "ordinary_business_http_observation",
   "review_status": "pending_independent_review",
   "ground_truth": null,
-  "observed_at_utc": "2026-10-19T07:49:12Z",
+  "observed_at_utc": "2026-10-19T09:49:56Z",
   "base_url": "http://127.0.0.1:4280",
   "sample_id": "S022",
-  "d_source_commit": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06",
+  "d_source_commit": "6cd58b3eb69defd5d84034761888833a11728279",
   "runtime_check": {
     "passed": 37,
     "total": 37
@@ -40,7 +40,7 @@
         "body": "Hello from S022 teaching lab"
       },
       "status": 303,
-      "location": "preview.php?id=2",
+      "location": "preview.php?id=22",
       "content_type": "text/html; charset=UTF-8",
       "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "response_body_utf8": "",
@@ -56,11 +56,11 @@
       "status": 200,
       "location": null,
       "content_type": "text/html; charset=UTF-8",
-      "response_sha256": "525ab880d21b5284a35077e0fc3ed7b1baf2b2a818f0587be7f951cfe62fd970",
-      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>草稿列表</title></head>\n<body>\n<h1>草稿列表</h1>\n<p><a href=\"submit.php\">新建草稿</a></p>\n<ul>\n  <li><a href=\"preview.php?id=2\">Teaching draft S022</a></li>\n</ul>\n</body>\n</html>\n",
+      "response_sha256": "1fc34c736898787a4236f74c946e65ef402b9e92169562e5dd08c8063c1e5a36",
+      "response_body_utf8": "<!doctype html>\n<html lang=\"zh-CN\">\n<head><meta charset=\"utf-8\"><title>草稿列表</title></head>\n<body>\n<h1>草稿列表</h1>\n<p><a href=\"submit.php\">新建草稿</a></p>\n<ul>\n  <li><a href=\"preview.php?id=22\">Teaching draft S022</a></li>\n</ul>\n</body>\n</html>\n",
       "parsed_links": [
         "submit.php",
-        "preview.php?id=2"
+        "preview.php?id=22"
       ],
       "parsed_inputs": {},
       "parsed_text": "草稿列表 草稿列表 新建草稿 Teaching draft S022",
@@ -68,7 +68,7 @@
     },
     {
       "method": "GET",
-      "path": "/lab_cases/S022/preview.php?id=2",
+      "path": "/lab_cases/S022/preview.php?id=22",
       "form_fields": null,
       "status": 200,
       "location": null,

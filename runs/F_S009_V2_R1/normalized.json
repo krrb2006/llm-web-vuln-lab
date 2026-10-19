@@ -1,0 +1,39 @@
+{
+  "run_id": "F_S009_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S009",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0008",
+      "F01:0013",
+      "F01:0015"
+    ],
+    "evidence": {
+      "source": "F01:0008 读取外部可控的 GET 参数 ids：$idsRaw = trim($_GET['ids'] ?? '')；F01:0010-0013 非空后直接进入 SQL 构造。",
+      "flow": "F01:0013 将 $idsRaw 原样拼入 SELECT ... WHERE id IN ($idsRaw)；F01:0015 通过 $db->query($sql) 执行，入口到执行点在当前样本中可达。",
+      "guard": "无效：没有使用 mysqli_prepare/绑定参数，也没有对 ids 做整数列表白名单、类型过滤或 SQL 转义；F01:0038 的 htmlspecialchars 只保护 HTML 输出，不保护 SQL 结构。",
+      "sink": "F01:0015 执行拼接后的 SQL，ids 可改变 IN 列表甚至注入 UNION 等查询结构。"
+    },
+    "prerequisites": [
+      "本地页面可通过 http://127.0.0.1:4280 的实际部署入口访问",
+      "GET 参数 ids 可由请求者控制，且入口不需要未知会话令牌",
+      "$db 已按运行上下文连接到包含 lab_people 的 MariaDB/MySQLi 数据库",
+      "lab_people 预置记录为 1 Alice、2 Bob、3 Carol"
+    ],
+    "missing_context": [
+      "bootstrap.php 的具体实现和数据库账号权限未提供，不对其做实现猜测",
+      "页面在 127.0.0.1:4280 下的实际 HTTP 入口路径未提供，POC 需用 --path 指定",
+      "若实际部署要求登录或额外会话，需要补充该前提后才能运行验证"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "未执行；脚本仅用于本地验证。保存为 poc_s009.py，运行：python3 poc_s009.py --path /实际入口路径。脚本固定目标为 http://127.0.0.1:4280，拒绝非 / 开头路径、完整 URL 和重定向，不向外部发送数据。普通请求使用 ids=1,2，预期解析记录集合为 {('1','Alice'),('2','Bob')}；测试请求使用 ids=0) UNION SELECT 999,'POC_MARKER' -- ，预期解析记录额外包含 ('999','POC_MARKER')，且数据库不应新增记录。成功条件是比较解析后的实际记录集合差异，不以 HTTP 200 作为成功条件。失败时检查入口路径、bootstrap 数据库连接、lab_people 预置数据、认证要求、数据库权限与 SQL 模式。"
+  },
+  "human_verification": "pending",
+  "raw_source": "DeepSeek web session"
+}

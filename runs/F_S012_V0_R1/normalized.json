@@ -1,0 +1,37 @@
+{
+  "run_id": "F_S012_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S012",
+    "prediction": "safe",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0008",
+      "F01:0009",
+      "F01:0013",
+      "F01:0015",
+      "F01:0017"
+    ],
+    "evidence": {
+      "source": "F01:0008 从 $_GET['sort'] 读取外部输入并 trim。",
+      "flow": "F01:0013 仅通过 $allowed[$sort] 映射为固定列名，未将原始 $sort 直接拼入 SQL。",
+      "guard": "有效：F01:0009-F01:0012 定义固定白名单 id/name，F01:0013 非法值回退 id，动态排序字段被白名单覆盖。",
+      "sink": "F01:0015 将白名单映射后的 $column 拼入 ORDER BY，F01:0017 执行 query；拼接值仅可能为 id 或 name。"
+    },
+    "prerequisites": [
+      "PHP + MariaDB（MySQLi）运行环境",
+      "bootstrap.php 提供已连接的 $db，且 lab_people 表存在"
+    ],
+    "missing_context": [
+      "bootstrap.php 的具体连接配置未在输入中提供；不影响本文件 SQL 注入路径的白名单结论"
+    ],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成POC。静态审查显示 sort 仅经固定白名单映射为 id/name 后进入 ORDER BY，原始 GET 值不进入 SQL；判断范围为该 SQL 注入路径，未对 bootstrap.php、数据库权限或其他类型风险作结论。"
+  },
+  "human_verification": "pending",
+  "raw_source": "DeepSeek web session"
+}

@@ -2,13 +2,13 @@
   "kind": "reference_browser_dom_observation",
   "review_status": "pending_independent_review",
   "ground_truth": null,
-  "observed_at_utc": "2026-10-19T07:51:31.450Z",
+  "observed_at_utc": "2026-10-19T09:50:22.903Z",
   "sample_id": "S023",
   "base_url": "http://127.0.0.1:4280",
-  "d_source_commit": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06",
-  "browser_version": "Edg/155.0.4283.45",
+  "d_source_commit": "6cd58b3eb69defd5d84034761888833a11728279",
+  "browser_version": "Edg/155.0.4283.62",
   "marker_purpose": "Set only document.documentElement.dataset.labXss; no Cookie access or external request",
-  "note": "A Chrome mouse press/release clicked the local preview link; no external URL was opened.",
+  "note": "A mouse press/release clicked the local preview link; no external URL was opened.",
   "observations": {
     "before_click": {
       "location": "http://127.0.0.1:4280/lab_cases/S023/index.php?url=javascript%3Avoid%28document.documentElement.dataset.labXss%3D%27yes%27%29",

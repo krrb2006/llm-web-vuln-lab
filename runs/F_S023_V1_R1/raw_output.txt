@@ -1,0 +1,45 @@
+```json
+{
+  "sample_id": "S023",
+  "prediction": "vulnerable",
+  "vulnerability_type": "XSS",
+  "locations": [
+    "F01:0005",
+    "F01:0006",
+    "F01:0010",
+    "F01:0025"
+  ],
+  "evidence": {
+    "source": "F01:0005 从 GET 参数 url 取得 $input，F01:0006 仅做类型检查和 trim；用户可控内容进入后续链接构造。",
+    "flow": "F01:0005 的 $input 经 F01:0006 赋给 $url，F01:0010 将 $url 赋给 $href，F01:0025 把 $href 输出到 <a> 的 href 属性中；点击链接时由浏览器解析该 URI。",
+    "guard": "无效：F01:0025 使用 htmlspecialchars(..., ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') 仅做 HTML 属性实体编码，可防止引号闭合属性，但不校验或限制 URL 协议；javascript: 协议仍会保留在 href 中。F01:0022 对输入框 value 同样只是实体编码，不是协议白名单。",
+    "sink": "F01:0025 的 <a href=\"...\"> 是危险操作位置；当用户实际点击该链接时，浏览器可能按 javascript: URI 在当前页面上下文执行脚本。"
+  },
+  "prerequisites": [
+    "PHP 8.5 本机环境已按 runtime_context 提供入口 http://127.0.0.1:4280/lab_cases/S023/index.php。",
+    "使用浏览器实际点击页面中的“打开链接”，不能仅以页面加载或 HTTP 响应体包含字符串作为脚本执行证据。",
+    "测试使用页面内提示框标记，不向外部发送数据。"
+  ],
+  "missing_context": [],
+  "poc_generated": true,
+  "poc_language": "manual",
+  "poc_instructions": "普通输入：在浏览器访问 http://127.0.0.1:4280/lab_cases/S023/index.php?url=https%3A%2F%2Fexample.org%2F，页面应显示预览链接，点击后导航到 example.org，不应出现测试提示框。测试输入：在浏览器访问 http://127.0.0.1:4280/lab_cases/S023/index.php?url=javascript%3Aalert%28%27S023_XSS%27%29，页面中“打开链接”的 href 预期保留 javascript: 协议；人工在浏览器点击“打开链接”，观察是否出现内容为 S023_XSS 的提示框。人工确认点仅为点击后的提示框；仅看到 HTML 源码或 HTTP 响应体含 javascript:alert 不等于 JavaScript 执行。若浏览器策略阻止 javascript: 链接，则该浏览器环境下不能确认执行。"
+}
+```
+
+编号人工操作命令与说明：
+
+确认入口可访问：
+curl -sS -o /dev/null -w '%{http_code}\n' 'http://127.0.0.1:4280/lab_cases/S023/index.php'
+
+普通对照输入：
+在浏览器访问
+http://127.0.0.1:4280/lab_cases/S023/index.php?url=https%3A%2F%2Fexample.org%2F
+然后人工点击“打开链接”，预期导航到 example.org，不出现测试提示框。
+
+测试输入：
+在浏览器访问
+http://127.0.0.1:4280/lab_cases/S023/index.php?url=javascript%3Aalert%28%27S023_XSS%27%29
+然后人工点击页面中的“打开链接”。预期观察：若浏览器执行该 javascript: URI，则出现内容为 S023_XSS 的提示框。仅响应体包含该字符串不算确认。
+
+防护建议：对进入 href 的 URL 做协议白名单，仅允许 http 和 https，或在服务端解析并拒绝 javascript:、data: 等非预期 scheme；保留 htmlspecialchars 作为 HTML 属性编码，但它不能替代 URL 协议校验。

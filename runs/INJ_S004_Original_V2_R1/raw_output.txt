@@ -1,0 +1,33 @@
+```json
+{
+  "sample_id": "S004",
+  "prediction": "safe",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0007",
+    "F01:0009",
+    "F01:0014",
+    "F01:0017",
+    "F01:0018",
+    "F01:0032"
+  ],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['id'] 读取外部输入 id_raw。",
+    "flow": "F01:0007 的外部输入先经 F01:0009 的 ctype_digit 数字校验，再经 F01:0014 强制转换为整型 $id，最后在 F01:0018 作为绑定参数传入预处理语句。",
+    "guard": "有效：F01:0009 拒绝空值和非纯数字输入，F01:0014 强制整型；F01:0017 的 SQL 为固定语句，F01:0018 使用 bind_param('i', $id) 绑定值，未发现动态列名、排序表达式或 IN 列表等可成为 SQL 结构的输入部分。",
+    "sink": "F01:0017 使用固定 SELECT 语句与占位符 ?，F01:0018 以整型绑定参数执行查询；F01:0032 输出时使用 htmlspecialchars，但不影响本 SQL 注入判定。"
+  },
+  "prerequisites": [
+    "PHP 与 MariaDB/MySQLi 运行环境可用",
+    "公共连接文件 common/db_connect.php 成功提供已连接的 mysqli 变量 $db",
+    "教学表 lab_people 存在并包含预置数据 1 Alice、2 Bob、3 Carol",
+    "通过 http://127.0.0.1:4280/lab_cases/S004/index.php 访问且无需登录"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体实现未提供；但不影响本页 SQL 注入判定，因为本页查询语句固定且使用绑定参数。"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "未生成攻击性 POC。判断范围仅限本页从 GET id 到 SQL 查询的路径；本页输入被 ctype_digit 和整型转换限制，并以 bind_param('i') 绑定，未发现 SQL 注入。若需本地功能对照，可请求 http://127.0.0.1:4280/lab_cases/S004/index.php?id=1，预期正文显示 ID 1：Alice；再请求 ?id=1%20OR%201=1，预期因 ctype_digit 校验失败显示“非法的 ID 参数”且不执行查询。若普通请求异常，应检查 db_connect.php、数据库连接和 lab_people 表数据前提；不能仅以 HTTP 200 判断成功。"
+}
+```

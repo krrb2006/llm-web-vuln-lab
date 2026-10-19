@@ -1,0 +1,29 @@
+```json
+{
+  "sample_id": "S009",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0008", "F01:0013", "F01:0015"],
+  "evidence": {
+    "source": "F01:0008 从 $_GET['ids'] 读取外部输入，仅做 trim，未做类型或格式校验。",
+    "flow": "F01:0013 将 $idsRaw 直接拼入 SQL 的 WHERE id IN ($idsRaw)；F01:0015 执行该 SQL。",
+    "guard": "无效：F01:0008 仅 trim；F01:0013 无预处理绑定、无白名单、无转义；F01:0018-0022 仅记录错误并置空结果，不能阻止注入；F01:0038 的 HTML 转义只保护输出，不保护 SQL。",
+    "sink": "F01:0015 $db->query($sql) 是可达的实际 SQL 执行点。"
+  },
+  "prerequisites": [
+    "PHP + MariaDB（MySQLi）环境可访问 127.0.0.1:4280",
+    "bootstrap.php 成功提供已连接的 $db",
+    "lab_people 表存在且含预置数据",
+    "GET 参数 ids 非空并进入 F01:0013 分支"
+  ],
+  "missing_context": [
+    "未提供入口脚本的 URL 路径或文件名，无法构造可直接运行的 HTTP POC",
+    "bootstrap.php 及其 D 配置未在输入包中，无法核对连接初始化细节；不猜测其实现"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "未生成 POC：缺少入口脚本 URL 路径，不能在 127.0.0.1:4280 上给出可直接运行的请求。补齐入口 URL 后，应比较普通输入（如 ids=1,2）与不修改数据的良性测试输入的实际返回记录或查询条件变化；不能以 HTTP 200 作为成功条件。失败时检查 bootstrap 连接、lab_people 表与数据、Web 服务到 127.0.0.1:4280 的可达性。"
+}
+```
+
+防护建议：将 ids 解析为整数数组，并使用预处理语句与绑定参数构造 IN 列表；不要仅依赖 trim、输出转义或隐藏数据库错误。上述修复建议未在输入包中验证。

