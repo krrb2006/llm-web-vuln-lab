@@ -1,0 +1,21 @@
+{
+  "run_id": "F_S008_V1_R1",
+  "phase": "F",
+  "sample_id": "S008",
+  "variant": "Original",
+  "prompt_version": "V1",
+  "vulnerability_type": "SQLi",
+  "status": "input_prepared",
+  "model_display_name": null,
+  "model_settings": null,
+  "submitted_at": null,
+  "prompt_sha256": "76727ec101cac6793e108061511ba7ec1029f27d654aa8b1c499f5dd18cb3c84",
+  "packet_sha256": "0b3a718318ce598616ff47aab0a25b110d8f9cd303378d2c20d941110db09dac",
+  "input_sha256": "a75cfa5d1915e012547674b8fd7a4ec38feab8ca19b4173106662b2c09065c71",
+  "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\llm-web-vuln-lab\\dataset\\packets\\S008_v1\\code_input.txt",
+  "raw_output_sha256": null,
+  "source_ref": "origin/a/criteria-and-sql01@5b0560a",
+  "planned_model_display_name": "DeepSeek-V4.1-Flash",
+  "planned_model_settings": "深度思考=开；联网搜索=关",
+  "formal_plan_locked": true
+}

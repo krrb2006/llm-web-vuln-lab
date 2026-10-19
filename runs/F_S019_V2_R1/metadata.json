@@ -1,0 +1,21 @@
+{
+  "run_id": "F_S019_V2_R1",
+  "phase": "F",
+  "sample_id": "S019",
+  "variant": "Original",
+  "prompt_version": "V2",
+  "vulnerability_type": "XSS",
+  "status": "input_prepared",
+  "model_display_name": null,
+  "model_settings": null,
+  "submitted_at": null,
+  "prompt_sha256": "3666ebeb28980e192172852639ab1759c94b6cbb2e5cdfe0c6f185a946841178",
+  "packet_sha256": "4ee21e7ded087864991df5d86192e1291e222e410d040b83b1b37aa90b19d9ab",
+  "input_sha256": "86d971ecd86270d566c2b8dd963f59a8d9591ad95726a483067c5b184f463089",
+  "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\llm-web-vuln-lab\\dataset\\packets\\S019_v1\\code_input.txt",
+  "raw_output_sha256": null,
+  "source_ref": "origin/a/criteria-and-sql01@5b0560a",
+  "planned_model_display_name": "DeepSeek-V4.1-Flash",
+  "planned_model_settings": "深度思考=开；联网搜索=关",
+  "formal_plan_locked": true
+}
