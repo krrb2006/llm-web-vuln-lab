@@ -1,0 +1,37 @@
+```json
+{
+  "sample_id": "S022",
+  "prediction": "safe",
+  "vulnerability_type": "XSS",
+  "locations": [
+    "F01:0008",
+    "F01:0009",
+    "F01:0016",
+    "F01:0020",
+    "F02:0029",
+    "F03:0038",
+    "F03:0039"
+  ],
+  "evidence": {
+    "source": "F01:0008-F01:0009 接收 POST 参数 title 与 body，属于用户可控输入。",
+    "flow": "F01:0016-F01:0020 使用 MySQLi 预处理语句写入 lab_preview_drafts；F02:0014 与 F03:0020 从数据库读取；F02:0029、F03:0038-F03:0039 输出到 HTML。",
+    "guard": "有效：F02:0029 的标题链接文本、F03:0038 的标题、F03:0039 的正文均使用 htmlspecialchars(..., ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')；F02:0029 与 F03:0007 的 id 被强制为整数，未发现未转义的 HTML/属性/URL/JavaScript/DOM 输出点。",
+    "sink": "F02:0029 为链接文本输出；F03:0038 为 h1 文本输出；F03:0039 为 div 文本输出，均处于转义后的 HTML 文本上下文。"
+  },
+  "prerequisites": [
+    "PHP 与 MariaDB 按运行上下文可用",
+    "通过 submit.php POST 提交 title/body 后，list.php 与 preview.php 能读取同一 sample_id 的数据",
+    "浏览器按 text/html 与 UTF-8 解析输出页面"
+  ],
+  "missing_context": [
+    "未提供 common/db_connect.php 与数据库表定义；不影响本路径中已展示的 XSS 输出编码判断"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "不生成攻击性 POC。若需本地人工对照，可提交普通标题“普通标题”、正文“普通正文”，再提交测试字符串标题“<img src=x onerror=alert(1)>”、正文“<script>alert(1)</script>”；随后查看 list.php 与 preview.php 的页面源码，预期显示为 &lt;img... 与 &lt;script... 的文本，而不是可执行元素。以上为人工观察方案，未实际运行或验证。"
+}
+```
+
+判断范围：本结论仅针对用户提供代码中从 POST 输入到数据库，再到 list.php/preview.php 浏览器输出的 XSS 路径；未发现未转义的 HTML 正文、属性、URL 或 JavaScript/DOM 注入点，因此判为 safe。
+
+防护建议：保持现有输出编码；若后续允许富文本或改变输出上下文（属性、URL、JavaScript、DOM），需按对应上下文重新编码或使用白名单净化，不能仅依赖数据库预处理语句。
