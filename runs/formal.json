@@ -7,10 +7,10 @@
     "status": "planned",
     "operator": "A",
     "reviewer": "D",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "0da0b54298c41a089e37c3e1857b02c1cd2124a121ae41f1eaad4ceb0e72861f",
+    "prompt_sha256": "94e49bd85019123577dc8e4664d074e468487fd8e42bcb62d48fa8baefab03ed",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -19,7 +19,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S007_V1_R1",
@@ -29,10 +30,10 @@
     "status": "planned",
     "operator": "A",
     "reviewer": "D",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "0da0b54298c41a089e37c3e1857b02c1cd2124a121ae41f1eaad4ceb0e72861f",
+    "prompt_sha256": "76727ec101cac6793e108061511ba7ec1029f27d654aa8b1c499f5dd18cb3c84",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -41,7 +42,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S007_V2_R1",
@@ -51,10 +53,10 @@
     "status": "planned",
     "operator": "A",
     "reviewer": "D",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "0da0b54298c41a089e37c3e1857b02c1cd2124a121ae41f1eaad4ceb0e72861f",
+    "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -63,7 +65,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S008_V0_R1",
@@ -73,10 +76,10 @@
     "status": "planned",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "0b3a718318ce598616ff47aab0a25b110d8f9cd303378d2c20d941110db09dac",
+    "prompt_sha256": "94e49bd85019123577dc8e4664d074e468487fd8e42bcb62d48fa8baefab03ed",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -85,7 +88,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S008_V1_R1",
@@ -95,10 +99,10 @@
     "status": "planned",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "0b3a718318ce598616ff47aab0a25b110d8f9cd303378d2c20d941110db09dac",
+    "prompt_sha256": "76727ec101cac6793e108061511ba7ec1029f27d654aa8b1c499f5dd18cb3c84",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -107,7 +111,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S008_V2_R1",
@@ -117,10 +122,10 @@
     "status": "planned",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "0b3a718318ce598616ff47aab0a25b110d8f9cd303378d2c20d941110db09dac",
+    "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -129,7 +134,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S009_V0_R1",
@@ -139,10 +145,10 @@
     "status": "planned",
     "operator": "C",
     "reviewer": "B",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "7a9dd6065e6bd074801d293c94520d93b3f71f7ece14d3244daad1f765f8a5c4",
+    "prompt_sha256": "94e49bd85019123577dc8e4664d074e468487fd8e42bcb62d48fa8baefab03ed",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -151,7 +157,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S009_V1_R1",
@@ -161,10 +168,10 @@
     "status": "planned",
     "operator": "C",
     "reviewer": "B",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "7a9dd6065e6bd074801d293c94520d93b3f71f7ece14d3244daad1f765f8a5c4",
+    "prompt_sha256": "76727ec101cac6793e108061511ba7ec1029f27d654aa8b1c499f5dd18cb3c84",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -173,7 +180,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S009_V2_R1",
@@ -183,10 +191,10 @@
     "status": "planned",
     "operator": "C",
     "reviewer": "B",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "7a9dd6065e6bd074801d293c94520d93b3f71f7ece14d3244daad1f765f8a5c4",
+    "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -195,7 +203,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S010_V0_R1",
@@ -205,10 +214,10 @@
     "status": "planned",
     "operator": "D",
     "reviewer": "C",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "1e32adc03620cfd699350fb5399083304cc75277420eba51697672374c06f58f",
+    "prompt_sha256": "94e49bd85019123577dc8e4664d074e468487fd8e42bcb62d48fa8baefab03ed",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -217,7 +226,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S010_V1_R1",
@@ -227,10 +237,10 @@
     "status": "planned",
     "operator": "D",
     "reviewer": "C",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "1e32adc03620cfd699350fb5399083304cc75277420eba51697672374c06f58f",
+    "prompt_sha256": "76727ec101cac6793e108061511ba7ec1029f27d654aa8b1c499f5dd18cb3c84",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -239,7 +249,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S010_V2_R1",
@@ -249,10 +260,10 @@
     "status": "planned",
     "operator": "D",
     "reviewer": "C",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "1e32adc03620cfd699350fb5399083304cc75277420eba51697672374c06f58f",
+    "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -261,7 +272,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S011_V0_R1",
@@ -271,10 +283,10 @@
     "status": "planned",
     "operator": "D",
     "reviewer": "C",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "5b38ba932707b693d705e8b54b2340a5e4b6e84cc68cf47210f9c3f77f9e5299",
+    "prompt_sha256": "94e49bd85019123577dc8e4664d074e468487fd8e42bcb62d48fa8baefab03ed",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -283,7 +295,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S011_V1_R1",
@@ -293,10 +306,10 @@
     "status": "planned",
     "operator": "D",
     "reviewer": "C",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "5b38ba932707b693d705e8b54b2340a5e4b6e84cc68cf47210f9c3f77f9e5299",
+    "prompt_sha256": "76727ec101cac6793e108061511ba7ec1029f27d654aa8b1c499f5dd18cb3c84",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -305,7 +318,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S011_V2_R1",
@@ -315,10 +329,10 @@
     "status": "planned",
     "operator": "D",
     "reviewer": "C",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "5b38ba932707b693d705e8b54b2340a5e4b6e84cc68cf47210f9c3f77f9e5299",
+    "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -327,7 +341,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S012_V0_R1",
@@ -337,10 +352,10 @@
     "status": "planned",
     "operator": "C",
     "reviewer": "B",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "fde871dc44f3eff9841293555a58c7a9f62323306e9a64f91b4f8d3db2be0945",
+    "prompt_sha256": "94e49bd85019123577dc8e4664d074e468487fd8e42bcb62d48fa8baefab03ed",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -349,7 +364,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S012_V1_R1",
@@ -359,10 +375,10 @@
     "status": "planned",
     "operator": "C",
     "reviewer": "B",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "fde871dc44f3eff9841293555a58c7a9f62323306e9a64f91b4f8d3db2be0945",
+    "prompt_sha256": "76727ec101cac6793e108061511ba7ec1029f27d654aa8b1c499f5dd18cb3c84",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -371,7 +387,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S012_V2_R1",
@@ -381,10 +398,10 @@
     "status": "planned",
     "operator": "C",
     "reviewer": "B",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "fde871dc44f3eff9841293555a58c7a9f62323306e9a64f91b4f8d3db2be0945",
+    "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -393,7 +410,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S019_V0_R1",
@@ -403,10 +421,10 @@
     "status": "planned",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "4ee21e7ded087864991df5d86192e1291e222e410d040b83b1b37aa90b19d9ab",
+    "prompt_sha256": "824ea2c5fba391e0827a554c0683a4738efa38859c2b52f2d1de131634a32bf2",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -415,7 +433,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S019_V1_R1",
@@ -425,10 +444,10 @@
     "status": "planned",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "4ee21e7ded087864991df5d86192e1291e222e410d040b83b1b37aa90b19d9ab",
+    "prompt_sha256": "44476daa06bfbebf6d83fc85649f1d1a9332b17ecec23eeb1241534f2860533c",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -437,7 +456,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S019_V2_R1",
@@ -447,10 +467,10 @@
     "status": "planned",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "4ee21e7ded087864991df5d86192e1291e222e410d040b83b1b37aa90b19d9ab",
+    "prompt_sha256": "3666ebeb28980e192172852639ab1759c94b6cbb2e5cdfe0c6f185a946841178",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -459,7 +479,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S020_V0_R1",
@@ -469,10 +490,10 @@
     "status": "planned",
     "operator": "A",
     "reviewer": "D",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "64ec2ee56ba873938292418f4342eb3c3233f181e7ed879c2caac4eaa38d953e",
+    "prompt_sha256": "824ea2c5fba391e0827a554c0683a4738efa38859c2b52f2d1de131634a32bf2",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -481,7 +502,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S020_V1_R1",
@@ -491,10 +513,10 @@
     "status": "planned",
     "operator": "A",
     "reviewer": "D",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "64ec2ee56ba873938292418f4342eb3c3233f181e7ed879c2caac4eaa38d953e",
+    "prompt_sha256": "44476daa06bfbebf6d83fc85649f1d1a9332b17ecec23eeb1241534f2860533c",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -503,7 +525,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S020_V2_R1",
@@ -513,10 +536,10 @@
     "status": "planned",
     "operator": "A",
     "reviewer": "D",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "64ec2ee56ba873938292418f4342eb3c3233f181e7ed879c2caac4eaa38d953e",
+    "prompt_sha256": "3666ebeb28980e192172852639ab1759c94b6cbb2e5cdfe0c6f185a946841178",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -525,7 +548,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S021_V0_R1",
@@ -535,10 +559,10 @@
     "status": "planned",
     "operator": "A",
     "reviewer": "D",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "e881e86713926107fa7db458b38c0e9fc824f5a8d916e2ebb799833e7e7122a5",
+    "prompt_sha256": "824ea2c5fba391e0827a554c0683a4738efa38859c2b52f2d1de131634a32bf2",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -547,7 +571,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S021_V1_R1",
@@ -557,10 +582,10 @@
     "status": "planned",
     "operator": "A",
     "reviewer": "D",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "e881e86713926107fa7db458b38c0e9fc824f5a8d916e2ebb799833e7e7122a5",
+    "prompt_sha256": "44476daa06bfbebf6d83fc85649f1d1a9332b17ecec23eeb1241534f2860533c",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -569,7 +594,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S021_V2_R1",
@@ -579,10 +605,10 @@
     "status": "planned",
     "operator": "A",
     "reviewer": "D",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "e881e86713926107fa7db458b38c0e9fc824f5a8d916e2ebb799833e7e7122a5",
+    "prompt_sha256": "3666ebeb28980e192172852639ab1759c94b6cbb2e5cdfe0c6f185a946841178",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -591,7 +617,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S022_V0_R1",
@@ -601,10 +628,10 @@
     "status": "planned",
     "operator": "D",
     "reviewer": "C",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "ccf37ff8d9b045f365659a9c66896b669cbd6e5b424defd56c5e385b86bba5bd",
+    "prompt_sha256": "824ea2c5fba391e0827a554c0683a4738efa38859c2b52f2d1de131634a32bf2",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -613,7 +640,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S022_V1_R1",
@@ -623,10 +651,10 @@
     "status": "planned",
     "operator": "D",
     "reviewer": "C",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "ccf37ff8d9b045f365659a9c66896b669cbd6e5b424defd56c5e385b86bba5bd",
+    "prompt_sha256": "44476daa06bfbebf6d83fc85649f1d1a9332b17ecec23eeb1241534f2860533c",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -635,7 +663,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S022_V2_R1",
@@ -645,10 +674,10 @@
     "status": "planned",
     "operator": "D",
     "reviewer": "C",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "ccf37ff8d9b045f365659a9c66896b669cbd6e5b424defd56c5e385b86bba5bd",
+    "prompt_sha256": "3666ebeb28980e192172852639ab1759c94b6cbb2e5cdfe0c6f185a946841178",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -657,7 +686,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S023_V0_R1",
@@ -667,10 +697,10 @@
     "status": "planned",
     "operator": "C",
     "reviewer": "B",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "e47750fd9ff681dc105db0d409800d915a6dd5adfe41d452113e35680b4c3781",
+    "prompt_sha256": "824ea2c5fba391e0827a554c0683a4738efa38859c2b52f2d1de131634a32bf2",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -679,7 +709,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S023_V1_R1",
@@ -689,10 +720,10 @@
     "status": "planned",
     "operator": "C",
     "reviewer": "B",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "e47750fd9ff681dc105db0d409800d915a6dd5adfe41d452113e35680b4c3781",
+    "prompt_sha256": "44476daa06bfbebf6d83fc85649f1d1a9332b17ecec23eeb1241534f2860533c",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -701,7 +732,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S023_V2_R1",
@@ -711,10 +743,10 @@
     "status": "planned",
     "operator": "C",
     "reviewer": "B",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "e47750fd9ff681dc105db0d409800d915a6dd5adfe41d452113e35680b4c3781",
+    "prompt_sha256": "3666ebeb28980e192172852639ab1759c94b6cbb2e5cdfe0c6f185a946841178",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -723,7 +755,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S024_V0_R1",
@@ -733,10 +766,10 @@
     "status": "planned",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "c78a31862f547c160a20fee6a84e09172afc8da441deed8ff543ad76783a109c",
+    "prompt_sha256": "824ea2c5fba391e0827a554c0683a4738efa38859c2b52f2d1de131634a32bf2",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -745,7 +778,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S024_V1_R1",
@@ -755,10 +789,10 @@
     "status": "planned",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "c78a31862f547c160a20fee6a84e09172afc8da441deed8ff543ad76783a109c",
+    "prompt_sha256": "44476daa06bfbebf6d83fc85649f1d1a9332b17ecec23eeb1241534f2860533c",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -767,7 +801,8 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   },
   {
     "run_id": "F_S024_V2_R1",
@@ -777,10 +812,10 @@
     "status": "planned",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": "",
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
-    "packet_sha256": "",
-    "prompt_sha256": "",
+    "packet_sha256": "c78a31862f547c160a20fee6a84e09172afc8da441deed8ff543ad76783a109c",
+    "prompt_sha256": "3666ebeb28980e192172852639ab1759c94b6cbb2e5cdfe0c6f185a946841178",
     "prediction": "",
     "location_correct": null,
     "poc_generated": false,
@@ -789,6 +824,7 @@
     "logic_changed": false,
     "verification": "not_run",
     "error_reason": "",
-    "evidence_paths": []
+    "evidence_paths": [],
+    "model_settings": "深度思考=开；联网搜索=关"
   }
 ]
