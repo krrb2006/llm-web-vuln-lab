@@ -120,10 +120,11 @@
 1. S023/S024 的 `browser_reference.json.note` 写"A Chrome mouse press/release clicked…"，与 `browser_version=Edg/155` 措辞不一致（模板残留"Chrome"，实际为 Edge）。仅记录性，不影响 marker 判定。
 2. `current_source_review.json` 的 `runtime_evidence_source_commit`（S017–S022 为 `a90708be`，即 D 证据刷新提交）与 `browser_reference.json` 的 `d_source_commit`（`a296e4b`，源码提交）字段语义不同但源码内容一致（`a90708be` 为证据-only 提交，不改源码），无实质冲突。
 
-## 九、签字块草稿（供本人核对后手写/提交，不代签）
+## 九、C 签字（已提交）
 
-> 签字：C（＿＿＿＿＿＿／学号＿＿＿＿＿＿）　　日期：2026-10-＿＿（UTC+8）
+> 签字：C（Chang_jia_jia，1715172213@qq.com）　　日期时间：2026-10-19 16:37（UTC+8）
 > 确认范围：本人已核对 24 个正式输入包的唯一路径、行号映射、源码 LF 哈希与版本（S009–S012 用 v2，其余 v1），并确认正式测试使用最终包、不混入归档 v1 包。
+> 签字位置：`docs/B_冻结签字交接单_2026-10-19.md` 的 C 节（与 A `97ab7bd` 同一份冻结单）。
 
 ---
 
