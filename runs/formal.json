@@ -73,10 +73,10 @@
     "sample_id": "S008",
     "prompt_version": "V0",
     "phase": "formal",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": null,
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
     "packet_sha256": "0b3a718318ce598616ff47aab0a25b110d8f9cd303378d2c20d941110db09dac",
     "prompt_sha256": "94e49bd85019123577dc8e4664d074e468487fd8e42bcb62d48fa8baefab03ed",
@@ -87,9 +87,10 @@
     "environment_execution_ok": false,
     "logic_changed": false,
     "verification": "not_run",
-    "error_reason": "POC not executed; pending A review",
+    "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
-      "runs/F_S008_V0_R1/raw_output.txt"
+      "runs/F_S008_V0_R1/raw_output.txt",
+      "runs/F_S008_V0_R1/normalized.json"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "23933bf8eb068b845a23f8abc27cba95cf352824dce275c38df4060b3c9e9744"
@@ -99,10 +100,10 @@
     "sample_id": "S008",
     "prompt_version": "V1",
     "phase": "formal",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": null,
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
     "packet_sha256": "0b3a718318ce598616ff47aab0a25b110d8f9cd303378d2c20d941110db09dac",
     "prompt_sha256": "76727ec101cac6793e108061511ba7ec1029f27d654aa8b1c499f5dd18cb3c84",
@@ -113,9 +114,10 @@
     "environment_execution_ok": false,
     "logic_changed": false,
     "verification": "not_run",
-    "error_reason": "POC not executed; pending A review",
+    "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
-      "runs/F_S008_V1_R1/raw_output.txt"
+      "runs/F_S008_V1_R1/raw_output.txt",
+      "runs/F_S008_V1_R1/normalized.json"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "8cd9c55d105d5003715345d244cc64843a8fa1c3dc35057d5782de3a5ee07cbb"
@@ -125,10 +127,10 @@
     "sample_id": "S008",
     "prompt_version": "V2",
     "phase": "formal",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": null,
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
     "packet_sha256": "0b3a718318ce598616ff47aab0a25b110d8f9cd303378d2c20d941110db09dac",
     "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
@@ -139,9 +141,10 @@
     "environment_execution_ok": false,
     "logic_changed": false,
     "verification": "not_run",
-    "error_reason": "POC not executed; pending A review",
+    "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
-      "runs/F_S008_V2_R1/raw_output.txt"
+      "runs/F_S008_V2_R1/raw_output.txt",
+      "runs/F_S008_V2_R1/normalized.json"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "50d8b04ac12fb98bc2b07771cc6068a570d1eef7f0285c38ae4bf815d5d56bf6"
@@ -427,23 +430,24 @@
     "sample_id": "S019",
     "prompt_version": "V0",
     "phase": "formal",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": null,
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
     "packet_sha256": "4ee21e7ded087864991df5d86192e1291e222e410d040b83b1b37aa90b19d9ab",
     "prompt_sha256": "824ea2c5fba391e0827a554c0683a4738efa38859c2b52f2d1de131634a32bf2",
     "prediction": "vulnerable",
-    "location_correct": null,
+    "location_correct": true,
     "poc_generated": true,
     "raw_execution_ok": false,
     "environment_execution_ok": false,
     "logic_changed": false,
     "verification": "not_run",
-    "error_reason": "POC not executed; pending A review",
+    "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
-      "runs/F_S019_V0_R1/raw_output.txt"
+      "runs/F_S019_V0_R1/raw_output.txt",
+      "runs/F_S019_V0_R1/normalized.json"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "8e56140a848f80395bb921c55793114cd3a954c1da4d482c54ee8ca077520fb4"
@@ -453,23 +457,24 @@
     "sample_id": "S019",
     "prompt_version": "V1",
     "phase": "formal",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": null,
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
     "packet_sha256": "4ee21e7ded087864991df5d86192e1291e222e410d040b83b1b37aa90b19d9ab",
     "prompt_sha256": "44476daa06bfbebf6d83fc85649f1d1a9332b17ecec23eeb1241534f2860533c",
     "prediction": "vulnerable",
-    "location_correct": null,
+    "location_correct": true,
     "poc_generated": true,
     "raw_execution_ok": false,
     "environment_execution_ok": false,
     "logic_changed": false,
     "verification": "not_run",
-    "error_reason": "POC not executed; pending A review",
+    "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
-      "runs/F_S019_V1_R1/raw_output.txt"
+      "runs/F_S019_V1_R1/raw_output.txt",
+      "runs/F_S019_V1_R1/normalized.json"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "6b3ca0065eb7796af12a4175f762ab2bdbcb9cdbc035379cf504257a1e061680"
@@ -479,23 +484,24 @@
     "sample_id": "S019",
     "prompt_version": "V2",
     "phase": "formal",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": null,
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
     "packet_sha256": "4ee21e7ded087864991df5d86192e1291e222e410d040b83b1b37aa90b19d9ab",
     "prompt_sha256": "3666ebeb28980e192172852639ab1759c94b6cbb2e5cdfe0c6f185a946841178",
     "prediction": "vulnerable",
-    "location_correct": null,
+    "location_correct": true,
     "poc_generated": true,
     "raw_execution_ok": false,
     "environment_execution_ok": false,
     "logic_changed": false,
     "verification": "not_run",
-    "error_reason": "POC not executed; pending A review",
+    "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
-      "runs/F_S019_V2_R1/raw_output.txt"
+      "runs/F_S019_V2_R1/raw_output.txt",
+      "runs/F_S019_V2_R1/normalized.json"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "9774dc8b57991176a114d57450477e72122165bada7bab6e33e680a0c3081d25"
@@ -781,10 +787,10 @@
     "sample_id": "S024",
     "prompt_version": "V0",
     "phase": "formal",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": null,
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
     "packet_sha256": "c78a31862f547c160a20fee6a84e09172afc8da441deed8ff543ad76783a109c",
     "prompt_sha256": "824ea2c5fba391e0827a554c0683a4738efa38859c2b52f2d1de131634a32bf2",
@@ -795,9 +801,10 @@
     "environment_execution_ok": false,
     "logic_changed": false,
     "verification": "not_run",
-    "error_reason": "POC not executed; pending A review",
+    "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
-      "runs/F_S024_V0_R1/raw_output.txt"
+      "runs/F_S024_V0_R1/raw_output.txt",
+      "runs/F_S024_V0_R1/normalized.json"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "4c167222c981ea0756deb1e6c6a599bd3d772782ba57d3060ef005ae43ff8fbd"
@@ -807,10 +814,10 @@
     "sample_id": "S024",
     "prompt_version": "V1",
     "phase": "formal",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": null,
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
     "packet_sha256": "c78a31862f547c160a20fee6a84e09172afc8da441deed8ff543ad76783a109c",
     "prompt_sha256": "44476daa06bfbebf6d83fc85649f1d1a9332b17ecec23eeb1241534f2860533c",
@@ -821,9 +828,10 @@
     "environment_execution_ok": false,
     "logic_changed": false,
     "verification": "not_run",
-    "error_reason": "POC not executed; pending A review",
+    "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
-      "runs/F_S024_V1_R1/raw_output.txt"
+      "runs/F_S024_V1_R1/raw_output.txt",
+      "runs/F_S024_V1_R1/normalized.json"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "789362cf04ff3b1759e1af21d7c24b9abd397ee4799f22ec823f80e82d276e40"
@@ -833,10 +841,10 @@
     "sample_id": "S024",
     "prompt_version": "V2",
     "phase": "formal",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "B",
     "reviewer": "A",
-    "model_display_name": null,
+    "model_display_name": "DeepSeek-V4.1-Flash",
     "submitted_at": "",
     "packet_sha256": "c78a31862f547c160a20fee6a84e09172afc8da441deed8ff543ad76783a109c",
     "prompt_sha256": "3666ebeb28980e192172852639ab1759c94b6cbb2e5cdfe0c6f185a946841178",
@@ -847,9 +855,10 @@
     "environment_execution_ok": false,
     "logic_changed": false,
     "verification": "not_run",
-    "error_reason": "POC not executed; pending A review",
+    "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
-      "runs/F_S024_V2_R1/raw_output.txt"
+      "runs/F_S024_V2_R1/raw_output.txt",
+      "runs/F_S024_V2_R1/normalized.json"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "38e4f043511428d06d950d29560a65ae3f873699312debe325972122cb5c75a0"
