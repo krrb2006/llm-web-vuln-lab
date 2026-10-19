@@ -1,0 +1,35 @@
+{
+  "run_id": "F_S024_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S024",
+    "prediction": "safe",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0005",
+      "F01:0010",
+      "F01:0011",
+      "F01:0023",
+      "F01:0026"
+    ],
+    "evidence": {
+      "source": "F01:0005 的 GET 参数 url 进入 $input，并在 F01:0006 转为 $url。",
+      "flow": "F01:0006-F01:0011 对输入 trim、空值回退，并用 parse_url 提取 scheme；F01:0023 输出到 input 的 value 属性，F01:0026 输出到预览链接 href 属性。",
+      "guard": "有效：F01:0023 与 F01:0026 两处 HTML 属性输出均使用 htmlspecialchars($..., ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')；F01:0011 仅允许 http/https 作为 href，否则回退为 #。",
+      "sink": "F01:0023 的带引号 value 属性与 F01:0026 的带引号 href 属性；未发现内联 JavaScript、DOM 写入或未编码的属性拼接。"
+    },
+    "prerequisites": [
+      "PHP 8.5 本机环境，入口为 http://127.0.0.1:4280/lab_cases/S024/index.php。",
+      "验证 href 行为需用户实际点击“打开链接”后观察浏览器导航；页面加载本身不等同于脚本执行。"
+    ],
+    "missing_context": [],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成POC。普通输入可用 https://example.org/；测试输入可包含引号、尖括号或 javascript:alert(1) 等，但静态判断预期 value/href 中的特殊字符会被 htmlspecialchars 实体编码，且非 http/https 的 href 会回退为 #。若要人工核对，应查看页面源码中属性编码情况，并实际点击链接观察导航行为；不能仅凭 HTTP 响应体出现字符串断言 JavaScript 执行。本次未运行代码。"
+  },
+  "human_verification": "pending",
+  "raw_source": "S001-s024.docx"
+}

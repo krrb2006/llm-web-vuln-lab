@@ -5,7 +5,7 @@
   "variant": "Original",
   "prompt_version": "V2",
   "vulnerability_type": "XSS",
-  "status": "input_prepared",
+  "status": "raw_recorded_time_unknown",
   "model_display_name": null,
   "model_settings": null,
   "submitted_at": null,
@@ -13,9 +13,12 @@
   "packet_sha256": "4ee21e7ded087864991df5d86192e1291e222e410d040b83b1b37aa90b19d9ab",
   "input_sha256": "86d971ecd86270d566c2b8dd963f59a8d9591ad95726a483067c5b184f463089",
   "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\llm-web-vuln-lab\\dataset\\packets\\S019_v1\\code_input.txt",
-  "raw_output_sha256": null,
+  "raw_output_sha256": "9774dc8b57991176a114d57450477e72122165bada7bab6e33e680a0c3081d25",
   "source_ref": "origin/a/criteria-and-sql01@5b0560a",
   "planned_model_display_name": "DeepSeek-V4.1-Flash",
   "planned_model_settings": "深度思考=开；联网搜索=关",
-  "formal_plan_locked": true
+  "formal_plan_locked": true,
+  "raw_source": "S001-s024.docx",
+  "raw_source_path": "D:\\网络安全\\S001-s024.docx",
+  "raw_source_note": "Authoritative formal answer; document heading S019-v2, JSON sample_id S019 used for routing."
 }
