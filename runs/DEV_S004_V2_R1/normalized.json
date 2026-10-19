@@ -1,0 +1,39 @@
+{
+  "run_id": "DEV_S004_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S004",
+    "prediction": "safe",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0009",
+      "F01:0014",
+      "F01:0017",
+      "F01:0018"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 GET 参数 id 读取外部输入；F01:0009 使用 ctype_digit 拒绝空值和非纯数字字符串。",
+      "flow": "F01:0007 的输入经 F01:0009 校验后，在 F01:0014 强制转换为 int，并在 F01:0018 作为绑定参数传入。",
+      "guard": "有效：F01:0009 仅允许数字字符串，F01:0014 强制 int，F01:0018 使用 bind_param('i')；F01:0017 的 SQL 语句固定，没有动态列名、排序表达式或 IN 列表结构。",
+      "sink": "F01:0017 使用固定的 SELECT id, name FROM lab_people WHERE id = ?；F01:0018 绑定后于 F01:0019 执行。"
+    },
+    "prerequisites": [
+      "PHP 与 mysqli 扩展可用。",
+      "common/db_connect.php 提供已连接的 mysqli 变量 $db。",
+      "数据库中存在 lab_people 表，且预置记录可用。",
+      "本地教学入口可通过 http://127.0.0.1:4280/lab_cases/S004/index.php 访问。"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体实现未在输入包中提供；当前样本内的 SQL 构造与执行路径已可见，未发现其他 SQL 结构拼接点。"
+    ],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成攻击性 POC。判断范围仅覆盖 SQL 注入路径。本地复核时可访问固定目标 http://127.0.0.1:4280/lab_cases/S004/index.php?id=1，普通预期为展示 ID 1：Alice；访问 id=2 预期展示 ID 2：Bob；访问 id=1%27 预期显示“非法的 ID 参数”且不执行查询。观察 HTML 正文与数据库记录应无异常变化。若结果不符合，检查 common/db_connect.php 的 $db 连接、lab_people 初始化及 PHP 错误日志。"
+  },
+  "human_verification": "pending",
+  "raw_source": "S001.docx"
+}

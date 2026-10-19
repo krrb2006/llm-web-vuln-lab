@@ -1,0 +1,63 @@
+```json
+{
+  "sample_id": "S013",
+  "prediction": "vulnerable",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0003", "F01:0013"],
+  "evidence": {
+    "source": "F01:0003 读取 GET 参数 q，未做过滤或类型约束",
+    "flow": "F01:0003 的 $q 在 F01:0013 被直接 echo 到 HTML 正文的 <p> 元素内",
+    "guard": "无效：F01:0013 未使用 htmlspecialchars 或等价 HTML 正文编码，未限制尖括号和脚本标记",
+    "sink": "F01:0013 浏览器将输出内容作为 HTML 正文解析，可控字符串可形成脚本标签"
+  },
+  "prerequisites": [
+    "PHP 单页脚本部署在 http://127.0.0.1:4280 可访问",
+    "q 参数可从请求到达 F01:0003",
+    "浏览器解析 F01:0013 返回的 HTML 正文"
+  ],
+  "missing_context": [
+    "未提供该单页脚本在 127.0.0.1:4280 上的具体 URL 路径；验证脚本默认根路径 /，需按实际部署调整路径，但主机和端口保持固定"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "运行 Python 脚本生成普通对照 URL 和测试 URL；目标固定为 http://127.0.0.1:4280，默认路径为 /，若实际部署路径不同仅修改 PATH。普通对照：浏览器打开普通 URL，预期显示搜索词 hello 且无弹窗。测试：浏览器打开测试 URL，人工观察是否弹出 XSS-S013 提示框；仅响应体含 payload 不算执行。若浏览器无弹窗则不能判定实际触发。反射型无需存储清理。修复建议未验证：输出到 HTML 正文前使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') 等上下文编码。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+# S013 本地反射型 XSS 验证辅助脚本
+# 仅生成固定目标 http://127.0.0.1:4280 的普通/测试 URL；
+# 不自动发起请求、不跟随重定向、不外发数据。实际 JavaScript 执行需人工在浏览器确认。
+
+from urllib.parse import urlencode, urlparse
+
+BASE = "http://127.0.0.1:4280"
+PATH = "/"  # 若实际部署路径不同，只修改此路径；主机和端口保持固定
+
+def build_url(q: str) -> str:
+    return f"{BASE}{PATH}?{urlencode({'q': q})}"
+
+normal_q = "hello"
+test_q = "<script>alert('XSS-S013')</script>"
+
+normal_url = build_url(normal_q)
+test_url = build_url(test_q)
+
+# 固定目标校验：只允许 http://127.0.0.1:4280
+for u in (normal_url, test_url):
+    p = urlparse(u)
+    assert p.scheme == "http" and p.hostname == "127.0.0.1" and p.port == 4280, u
+
+print("普通对照 URL：")
+print(normal_url)
+print()
+print("测试 URL：")
+print(test_url)
+print()
+print("人工验证步骤：")
+print("1. 浏览器打开普通对照 URL，预期页面显示“搜索词：hello”，无弹窗。")
+print("2. 浏览器打开测试 URL，人工观察是否弹出 XSS-S013 提示框。")
+print("3. 若仅 HTTP 响应体含 <script> 但浏览器无弹窗，不能判定 JavaScript 实际执行。")
+print("4. 不要在其他主机运行；不要自动跟随跨主机重定向；不要外发数据。")
+```
