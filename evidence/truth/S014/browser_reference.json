@@ -1,15 +1,13 @@
 {
   "sample_id": "S014",
-  "review_status": "reviewed_by_A",
-  "ground_truth": false,
-  "checked_at_utc": "2026-10-11T09:09:15Z",
+  "checked_at_utc": "2026-10-19T07:49:39Z",
   "browser": {
-    "name": "Chrome",
-    "version": "154.0.8037.99",
+    "name": "Edge",
+    "version": "155.0.4283.45",
     "fresh_temporary_profile_per_request": true
   },
   "source": {
-    "c_commit": "a04a83218e7999acd03d8a20422cf4b405903479",
+    "c_commit": "6a746b2f1a84efcd5c1df0203a335bab8df3c918",
     "source_path": "dataset/raw/S014/index.php",
     "source_sha256": "c098e3db8a9e03e3b6e85d09ec545ebf7f7d974a134866839e4ccd862b7c78ac",
     "local_sha256": "c098e3db8a9e03e3b6e85d09ec545ebf7f7d974a134866839e4ccd862b7c78ac",

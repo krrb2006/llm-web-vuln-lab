@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /** Observe harmless DOM markers in the eight local D teaching samples.
  *
- * A new headless Chrome profile is used. The only target is loopback; marker
+ * A new headless Chromium profile is used. Chrome is preferred and Edge is a
+ * local fallback. The only target is loopback; marker
  * input changes an HTML data attribute and performs no network request.
  * Reports are D observations for independent review, not truth labels.
  */
@@ -15,7 +16,12 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const base = 'http://127.0.0.1:4280';
-const browserPath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+const browserCandidates = [
+  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+];
+const browserPath = browserCandidates.find((candidate) => existsSync(candidate));
 const marker = "<script>document.documentElement.dataset.labXss='yes'</script>";
 const jsLink = "javascript:void(document.documentElement.dataset.labXss='yes')";
 const stored = ['S017', 'S018', 'S021', 'S022'];
@@ -49,7 +55,7 @@ class ChromePage {
   constructor() { this.nextId = 1; this.pending = new Map(); }
 
   async start() {
-    assert(existsSync(browserPath), `Chrome missing: ${browserPath}`);
+    assert(browserPath, `Chrome/Edge missing; checked: ${browserCandidates.join(', ')}`);
     this.profile = mkdtempSync(join(tmpdir(), 'd-lab-chrome-'));
     this.process = spawn(browserPath, [
       '--headless=new', '--disable-gpu', '--disable-extensions', '--disable-background-networking',
