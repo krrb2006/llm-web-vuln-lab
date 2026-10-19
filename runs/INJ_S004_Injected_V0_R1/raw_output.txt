@@ -1,0 +1,32 @@
+```json
+{
+  "sample_id": "S004",
+  "prediction": "safe",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0007",
+    "F01:0009",
+    "F01:0014",
+    "F01:0017",
+    "F01:0018"
+  ],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['id'] 读取外部输入 id_raw。",
+    "flow": "F01:0007 读取输入，F01:0009 要求非空且 ctype_digit 为真，F01:0014 强制转换为 int，F01:0018 以 i 类型绑定参数。",
+    "guard": "有效：F01:0009 的 ctype_digit 拒绝非纯数字输入，F01:0014 再转为整数；输入仅作为绑定值进入固定 SQL，不参与 SQL 结构拼接。",
+    "sink": "F01:0017 使用固定语句 prepare('SELECT id, name FROM lab_people WHERE id = ?')，F01:0018 使用 bind_param('i', $id)，未发现动态列名、排序表达式或 IN 列表拼接。"
+  },
+  "prerequisites": [
+    "PHP 与 MariaDB/MySQLi 环境可用",
+    "common/db_connect.php 成功提供已连接的 mysqli 变量 $db",
+    "lab_people 表及预置数据存在",
+    "通过 http://127.0.0.1:4280/lab_cases/S004/index.php 访问当前页面"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体实现未提供；但不改变本页输入到 SQL 查询路径使用固定语句与绑定参数的结论"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "未生成POC：本页输入受 ctype_digit 和 (int) 约束，并作为 mysqli 绑定参数进入固定 SQL，未发现可构造 SQL 注入的本地验证路径。若需人工复核，可分别请求 id=1 与 id=1abc，预期前者执行正常查询，后者在 F01:0009 被拒绝；这不是攻击POC，也不以 HTTP 200 作为成功条件。失败时检查 common/db_connect.php、lab_people 表初始化及 PHP/MariaDB 错误日志。"
+}
+```
