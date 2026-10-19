@@ -1,18 +1,18 @@
 {
-  "checked_at_utc": "2026-10-13T13:02:36Z",
+  "checked_at_utc": "2026-10-19T07:48:52Z",
   "a_source": {
-    "ref": "origin/a/criteria-and-sql01",
-    "commit": "d498903da01d89a695fa49d5392d3776eb901e2f"
+    "ref": "173b9af",
+    "commit": "173b9af0da6701b9b43a2cae53d5ae240b6df9ef"
   },
   "c_source": {
-    "ref": "origin/c/samples",
+    "ref": "8da63f7",
     "commit": "8da63f7b8e169e5037626b0362d005ba7ba5ede0"
   },
   "d_source": {
-    "ref": "origin/d/environment-reference",
-    "commit": "a90708be2a4a53f732b3cabea37f7feed5f04125"
+    "ref": "a296e4b",
+    "commit": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06"
   },
-  "dvwa_commit": "068d974487a297c155c48722f9fcf7180a83adc4",
+  "dvwa_commit": "a1978a2fed195acd093010af6395f86a281537ca",
   "summary": {
     "total": 37,
     "passed": 37,
@@ -33,9 +33,9 @@
   "files": [
     {
       "path": "common/db_connect.php",
-      "source_sha256": "d6e917165049df19939c850bbc8014dcb689e8a8d55b759335732d010f5909da",
-      "local_sha256": "d6e917165049df19939c850bbc8014dcb689e8a8d55b759335732d010f5909da",
-      "container_sha256": "d6e917165049df19939c850bbc8014dcb689e8a8d55b759335732d010f5909da",
+      "source_sha256": "fb4248a82c13f04a63a966cc658b5c5daba28b3aa9c3a3e7d5d5b8b24af82877",
+      "local_sha256": "fb4248a82c13f04a63a966cc658b5c5daba28b3aa9c3a3e7d5d5b8b24af82877",
+      "container_sha256": "fb4248a82c13f04a63a966cc658b5c5daba28b3aa9c3a3e7d5d5b8b24af82877",
       "source_matches_local": true,
       "container_matches_local": true,
       "php_lint_exit_code": 0,
@@ -44,9 +44,9 @@
     },
     {
       "path": "S001/index.php",
-      "source_sha256": "6df870a193ee6bcbeeb9f26a136a8789d0a0ba731b9d45e4332f54353d89f34e",
-      "local_sha256": "6df870a193ee6bcbeeb9f26a136a8789d0a0ba731b9d45e4332f54353d89f34e",
-      "container_sha256": "6df870a193ee6bcbeeb9f26a136a8789d0a0ba731b9d45e4332f54353d89f34e",
+      "source_sha256": "d23d5474024b3fc86f134dfc639820d0ee11aeebf3442b2fbb74ea1413a1d3d9",
+      "local_sha256": "d23d5474024b3fc86f134dfc639820d0ee11aeebf3442b2fbb74ea1413a1d3d9",
+      "container_sha256": "d23d5474024b3fc86f134dfc639820d0ee11aeebf3442b2fbb74ea1413a1d3d9",
       "source_matches_local": true,
       "container_matches_local": true,
       "php_lint_exit_code": 0,
@@ -55,9 +55,9 @@
     },
     {
       "path": "S002/index.php",
-      "source_sha256": "bdd4728b69bdf06ce2f423561fba667d57834e1ca6931536fcee2d5fa8145e0d",
-      "local_sha256": "bdd4728b69bdf06ce2f423561fba667d57834e1ca6931536fcee2d5fa8145e0d",
-      "container_sha256": "bdd4728b69bdf06ce2f423561fba667d57834e1ca6931536fcee2d5fa8145e0d",
+      "source_sha256": "9a212ab2ff33580ec9d420c0b5d7266e5ec3aa670856eba9e9f9efe4b25b9621",
+      "local_sha256": "9a212ab2ff33580ec9d420c0b5d7266e5ec3aa670856eba9e9f9efe4b25b9621",
+      "container_sha256": "9a212ab2ff33580ec9d420c0b5d7266e5ec3aa670856eba9e9f9efe4b25b9621",
       "source_matches_local": true,
       "container_matches_local": true,
       "php_lint_exit_code": 0,
@@ -66,9 +66,9 @@
     },
     {
       "path": "S003/index.php",
-      "source_sha256": "df4b620a75f7ada451a5ae64377bf5e380b9852fe2055517f8e100205b7927b8",
-      "local_sha256": "df4b620a75f7ada451a5ae64377bf5e380b9852fe2055517f8e100205b7927b8",
-      "container_sha256": "df4b620a75f7ada451a5ae64377bf5e380b9852fe2055517f8e100205b7927b8",
+      "source_sha256": "f9fa0783d791544e31d9ce4a09fa4649c1020c313aff3b1983b74d66083eb42c",
+      "local_sha256": "f9fa0783d791544e31d9ce4a09fa4649c1020c313aff3b1983b74d66083eb42c",
+      "container_sha256": "f9fa0783d791544e31d9ce4a09fa4649c1020c313aff3b1983b74d66083eb42c",
       "source_matches_local": true,
       "container_matches_local": true,
       "php_lint_exit_code": 0,
@@ -77,9 +77,9 @@
     },
     {
       "path": "S004/index.php",
-      "source_sha256": "940d656663a13f0eb5f3cd3d65d3994c8ac1a38d0f829fb23d3f53e4e85cca41",
-      "local_sha256": "940d656663a13f0eb5f3cd3d65d3994c8ac1a38d0f829fb23d3f53e4e85cca41",
-      "container_sha256": "940d656663a13f0eb5f3cd3d65d3994c8ac1a38d0f829fb23d3f53e4e85cca41",
+      "source_sha256": "0cc29019f9de563ed1ade45cf2f2982112f3a24c121f14206dc1b57c67bf45c9",
+      "local_sha256": "0cc29019f9de563ed1ade45cf2f2982112f3a24c121f14206dc1b57c67bf45c9",
+      "container_sha256": "0cc29019f9de563ed1ade45cf2f2982112f3a24c121f14206dc1b57c67bf45c9",
       "source_matches_local": true,
       "container_matches_local": true,
       "php_lint_exit_code": 0,
@@ -88,9 +88,9 @@
     },
     {
       "path": "S005/index.php",
-      "source_sha256": "c5bc903494b213c56c774785434720aefc4287aaaa24e2798a1e0d09fd4c4193",
-      "local_sha256": "c5bc903494b213c56c774785434720aefc4287aaaa24e2798a1e0d09fd4c4193",
-      "container_sha256": "c5bc903494b213c56c774785434720aefc4287aaaa24e2798a1e0d09fd4c4193",
+      "source_sha256": "5ecc4904536ac3611895d80b06ed21e668f8a988a320446532df9ddca17d7922",
+      "local_sha256": "5ecc4904536ac3611895d80b06ed21e668f8a988a320446532df9ddca17d7922",
+      "container_sha256": "5ecc4904536ac3611895d80b06ed21e668f8a988a320446532df9ddca17d7922",
       "source_matches_local": true,
       "container_matches_local": true,
       "php_lint_exit_code": 0,
@@ -99,9 +99,9 @@
     },
     {
       "path": "S006/index.php",
-      "source_sha256": "6c94327f0abdd6b07f88d4256c01185df2e26e0c5a83238a00e8a98b931fd605",
-      "local_sha256": "6c94327f0abdd6b07f88d4256c01185df2e26e0c5a83238a00e8a98b931fd605",
-      "container_sha256": "6c94327f0abdd6b07f88d4256c01185df2e26e0c5a83238a00e8a98b931fd605",
+      "source_sha256": "f543854aa3fd6945ea76b2ad9df25faaa308e20d8fc3a708a7b5b22a31c7d7ab",
+      "local_sha256": "f543854aa3fd6945ea76b2ad9df25faaa308e20d8fc3a708a7b5b22a31c7d7ab",
+      "container_sha256": "f543854aa3fd6945ea76b2ad9df25faaa308e20d8fc3a708a7b5b22a31c7d7ab",
       "source_matches_local": true,
       "container_matches_local": true,
       "php_lint_exit_code": 0,
@@ -110,9 +110,9 @@
     },
     {
       "path": "S007/index.php",
-      "source_sha256": "ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8",
-      "local_sha256": "ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8",
-      "container_sha256": "ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8",
+      "source_sha256": "07bcaef84920da5049221df902d52a946f4951da0c6fbd1b10bd4ab4a0cc2d45",
+      "local_sha256": "07bcaef84920da5049221df902d52a946f4951da0c6fbd1b10bd4ab4a0cc2d45",
+      "container_sha256": "07bcaef84920da5049221df902d52a946f4951da0c6fbd1b10bd4ab4a0cc2d45",
       "source_matches_local": true,
       "container_matches_local": true,
       "php_lint_exit_code": 0,
@@ -132,9 +132,9 @@
     },
     {
       "path": "S008/index.php",
-      "source_sha256": "ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8",
-      "local_sha256": "ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8",
-      "container_sha256": "ef9f569558f6fb59842c87f48987dfd8829fcf0f2cc709facb4de3c0eb9809e8",
+      "source_sha256": "07bcaef84920da5049221df902d52a946f4951da0c6fbd1b10bd4ab4a0cc2d45",
+      "local_sha256": "07bcaef84920da5049221df902d52a946f4951da0c6fbd1b10bd4ab4a0cc2d45",
+      "container_sha256": "07bcaef84920da5049221df902d52a946f4951da0c6fbd1b10bd4ab4a0cc2d45",
       "source_matches_local": true,
       "container_matches_local": true,
       "php_lint_exit_code": 0,
@@ -143,9 +143,9 @@
     },
     {
       "path": "S008/repository.php",
-      "source_sha256": "b33407ca4d868a1138918262af3b0fd65ca6e39f1c4b0843b2f9a3ff36067373",
-      "local_sha256": "b33407ca4d868a1138918262af3b0fd65ca6e39f1c4b0843b2f9a3ff36067373",
-      "container_sha256": "b33407ca4d868a1138918262af3b0fd65ca6e39f1c4b0843b2f9a3ff36067373",
+      "source_sha256": "e195f676c58fce2e7fb02c890e3646f320af4702a4dd4f05e819288bd26ea465",
+      "local_sha256": "e195f676c58fce2e7fb02c890e3646f320af4702a4dd4f05e819288bd26ea465",
+      "container_sha256": "e195f676c58fce2e7fb02c890e3646f320af4702a4dd4f05e819288bd26ea465",
       "source_matches_local": true,
       "container_matches_local": true,
       "php_lint_exit_code": 0,

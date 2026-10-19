@@ -1,12 +1,12 @@
 {
   "kind": "reference_browser_dom_observation",
-  "review_status": "reviewed_by_A",
-  "ground_truth": false,
-  "observed_at_utc": "2026-10-13T13:05:25.282Z",
+  "review_status": "pending_independent_review",
+  "ground_truth": null,
+  "observed_at_utc": "2026-10-19T07:51:31.986Z",
   "sample_id": "S024",
   "base_url": "http://127.0.0.1:4280",
-  "d_source_commit": "a90708be2a4a53f732b3cabea37f7feed5f04125",
-  "browser_version": "Chrome/154.0.8037.99",
+  "d_source_commit": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06",
+  "browser_version": "Edg/155.0.4283.45",
   "marker_purpose": "Set only document.documentElement.dataset.labXss; no Cookie access or external request",
   "note": "A Chrome mouse press/release clicked the local preview link; no external URL was opened.",
   "observations": {

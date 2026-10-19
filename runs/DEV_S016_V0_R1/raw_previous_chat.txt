@@ -1,0 +1,24 @@
+```json
+{
+  "sample_id": "S016",
+  "prediction": "safe",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0003", "F01:0015"],
+  "evidence": {
+    "source": "F01:0003：$q = $_GET['q'] ?? '';，GET 参数 q 是可控输入。",
+    "flow": "F01:0003 读取 $q，F01:0015 将其输出到 input 元素的 value 属性中。",
+    "guard": "有效：F01:0015 使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，在双引号包裹的 HTML 属性上下文中转义引号与特殊字符。",
+    "sink": "F01:0015：input 标签的 value 属性回显，未发现未编码输出到 HTML/JS/URL/DOM 的危险上下文。"
+  },
+  "prerequisites": [
+    "PHP 单页脚本可由本地 Web 服务器解析",
+    "GET 参数 q 可控"
+  ],
+  "missing_context": [],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "无需POC。可普通输入 q=hello 观察 value 属性回显；测试输入 q 包含双引号和尖括号，观察其被转义为 HTML 实体，浏览器不执行脚本。由于判定为 safe，不生成攻击性 POC。"
+}
+```
+
+判断范围：本次仅审计从 GET 参数 `q` 到浏览器 HTML 属性输出的路径；代码中未发现存储、URL、JavaScript 或 DOM 上下文输出。防护建议：保持对属性上下文使用 `htmlspecialchars` 并配合 `ENT_QUOTES | ENT_SUBSTITUTE` 与明确 UTF-8；若未来输出进入 JavaScript、URL 或 DOM，应改用对应上下文的编码、白名单或安全 API。

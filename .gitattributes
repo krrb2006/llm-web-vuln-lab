@@ -4,6 +4,7 @@
 *.php text eol=lf
 *.txt text eol=lf
 *.sh text eol=lf
+*.cmd text eol=crlf
 *.md text eol=lf
 *.json text eol=lf
 prompts/*.txt text eol=lf
@@ -13,6 +14,8 @@ runs/**/input.txt text eol=lf
 *.png binary
 *.pdf binary
 demo/*.raw.txt -text
+prompts/*.txt text eol=lf
+runs/**/input.txt text eol=lf whitespace=-blank-at-eol
 results/B_proposed_packets/**/*.txt text eol=lf whitespace=-blank-at-eol
 results/B_proposed_packets_v2/**/*.txt text eol=lf whitespace=-blank-at-eol
 runs/**/raw_output.txt -text whitespace=-blank-at-eol

@@ -1,11 +1,11 @@
 {
   "kind": "ordinary_business_http_observation",
-  "review_status": "reviewed_by_A",
-  "ground_truth": true,
-  "observed_at_utc": "2026-10-13T13:04:15Z",
+  "review_status": "pending_independent_review",
+  "ground_truth": null,
+  "observed_at_utc": "2026-10-19T07:49:07Z",
   "base_url": "http://127.0.0.1:4280",
   "sample_id": "S017",
-  "d_source_commit": "a90708be2a4a53f732b3cabea37f7feed5f04125",
+  "d_source_commit": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06",
   "runtime_check": {
     "passed": 37,
     "total": 37

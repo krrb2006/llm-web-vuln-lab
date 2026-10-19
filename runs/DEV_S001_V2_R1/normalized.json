@@ -1,0 +1,37 @@
+{
+  "run_id": "DEV_S001_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入，无需登录。",
+      "flow": "F01:0007 的 name 经 F01:0010 字符串拼接进入 WHERE 条件，再于 F01:0011 执行。",
+      "guard": "无效：F01:0010 没有绑定参数、转义或白名单；F01:0022-F01:0023 的 htmlspecialchars 仅保护输出，不改变 SQL 结构。",
+      "sink": "F01:0011 $db->query($sql) 执行由外部输入参与构造的 SQL。"
+    },
+    "prerequisites": [
+      "PHP + MariaDB 本地服务运行于 127.0.0.1:4280",
+      "common/db_connect.php 已提供可用 mysqli 变量 $db",
+      "lab_people 表存在并预置 (1,Alice)、(2,Bob)、(3,Carol)",
+      "入口 /lab_cases/S001/index.php 无需登录可访问"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体实现未在输入包中；上下文仅声明 $db 已连接，未提供数据库权限与错误显示配置"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "运行：python3 poc_s001.py。脚本固定访问 http://127.0.0.1:4280/lab_cases/S001/index.php，不读取任意主机，不跟随重定向，不外发数据。普通对照：name=Alice，预期解析到实际业务记录集合 {(1,'Alice')}，且不含 Bob/Carol；浏览器应只看到 Alice 一条记录，数据库无写入。测试步骤：name 参数发送 ' OR '1'='1，预期解析到至少 {(1,'Alice'),(2,'Bob'),(3,'Carol')} 三条记录；浏览器应看到三条记录，数据库仍无写入。成功断言比较解析后的 (id,name) 集合差异，不以 HTTP 200 为成功条件。若普通对照不符，检查端口、入口路径、lab_people 预置数据、$db 连接和 PHP 报错日志；若测试仍只返回 Alice，检查输入是否已被绑定/转义、载荷是否被改写或实际查询路径是否不同。"
+  },
+  "human_verification": "pending",
+  "raw_source": "S001.docx"
+}
