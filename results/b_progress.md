@@ -2,14 +2,14 @@
 
 排序种子：20261012；只控制任务顺序，不控制模型随机性。
 
-已建输入：10/61；清单任务原文已归档：5/61。原文归档不等于人工验证完成。
+已建输入：10/61；清单任务原文已归档：6/61。原文归档不等于人工验证完成。
 
 |任务|状态|
 |---|---|
 |DEV_S003_V0|input prepared|
 |DEV_S006_V0|input prepared|
 |DEV_S004_V0|input prepared|
-|DEV_S002_V0|input prepared|
+|DEV_S002_V0|raw recorded; submission time missing; verification pending|
 |DEV_S014_V0|raw recorded; submission time missing; verification pending|
 |DEV_S018_V0|pending|
 |DEV_S005_V0|input prepared|
