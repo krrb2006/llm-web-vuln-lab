@@ -1,0 +1,37 @@
+{
+  "run_id": "F_S008_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S008",
+    "prediction": "safe",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0008",
+      "F01:0011",
+      "F02:0007",
+      "F02:0008",
+      "F02:0009"
+    ],
+    "evidence": {
+      "source": "F01:0008 从 $_GET['name'] 读取外部输入，默认空字符串。",
+      "flow": "F01:0011 将 $name 传入 find_people_by_name；F02:0006 函数接收 $name。",
+      "guard": "有效：F02:0007 使用固定 prepared statement，SQL 结构为 WHERE name = ?；F02:0008 使用 bind_param('s', $name) 将输入作为绑定值，未见拼接进 SQL 结构。",
+      "sink": "F02:0007/F02:0009 执行固定的 SELECT 语句，动态部分仅为绑定参数，未发现动态列名、排序表达式或 IN 列表进入 SQL 结构。"
+    },
+    "prerequisites": [
+      "按给定运行时上下文，入口可访问且 $db 已由共享 bootstrap 建立为 mysqli 连接。",
+      "lab_people 表存在并包含给定虚构数据。"
+    ],
+    "missing_context": [
+      "common/db_connect.php 未提供，无法核查连接初始化细节；但不影响本片段中 name 参数进入固定绑定语句的判定。"
+    ],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "无需POC。判断范围仅限所给 F01/F02 中 name 到 SQL 的路径；普通请求 name=Alice 应返回 Alice，测试输入 name=' OR '1'='1 预期作为普通字符串绑定，不应扩大结果集。未运行代码，实际需检查数据库连接、表存在及字符集前提；不以HTTP 200作为成功条件。防护建议：继续使用参数化查询；若未来动态列名、排序或IN列表进入SQL结构，应使用白名单映射。"
+  },
+  "human_verification": "pending",
+  "raw_source": "S001-s024.docx"
+}

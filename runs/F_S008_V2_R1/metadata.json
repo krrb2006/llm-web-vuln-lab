@@ -5,7 +5,7 @@
   "variant": "Original",
   "prompt_version": "V2",
   "vulnerability_type": "SQLi",
-  "status": "input_prepared",
+  "status": "raw_recorded_time_unknown",
   "model_display_name": null,
   "model_settings": null,
   "submitted_at": null,
@@ -13,9 +13,12 @@
   "packet_sha256": "0b3a718318ce598616ff47aab0a25b110d8f9cd303378d2c20d941110db09dac",
   "input_sha256": "13a5924b750dbff4c7e3e0e9db58cb80a8178d00f15f0dcb3fc2d55e264152ab",
   "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\llm-web-vuln-lab\\dataset\\packets\\S008_v1\\code_input.txt",
-  "raw_output_sha256": null,
+  "raw_output_sha256": "50d8b04ac12fb98bc2b07771cc6068a570d1eef7f0285c38ae4bf815d5d56bf6",
   "source_ref": "origin/a/criteria-and-sql01@5b0560a",
   "planned_model_display_name": "DeepSeek-V4.1-Flash",
   "planned_model_settings": "深度思考=开；联网搜索=关",
-  "formal_plan_locked": true
+  "formal_plan_locked": true,
+  "raw_source": "S001-s024.docx",
+  "raw_source_path": "D:\\网络安全\\S001-s024.docx",
+  "raw_source_note": "Authoritative formal answer; document heading S001-v2, JSON sample_id S008 used for routing."
 }

