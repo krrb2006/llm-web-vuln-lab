@@ -13,7 +13,7 @@
   "packet_sha256": "9c6ca039383b371e799c7eaa34a2183d852c62bda00947e932c2392ef8032235",
   "input_sha256": "75a05811565b7e0bfb9edf3e19bec71efc2aff551057bb8a82ca268037389c0e",
   "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\b_a_integrated_packets\\S004\\code_input.txt",
-  "raw_output_sha256": "54a911ee2f78c33a37f742b840f90074295da39fa2cb4fdbe4f8623d7419800c",
+  "raw_output_sha256": "33b5dd94a1a3b3e2b2db6acda059f84cf0384021a1174bbce9389e837911b604",
   "source_ref": "origin/a/criteria-and-sql01@173b9af",
   "source_packet_repo_path": "dataset/packets/S004_v1/code_input.txt",
   "experiment_batch": "deepseek-main-2026-10-12",

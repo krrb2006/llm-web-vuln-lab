@@ -13,7 +13,7 @@
   "packet_sha256": "098b1cade9931f53f2be7437a16f595f75670deb944308a4e1c72f7b253077dc",
   "input_sha256": "f9f1316fd164e35c7d7b2028591f5a692e62c70fbe77182b72c2b2078b4ea187",
   "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\c-samples-readonly\\dataset\\packets\\S015_v1\\code_input.txt",
-  "raw_output_sha256": "67368a259dea5a6bf836cf78f19649d579acbf8541dbc036b2f6d25532f79036",
+  "raw_output_sha256": "1c3a9ba9d4d157ced8b8e5fed1783c8dae7acb1f0b72fdd1d2f9fc0876aff272",
   "source_ref": "origin/c/samples@a04a832",
   "source_packet_repo_path": "dataset/packets/S015_v1/code_input.txt",
   "pre_submission_correction": "Normalized checkout CRLF to repository LF; no model submission or raw output existed.",
