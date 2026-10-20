@@ -16,14 +16,14 @@
 
 现场从 `runs/{run_id}/metadata.json` 查哈希，从 `input.txt` 查 Fxx 行号，从 `raw_output.txt` 查模型原文，再看 `normalized.json` 格式标记和人工验证证据。缺实测时展示工具与待填表，不展示想象中的成功 POC。
 
-## 两分钟个人讲稿（冻结前版本）
+## 两分钟个人讲稿（2026-10-20 证据版）
 
 “我负责给同一个模型设计 SQL 注入和 XSS 的三版审计任务，并记录它在相同代码输入上的差异。每份 Prompt 是完整的四段文本：角色、目标、漏洞专属判定、JSON 与 POC 契约。V0 已经能定位行号、讲清证据并限制本地验证；V1 候选要求把入口到危险操作的可达链条和有效防护写实；V2 候选进一步要求普通请求与测试请求对照，区分脚本可运行和漏洞实际触发。代码中的注释只是审计数据，不是模型命令，这一边界从 V0 就存在。
 
-这里的表展示 S013 的三轮同包原始观察；12 个开发样本的 V0、V1、V2 均已归档。三轮 prediction 都是 6 vulnerable、6 safe，V1/V2 没有改变标签；V2 主要把 POC 断言、本地目标、重定向、存储清理和浏览器触发条件写得更具体。每条原文和输入哈希都保存，不能把我自己读代码的判断算作被测模型结果。模型 POC 尚未执行，正式测试仍须等冻结后进行，我负责其中九条，并由 A 复核。
+这里展示 S013 的三轮同包原始观察，全部 36 条开发回答均已归档。正式 36 条也已由 A 集成复核，每版的六个有漏洞与六个安全样本标签均判对，没有观察到 V1/V2 提高标签准确率。V1 补充部分执行点和跨请求证据，V2 的 POC 说明更具体，但我的九条正式记录仍未执行模型 POC；因此报告把预测、代码证据和实际触发分开。原文与哈希使每项结论都能追溯。
 
-我还设计四个开发样本的注释干扰对照，共十六次独立会话。只有在源码 diff、语法和参考行为一致后，才比较模型是否改变预测或遗漏证据。即使有一次偏移，也只能说明该次观察发生变化。最终结论仍以人工检查源码、POC 和本地运行证据为准。”
+注释干扰的固定句式批次现有十六条真实原文，八对预测都未改变；V0 本来已有不可信代码边界，不能把结果解释为 V2 独有防护。输入只追加合法注释的差异已核对，语法与业务等价动态补证仍待做。我还复核了 C 的九条，发现一个 POC 的注释空格会被 trim 删除，另外两个普通对照会跳去外站。标签判对并不保证验证方案可靠，这正是需要人工复核的原因。”
 
 ## 证据索引与复现
 
-Prompt：`prompts/{SQLi,XSS}_V{0,1,2}.txt`。输入和原文：`runs/{run_id}/{input.txt,raw_output.txt,metadata.json,normalized.json}`。版本锁：`runs/b_packet_lock.json`。POC：`pocs/{run_id}/`；运行证据：`evidence/{run_id}/`。迭代：`results/B_*_iteration.md`；注入：`results/B_injection.md`；复核：`results/B_review_C.md`。执行命令见 `docs/B_执行与交接.md`。当前已有十二条 DeepSeek V0 原文；S001/S003/S005、S013/S015/S017 生成了尚未执行的原始 POC，暂无实际触发证据。
+Prompt：`prompts/{SQLi,XSS}_V{0,1,2}.txt`。输入和原文：`runs/{run_id}/{input.txt,raw_output.txt,metadata.json,normalized.json}`。静态复算：`python tools/b_final_evidence_audit.py --out <全新JSON路径>`，该命令不执行 POC。机器证据：`results/B_evidence_audit_2026-10-20.json`；注入：`results/B_injection.md`；复核：`results/B_review_C.md`；正式统计：`results/formal_eval_2026-10-19-v2/summary.md`。B 自己九条 POC 仍为 not_run，全组两条触发见各自运行证据，不能移作 B 的结果。
