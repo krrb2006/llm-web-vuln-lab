@@ -223,10 +223,10 @@
     "operator": "C",
     "reviewer": "A",
     "evidence_paths": [
-      "experiments/context_ablation/runs/CTX_S007_ENTRY/input.txt",
-      "experiments/context_ablation/runs/CTX_S007_ENTRY/metadata.json",
-      "experiments/context_ablation/runs/CTX_S007_ENTRY/normalized.json",
-      "experiments/context_ablation/runs/CTX_S007_ENTRY/raw_output.txt"
+      "experiments/context_ablation/prepared_sqliv2_rerun/CTX_S007_ENTRY/input.txt",
+      "experiments/context_ablation/prepared_sqliv2_rerun/CTX_S007_ENTRY/metadata.json",
+      "experiments/context_ablation/prepared_sqliv2_rerun/CTX_S007_ENTRY/normalized.json",
+      "experiments/context_ablation/prepared_sqliv2_rerun/CTX_S007_ENTRY/raw_output.txt"
     ]
   },
   {
@@ -239,10 +239,10 @@
     "operator": "C",
     "reviewer": "A",
     "evidence_paths": [
-      "experiments/context_ablation/runs/CTX_S007_FULL/input.txt",
-      "experiments/context_ablation/runs/CTX_S007_FULL/metadata.json",
-      "experiments/context_ablation/runs/CTX_S007_FULL/normalized.json",
-      "experiments/context_ablation/runs/CTX_S007_FULL/raw_output.txt"
+      "experiments/context_ablation/prepared_sqliv2_rerun/CTX_S007_FULL/input.txt",
+      "experiments/context_ablation/prepared_sqliv2_rerun/CTX_S007_FULL/metadata.json",
+      "experiments/context_ablation/prepared_sqliv2_rerun/CTX_S007_FULL/normalized.json",
+      "experiments/context_ablation/prepared_sqliv2_rerun/CTX_S007_FULL/raw_output.txt"
     ]
   },
   {

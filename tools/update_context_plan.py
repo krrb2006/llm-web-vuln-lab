@@ -14,8 +14,10 @@ PLAN = ROOT / "experiments" / "bonus_runs.plan.json"
 def main() -> int:
     data = json.loads(PLAN.read_text(encoding="utf-8"))
     target = {
-        "CTX_S007_ENTRY": "experiments/context_ablation/runs/CTX_S007_ENTRY",
-        "CTX_S007_FULL": "experiments/context_ablation/runs/CTX_S007_FULL",
+        # The original S007 records are preserved as a mismatched XSS_V2
+        # observation. The plan points to the corrected SQLi_V2 rerun.
+        "CTX_S007_ENTRY": "experiments/context_ablation/prepared_sqliv2_rerun/CTX_S007_ENTRY",
+        "CTX_S007_FULL": "experiments/context_ablation/prepared_sqliv2_rerun/CTX_S007_FULL",
         "CTX_S020_ENTRY": "experiments/context_ablation/runs/CTX_S020_ENTRY",
         "CTX_S020_FULL": "experiments/context_ablation/runs/CTX_S020_FULL",
     }

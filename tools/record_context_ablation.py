@@ -18,11 +18,23 @@ EXPECTED_TYPES = {"S007": "SQLi", "S020": "XSS"}
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-id", required=True)
+    parser.add_argument(
+        "--run-dir",
+        help="override the archive directory, e.g. prepared_sqliv2_rerun/<run_id>",
+    )
     parser.add_argument("--raw-output", required=True)
-    parser.add_argument("--submitted-at", required=True)
+    parser.add_argument("--submitted-at")
+    parser.add_argument("--time-note", help="use when the UI does not export an exact submission timestamp")
     args = parser.parse_args()
 
-    run_dir = ROOT / "experiments" / "context_ablation" / "runs" / args.run_id
+    if not args.submitted_at and not args.time_note:
+        raise SystemExit("provide --submitted-at or --time-note")
+
+    run_dir = (
+        (ROOT / args.run_dir)
+        if args.run_dir
+        else ROOT / "experiments" / "context_ablation" / "runs" / args.run_id
+    )
     raw_path = ROOT / args.raw_output
     raw = raw_path.read_bytes()
     metadata = json.loads((run_dir / "metadata.json").read_text(encoding="utf-8"))
@@ -52,6 +64,7 @@ def main() -> int:
         "human_verification": "pending",
         "raw_source": "DeepSeek web session",
     }
+    (run_dir / "raw_output.txt").write_bytes(raw)
     (run_dir / "normalized.json").write_text(json.dumps(normalized, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     metadata_path = run_dir / "metadata.json"
     metadata.update(
@@ -60,6 +73,7 @@ def main() -> int:
             "model_display_name": "DeepSeek-V4.1-Flash",
             "model_settings": "深度思考=开；联网搜索=关",
             "submitted_at": args.submitted_at,
+            "submission_time_note": args.time_note,
             "raw_output_sha256": hashlib.sha256(raw).hexdigest(),
         }
     )

@@ -1,0 +1,107 @@
+{
+  "ready_for_submission": true,
+  "checks": [
+    {
+      "rubric": "基础",
+      "item": "24例数据集计划",
+      "done": 24,
+      "target": 24,
+      "status": "READY"
+    },
+    {
+      "rubric": "基础",
+      "item": "样本源码落库",
+      "done": 24,
+      "target": 24,
+      "status": "READY"
+    },
+    {
+      "rubric": "基础",
+      "item": "标准输入包与行号映射",
+      "done": 24,
+      "target": 24,
+      "status": "READY"
+    },
+    {
+      "rubric": "基础",
+      "item": "独立真值复核",
+      "done": 24,
+      "target": 24,
+      "status": "READY"
+    },
+    {
+      "rubric": "基础",
+      "item": "六份Prompt文本",
+      "done": 6,
+      "target": 6,
+      "status": "READY"
+    },
+    {
+      "rubric": "基础",
+      "item": "正式记录计划",
+      "done": 36,
+      "target": 36,
+      "status": "READY"
+    },
+    {
+      "rubric": "基础",
+      "item": "正式记录完成且证据可读",
+      "done": 36,
+      "target": 36,
+      "status": "READY"
+    },
+    {
+      "rubric": "基础",
+      "item": "统计产物",
+      "done": 1,
+      "target": 1,
+      "status": "READY"
+    },
+    {
+      "rubric": "基础",
+      "item": "最终实验报告",
+      "done": 1,
+      "target": 1,
+      "status": "READY"
+    },
+    {
+      "rubric": "加分",
+      "item": "加分实验计划结构",
+      "done": 1,
+      "target": 1,
+      "status": "READY"
+    },
+    {
+      "rubric": "加分",
+      "item": "加分实验完成且证据可读",
+      "done": 0,
+      "target": 26,
+      "status": "MISSING"
+    },
+    {
+      "rubric": "加分",
+      "item": "二次注入与逻辑漏洞代码蓝图",
+      "done": 6,
+      "target": 6,
+      "status": "READY"
+    },
+    {
+      "rubric": "工程",
+      "item": "自动化测试工作流",
+      "done": 1,
+      "target": 1,
+      "status": "READY"
+    }
+  ],
+  "bonus_plan_counts": {
+    "advanced_case": 4,
+    "burp_linkage": 2,
+    "context_ablation": 4,
+    "prompt_injection": 16
+  },
+  "bonus_plan_issues": [],
+  "notes": [
+    "READY only means required files and review states are present; humans must still inspect evidence content.",
+    "Planned bonus records never count as completed evidence."
+  ]
+}
