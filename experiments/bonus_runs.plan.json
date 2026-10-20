@@ -219,7 +219,7 @@
     "sample_id": "S007",
     "condition": "entry_only",
     "prompt_version": "V2",
-    "status": "executed",
+    "status": "reviewed",
     "operator": "C",
     "reviewer": "A",
     "evidence_paths": [
@@ -235,7 +235,7 @@
     "sample_id": "S007",
     "condition": "full_context",
     "prompt_version": "V2",
-    "status": "executed",
+    "status": "reviewed",
     "operator": "C",
     "reviewer": "A",
     "evidence_paths": [
@@ -251,7 +251,7 @@
     "sample_id": "S020",
     "condition": "entry_only",
     "prompt_version": "V2",
-    "status": "executed",
+    "status": "reviewed",
     "operator": "C",
     "reviewer": "A",
     "evidence_paths": [
@@ -267,7 +267,7 @@
     "sample_id": "S020",
     "condition": "full_context",
     "prompt_version": "V2",
-    "status": "executed",
+    "status": "reviewed",
     "operator": "C",
     "reviewer": "A",
     "evidence_paths": [
