@@ -19,4 +19,4 @@ verification取值：not_run
 失败归因和下一步：模型未生成 POC，未执行攻击性脚本；保持 not_run。
 全部证据相对路径：见 runs/formal.json 的 evidence_paths；截图 runs/F_S011_V0_R1/screenshot_*.png，POC pocs/F_S011_V0_R1/，日志 evidence/F_S011_V0_R1/。
 执行人签名和日期：D（linan）2026-10-19 19:00（UTC+8）
-复核人签名和日期：
+复核人签名和日期：C（Chang_jia_jia，1715172213@qq.com）2026-10-20（UTC+8），见 results/C_review_D_formal_9_2026-10-20.md
