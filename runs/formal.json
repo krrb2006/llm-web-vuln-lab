@@ -596,12 +596,15 @@
     "raw_execution_ok": true,
     "environment_execution_ok": true,
     "logic_changed": false,
-    "verification": "not_triggered",
-    "error_reason": "Original POC ran against localhost and showed unencoded response; browser execution not confirmed.",
+    "verification": "triggered",
+    "error_reason": "User-provided browser screenshots show normal preview and S019-XSS alert at 127.0.0.1:4280; version matched V2 marker.",
     "evidence_paths": [
       "runs/F_S019_V2_R1/raw_output.txt",
       "runs/F_S019_V2_R1/normalized.json",
-      "evidence/F_S019_V2_R1/stdout.txt"
+      "evidence/F_S019_V2_R1/stdout.txt",
+      "evidence/user_S019_browser/normal_preview.png",
+      "evidence/user_S019_browser/xss_alert.png",
+      "evidence/user_S019_browser/verification.md"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "9774dc8b57991176a114d57450477e72122165bada7bab6e33e680a0c3081d25"
