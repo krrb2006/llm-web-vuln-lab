@@ -1,0 +1,82 @@
+{
+  "kind": "frozen_source_recheck_for_burp_bonus",
+  "checked_at_utc": "2026-10-19T14:57:14Z",
+  "frozen_commit": "6cd58b3eb69defd5d84034761888833a11728279",
+  "base_url": "http://127.0.0.1:4280",
+  "sql": {
+    "S009": {
+      "normal": {
+        "status": 200,
+        "rows": [
+          [
+            "1",
+            "Alice"
+          ]
+        ],
+        "fatal": false,
+        "sha256": "048b0baf96c9bb73a9f20934ed89b05f1e3d67b00bcf6ebd9159d42a6565440f"
+      },
+      "controlled": {
+        "status": 200,
+        "rows": [
+          [
+            "1",
+            "Alice"
+          ],
+          [
+            "2",
+            "Bob"
+          ],
+          [
+            "3",
+            "Carol"
+          ]
+        ],
+        "fatal": false,
+        "sha256": "d78ed35ecbc7e04ec17004c33c2899c1901f728612f3cf44db9ef715b57a5b62"
+      }
+    },
+    "S010": {
+      "normal": {
+        "status": 200,
+        "rows": [
+          [
+            "1",
+            "Alice"
+          ],
+          [
+            "2",
+            "Bob"
+          ]
+        ],
+        "fatal": false,
+        "sha256": "104068e19216828f0a5359d9b9f743645ca01e4f29c3352dc45b2e0b16a3f84f"
+      },
+      "controlled": {
+        "status": 200,
+        "rows": [],
+        "fatal": false,
+        "sha256": "c46727f035c92a8e2b43cdba0e284d06131a33f5d6aff4e924a1ad047aa2d258"
+      }
+    }
+  },
+  "xss": {
+    "S021": {
+      "submit_status": 303,
+      "location": "preview.php?id=25",
+      "preview_status": 400,
+      "marker_executed": false,
+      "script_escaped": false,
+      "fatal": false
+    },
+    "S022": {
+      "submit_status": 303,
+      "location": "preview.php?id=26",
+      "preview_status": 400,
+      "marker_executed": false,
+      "script_escaped": false,
+      "fatal": false
+    }
+  },
+  "note": "Fresh read-only HTTP recheck on the frozen lab source; Burp captures remain the 2026-10-13 demo files."
+}
