@@ -1,0 +1,85 @@
+{
+  "kind": "burp_proxy_read_only_http_observation",
+  "observed_at_utc": "2026-10-13T11:22:14Z",
+  "transport": "HTTP proxy 127.0.0.1:8080 (Burp Proxy listener)",
+  "base_url": "http://127.0.0.1:4280",
+  "scope_note": "Loopback teaching lab only; GET requests; no cookies, credentials, or state changes; response headers saved only for Content-Type to avoid session identifiers.",
+  "observations": [
+    {
+      "sample_id": "S009",
+      "label": "normal",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S009/index.php?ids=1",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "048b0baf96c9bb73a9f20934ed89b05f1e3d67b00bcf6ebd9159d42a6565440f",
+      "observed_rows": [
+        {
+          "id": 1,
+          "name": "Alice"
+        }
+      ],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<ul>\n<li>1：Alice</li>\n</ul>\n</body>\n</html>\n"
+    },
+    {
+      "sample_id": "S009",
+      "label": "card_input",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S009/index.php?ids=1+OR+1%3D1",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "048b0baf96c9bb73a9f20934ed89b05f1e3d67b00bcf6ebd9159d42a6565440f",
+      "observed_rows": [
+        {
+          "id": 1,
+          "name": "Alice"
+        }
+      ],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<ul>\n<li>1：Alice</li>\n</ul>\n</body>\n</html>\n"
+    },
+    {
+      "sample_id": "S009",
+      "label": "controlled_condition",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S009/index.php?ids=1%29+OR+1%3D1+%23",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "d78ed35ecbc7e04ec17004c33c2899c1901f728612f3cf44db9ef715b57a5b62",
+      "observed_rows": [
+        {
+          "id": 1,
+          "name": "Alice"
+        },
+        {
+          "id": 2,
+          "name": "Bob"
+        },
+        {
+          "id": 3,
+          "name": "Carol"
+        }
+      ],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<ul>\n<li>1：Alice</li>\n<li>2：Bob</li>\n<li>3：Carol</li>\n</ul>\n</body>\n</html>\n"
+    },
+    {
+      "sample_id": "S010",
+      "label": "paired_control",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S010/index.php?ids=1%29+OR+1%3D1+%23",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "c46727f035c92a8e2b43cdba0e284d06131a33f5d6aff4e924a1ad047aa2d258",
+      "observed_rows": [],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<p>未找到匹配记录。</p>\n</body>\n</html>\n"
+    }
+  ],
+  "source_commits": {
+    "a_source": "d498903da01d89a695fa49d5392d3776eb901e2f",
+    "c_source": "8da63f7b8e169e5037626b0362d005ba7ba5ede0",
+    "d_source": "a296e4b527ebdaf41ca04c2bbc5627b1a89efc06"
+  }
+}
