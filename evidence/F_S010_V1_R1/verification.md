@@ -3,7 +3,7 @@
 run_id：F_S010_V1_R1
 sample_id、版本、操作者、复核人：S010 / V1 / D / C
 审计代码哈希／运行代码哈希：bffb5fc5bf93deac2ea04397af540daa0847678386318a9ccaec6fae2bd6ad2d / 同一哈希（runtime_check 37/37）
-正常业务请求与结果：GET sort=id / sort=name / sort=name DESC 均返回 3 条（1 Alice, 2 Bob, 3 Carol），无 Fatal；见 evidence/truth/S011/http_reference.json 与 S010 记录。
+正常业务请求与结果：GET ids=1,2 返回 Alice/Bob，GET ids=3 返回 Carol；受控与非法输入均无 Fatal；见 evidence/truth/S010/http_reference.json。
 模型原文相对路径：runs/F_S010_V1_R1/raw_output.txt
 模型原始结论及引用行号：safe；未发现 ids 进入 SQL 结构，F01:0016 过滤、F01:0027 占位符、F01:0030-0031 绑定。
 模型POC原文路径（若没有则写无）：无。
