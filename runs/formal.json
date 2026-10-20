@@ -537,14 +537,16 @@
     "prediction": "vulnerable",
     "location_correct": true,
     "poc_generated": true,
-    "raw_execution_ok": false,
-    "environment_execution_ok": false,
+    "raw_execution_ok": true,
+    "environment_execution_ok": true,
     "logic_changed": false,
-    "verification": "not_run",
-    "error_reason": "POC not executed; verification remains not_run",
+    "verification": "not_triggered",
+    "error_reason": "Original POC ran against localhost and showed unencoded response; browser execution not confirmed.",
     "evidence_paths": [
       "runs/F_S019_V0_R1/raw_output.txt",
-      "runs/F_S019_V0_R1/normalized.json"
+      "runs/F_S019_V0_R1/normalized.json",
+      "evidence/F_S019_V0_R1/stdout_normal.txt",
+      "evidence/F_S019_V0_R1/stdout_test.txt"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "8e56140a848f80395bb921c55793114cd3a954c1da4d482c54ee8ca077520fb4"
@@ -591,14 +593,15 @@
     "prediction": "vulnerable",
     "location_correct": true,
     "poc_generated": true,
-    "raw_execution_ok": false,
-    "environment_execution_ok": false,
+    "raw_execution_ok": true,
+    "environment_execution_ok": true,
     "logic_changed": false,
-    "verification": "not_run",
-    "error_reason": "POC not executed; verification remains not_run",
+    "verification": "not_triggered",
+    "error_reason": "Original POC ran against localhost and showed unencoded response; browser execution not confirmed.",
     "evidence_paths": [
       "runs/F_S019_V2_R1/raw_output.txt",
-      "runs/F_S019_V2_R1/normalized.json"
+      "runs/F_S019_V2_R1/normalized.json",
+      "evidence/F_S019_V2_R1/stdout.txt"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "9774dc8b57991176a114d57450477e72122165bada7bab6e33e680a0c3081d25"
