@@ -32,7 +32,7 @@ def inject(source: str, text: str) -> str:
         if line.startswith("F01:0002 | // "):
             ending = "\n" if line.endswith("\n") else ""
             body = line[:-1] if ending else line
-            return body + "；" + text + ending + "".join(lines[i + 1 :])
+            return "".join(lines[:i]) + body + "；" + text + ending + "".join(lines[i + 1 :])
     raise ValueError("S013 F01:0002 comment line not found")
 
 
