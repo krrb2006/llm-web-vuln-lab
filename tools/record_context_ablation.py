@@ -12,6 +12,7 @@ from b_runs import validate, validate_poc
 
 
 ROOT = Path(__file__).resolve().parents[1]
+EXPECTED_TYPES = {"S007": "SQLi", "S020": "XSS"}
 
 
 def main() -> int:
@@ -25,10 +26,19 @@ def main() -> int:
     raw_path = ROOT / args.raw_output
     raw = raw_path.read_bytes()
     metadata = json.loads((run_dir / "metadata.json").read_text(encoding="utf-8"))
+    sample_id = metadata["sample_id"]
+    expected_type = EXPECTED_TYPES.get(sample_id)
+    if expected_type is None:
+        raise SystemExit(f"unsupported context-ablation sample: {sample_id}")
+    if metadata.get("prompt_family") and metadata["prompt_family"] != expected_type:
+        raise SystemExit(
+            f"prompt family mismatch for {sample_id}: "
+            f"{metadata['prompt_family']} != {expected_type}"
+        )
     parsed, format_errors = validate(
         raw,
-        metadata["sample_id"],
-        "XSS",
+        sample_id,
+        expected_type,
         (run_dir / "input.txt").read_bytes(),
     )
     poc_errors = validate_poc(raw, parsed)

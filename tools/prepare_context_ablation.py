@@ -10,7 +10,10 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PROMPT = ROOT / "prompts" / "XSS_V2.txt"
+PROMPTS = {
+    "S007": ROOT / "prompts" / "SQLi_V2.txt",
+    "S020": ROOT / "prompts" / "XSS_V2.txt",
+}
 FORMAL_RUNS = ROOT / "runs"
 ENTRY_ROOT = ROOT / "experiments" / "context_ablation"
 OUT_ROOT = ROOT / "experiments" / "context_ablation" / "runs"
@@ -34,7 +37,8 @@ def main() -> int:
     out = OUT_ROOT / run_id
     out.mkdir(parents=True, exist_ok=True)
 
-    prompt_bytes = read_lf(PROMPT)
+    prompt_path = PROMPTS[args.sample_id]
+    prompt_bytes = read_lf(prompt_path)
     if args.condition == "entry_only":
         source_dir = ENTRY_ROOT / f"CTX_{args.sample_id}_ENTRY"
         spec = json.loads((source_dir / "spec.json").read_text(encoding="utf-8"))
@@ -64,6 +68,7 @@ def main() -> int:
         "sample_id": args.sample_id,
         "condition": args.condition,
         "prompt_version": "V2",
+        "prompt_family": "SQLi" if args.sample_id == "S007" else "XSS",
         "status": "input_prepared",
         "operator": "A (delegated execution for C)",
         "reviewer": "A",
