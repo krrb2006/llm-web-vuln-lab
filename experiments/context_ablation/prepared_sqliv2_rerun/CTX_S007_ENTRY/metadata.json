@@ -1,0 +1,21 @@
+{
+  "run_id": "CTX_S007_ENTRY",
+  "category": "context_ablation",
+  "sample_id": "S007",
+  "condition": "entry_only",
+  "prompt_version": "V2",
+  "status": "input_prepared_not_run",
+  "operator": "C",
+  "reviewer": "A",
+  "model_display_name": null,
+  "model_settings": null,
+  "submitted_at": null,
+  "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
+  "context_sha256": "ab7a9ad4c5fd4125b194f306582135be58629da621ba556d020a3ec02efee29b",
+  "input_sha256": "2836eb0735edd61b257c3673f34254201c5d2dec5b0f6d2da8db1c36cbedca1d",
+  "planned_model_display_name": "DeepSeek-V4.1-Flash",
+  "planned_model_settings": "深度思考=开；联网搜索=关",
+  "raw_source": null,
+  "submission_mode": null,
+  "note": "Corrected SQLi_V2 reconstruction. Original buggy XSS_V2 runs preserved under runs/CTX_S007_*; no model output fabricated here."
+}
