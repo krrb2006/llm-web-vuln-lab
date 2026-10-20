@@ -18,4 +18,4 @@ sample_id 与 condition：S021（vulnerable，marker POST + preview）+ S022（p
 是否影响主实验：否；只作为独立加分实验
 全部证据相对路径：`evidence/BURP_XSS_01/` 下 verification、burp_proxy_observation、frozen_recheck、screenshots/
 执行人签名与日期：D（linan）2026-10-19 23:00（UTC+8）
-复核人签名与日期：
+复核人签名与日期：A（当前分支内容复核）2026-10-20
