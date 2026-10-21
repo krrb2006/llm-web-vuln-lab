@@ -30,10 +30,17 @@
     "attack": "ignore_task",
     "condition": "baseline",
     "prompt_version": "V0",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "C",
     "reviewer": "B",
-    "evidence_paths": []
+    "evidence_paths": [
+      "runs/INJ_S013_Original_V0_R1/input.txt",
+      "runs/INJ_S013_Original_V0_R1/metadata.json",
+      "runs/INJ_S013_Original_V0_R1/raw_output.txt",
+      "runs/INJ_S013_Original_V0_R1/normalized.json",
+      "experiments/prompt_injection/packets/S013/Original/code_input.txt",
+      "experiments/prompt_injection/packets/S013/diff.patch"
+    ]
   },
   {
     "run_id": "INJ_XSS_IGNORE_DEF",
@@ -42,10 +49,17 @@
     "attack": "ignore_task",
     "condition": "defended",
     "prompt_version": "V2",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "C",
     "reviewer": "B",
-    "evidence_paths": []
+    "evidence_paths": [
+      "runs/INJ_S013_Injected_V2_R1/input.txt",
+      "runs/INJ_S013_Injected_V2_R1/metadata.json",
+      "runs/INJ_S013_Injected_V2_R1/raw_output.txt",
+      "runs/INJ_S013_Injected_V2_R1/normalized.json",
+      "experiments/prompt_injection/packets/S013/Injected/code_input.txt",
+      "experiments/prompt_injection/packets/S013/diff.patch"
+    ]
   },
   {
     "run_id": "INJ_SQLI_SAFE_BASE",
@@ -78,10 +92,17 @@
     "attack": "force_safe_verdict",
     "condition": "baseline",
     "prompt_version": "V0",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "C",
     "reviewer": "B",
-    "evidence_paths": []
+    "evidence_paths": [
+      "runs/INJ_S013_Original_V0_R1/input.txt",
+      "runs/INJ_S013_Original_V0_R1/metadata.json",
+      "runs/INJ_S013_Original_V0_R1/raw_output.txt",
+      "runs/INJ_S013_Original_V0_R1/normalized.json",
+      "experiments/prompt_injection/packets/S013/Original/code_input.txt",
+      "experiments/prompt_injection/packets/S013/diff.patch"
+    ]
   },
   {
     "run_id": "INJ_XSS_SAFE_DEF",
@@ -90,10 +111,17 @@
     "attack": "force_safe_verdict",
     "condition": "defended",
     "prompt_version": "V2",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "C",
     "reviewer": "B",
-    "evidence_paths": []
+    "evidence_paths": [
+      "runs/INJ_S013_Injected_V2_R1/input.txt",
+      "runs/INJ_S013_Injected_V2_R1/metadata.json",
+      "runs/INJ_S013_Injected_V2_R1/raw_output.txt",
+      "runs/INJ_S013_Injected_V2_R1/normalized.json",
+      "experiments/prompt_injection/packets/S013/Injected/code_input.txt",
+      "experiments/prompt_injection/packets/S013/diff.patch"
+    ]
   },
   {
     "run_id": "INJ_SQLI_LEAK_BASE",
@@ -126,10 +154,17 @@
     "attack": "request_hidden_rules",
     "condition": "baseline",
     "prompt_version": "V0",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "C",
     "reviewer": "B",
-    "evidence_paths": []
+    "evidence_paths": [
+      "runs/INJ_S013_Original_V0_R1/input.txt",
+      "runs/INJ_S013_Original_V0_R1/metadata.json",
+      "runs/INJ_S013_Original_V0_R1/raw_output.txt",
+      "runs/INJ_S013_Original_V0_R1/normalized.json",
+      "experiments/prompt_injection/packets/S013/Original/code_input.txt",
+      "experiments/prompt_injection/packets/S013/diff.patch"
+    ]
   },
   {
     "run_id": "INJ_XSS_LEAK_DEF",
@@ -138,10 +173,17 @@
     "attack": "request_hidden_rules",
     "condition": "defended",
     "prompt_version": "V2",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "C",
     "reviewer": "B",
-    "evidence_paths": []
+    "evidence_paths": [
+      "runs/INJ_S013_Injected_V2_R1/input.txt",
+      "runs/INJ_S013_Injected_V2_R1/metadata.json",
+      "runs/INJ_S013_Injected_V2_R1/raw_output.txt",
+      "runs/INJ_S013_Injected_V2_R1/normalized.json",
+      "experiments/prompt_injection/packets/S013/Injected/code_input.txt",
+      "experiments/prompt_injection/packets/S013/diff.patch"
+    ]
   },
   {
     "run_id": "INJ_SQLI_DIVERT_BASE",
@@ -174,10 +216,17 @@
     "attack": "divert_output",
     "condition": "baseline",
     "prompt_version": "V0",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "C",
     "reviewer": "B",
-    "evidence_paths": []
+    "evidence_paths": [
+      "runs/INJ_S013_Original_V0_R1/input.txt",
+      "runs/INJ_S013_Original_V0_R1/metadata.json",
+      "runs/INJ_S013_Original_V0_R1/raw_output.txt",
+      "runs/INJ_S013_Original_V0_R1/normalized.json",
+      "experiments/prompt_injection/packets/S013/Original/code_input.txt",
+      "experiments/prompt_injection/packets/S013/diff.patch"
+    ]
   },
   {
     "run_id": "INJ_XSS_DIVERT_DEF",
@@ -186,10 +235,17 @@
     "attack": "divert_output",
     "condition": "defended",
     "prompt_version": "V2",
-    "status": "planned",
+    "status": "reviewed",
     "operator": "C",
     "reviewer": "B",
-    "evidence_paths": []
+    "evidence_paths": [
+      "runs/INJ_S013_Injected_V2_R1/input.txt",
+      "runs/INJ_S013_Injected_V2_R1/metadata.json",
+      "runs/INJ_S013_Injected_V2_R1/raw_output.txt",
+      "runs/INJ_S013_Injected_V2_R1/normalized.json",
+      "experiments/prompt_injection/packets/S013/Injected/code_input.txt",
+      "experiments/prompt_injection/packets/S013/diff.patch"
+    ]
   },
   {
     "run_id": "BURP_SQLI_01",
