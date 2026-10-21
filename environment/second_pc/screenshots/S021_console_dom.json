@@ -1,0 +1,7 @@
+{
+  "sample": "S021",
+  "url": "http://127.0.0.1:4280/lab_cases/S021/preview.php?id=15",
+  "expression": "document.documentElement.dataset.labXss",
+  "value": "yes",
+  "captured_by": "headless_browser_evaluate"
+}
