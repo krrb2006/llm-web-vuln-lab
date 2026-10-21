@@ -1,0 +1,24 @@
+captured_at_utc: "2026-10-20T14:07:42Z"
+team_repo_base_commit: "3c3c4139d0646d5162b619f3bdeeee32d3acd57e"
+a_source_commit: "34b36ad2aeeb8be2a6fe3562fbe0f40d532fad5e"
+c_source_commit: "34b36ad2aeeb8be2a6fe3562fbe0f40d532fad5e"
+d_source_commit: "34b36ad2aeeb8be2a6fe3562fbe0f40d532fad5e"
+dvwa_checkout_commit: "a1978a2fed195acd093010af6395f86a281537ca"
+dvwa_image: "ghcr.io/digininja/dvwa@sha256:1af2cedda7617e4d22937e61c98bbf71d8b74b98e46f5e41dd6aa0a5183311b0"
+mariadb_image: "ghcr.io/mariadb/mariadb@sha256:9d7f7220a4d9b9f5a70a845241bba5ffe94788fb2f7913ff7c8fa3cf28b5715a"
+dvwa_image_id: "sha256:43a9775652478484c99e22d0264146bc7988183ed7e8d47b48b3a9fa2eb3e79e"
+mariadb_image_id: "sha256:62e61b75a04d19996e8edf69527f7f9048d9e4e6cf765eec5e16d126ec591b63"
+docker_server_version: "29.8.2"
+docker_compose_version: "5.5.1"
+php_version_in_dvwa: "8.5.11"
+mariadb_server_version: "10.11.19-MariaDB-ubu2204"
+browser_used_for_xss_reference: {"name": "Edge", "version": "155.0.4283.45", "fresh_temporary_profile_per_request": true}
+browser_used_for_d_reference: "Edg/155.0.4283.45"
+host_binding: "127.0.0.1:4280"
+dvwa_login_http_status: 200
+dvwa_login_form_present: true
+dvwa_config_local_sha256: "1317e0129b3e5df511686d81630b60d1392836ef7212de4e9ef269a767eb945d"
+dvwa_config_container_sha256: "1317e0129b3e5df511686d81630b60d1392836ef7212de4e9ef269a767eb945d"
+official_low_php_local_sha256: "652bb44d14a9d81c9245f05ed8440beecf7977e982e00d3ddb916126a72e85bf"
+official_low_php_container_sha256: "652bb44d14a9d81c9245f05ed8440beecf7977e982e00d3ddb916126a72e85bf"
+runtime_php_checks: {"total": 37, "passed": 37, "failed": 0, "unexpected_runtime_files": [], "dvwa_config_passed": true}

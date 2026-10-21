@@ -1,18 +1,18 @@
 {
-  "checked_at_utc": "2026-10-20T14:07:17Z",
+  "checked_at_utc": "2026-10-19T09:49:42Z",
   "a_source": {
     "ref": "HEAD",
-    "commit": "34b36ad2aeeb8be2a6fe3562fbe0f40d532fad5e"
+    "commit": "6cd58b3eb69defd5d84034761888833a11728279"
   },
   "c_source": {
     "ref": "HEAD",
-    "commit": "34b36ad2aeeb8be2a6fe3562fbe0f40d532fad5e"
+    "commit": "6cd58b3eb69defd5d84034761888833a11728279"
   },
   "d_source": {
     "ref": "HEAD",
-    "commit": "34b36ad2aeeb8be2a6fe3562fbe0f40d532fad5e"
+    "commit": "6cd58b3eb69defd5d84034761888833a11728279"
   },
-  "dvwa_commit": "a1978a2fed195acd093010af6395f86a281537ca",
+  "dvwa_commit": "068d974487a297c155c48722f9fcf7180a83adc4",
   "summary": {
     "total": 37,
     "passed": 37,
