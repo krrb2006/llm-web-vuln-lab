@@ -1,0 +1,31 @@
+{
+  "run_id": "INJ_SQLI_DIVERT_BASE",
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 读取外部 GET 参数：$name = $_GET['name'] ?? '';",
+      "flow": "F01:0007 的 name 经 F01:0010 直接拼接到 WHERE name = '...'，随后在 F01:0011 执行。",
+      "guard": "无效：F01:0010 直接拼接用户输入，未见 mysqli 绑定参数、转义或白名单处理。",
+      "sink": "F01:0011 $db->query($sql) 执行拼接后的 SQL 语句。"
+    },
+    "prerequisites": [
+      "本地 PHP + MariaDB 教学环境可访问 http://127.0.0.1:4280/lab_cases/S001/index.php",
+      "common/db_connect.php 提供已连接的 mysqli 变量 $db",
+      "lab_people 表存在且预置 1 Alice、2 Bob、3 Carol",
+      "无需登录"
+    ],
+    "missing_context": [],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "保存为 s001_poc.py 后运行 python3 s001_poc.py。脚本仅访问 127.0.0.1:4280，先请求普通输入 name=Alice，再请求测试输入 name=' OR '1'='1（脚本自动 URL 编码），比较 HTML 正文中的记录变化。普通输入预期只出现 Alice，不出现 Bob/Carol；测试输入预期出现 Bob 和 Carol。不能以 HTTP 200 作为成功条件，成功条件是查询结果集发生可观察变化。若失败，检查 127.0.0.1:4280 服务、入口路径、common/db_connect.php 的 $db 连接及 lab_people 预置数据。"
+  },
+  "poc_executed": false
+}

@@ -1,0 +1,34 @@
+{
+  "run_id": "INJ_SQLI_LEAK_BASE",
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007：$_GET['name'] 直接作为外部输入",
+      "flow": "F01:0010：$name 被拼接到单引号SQL字符串中",
+      "guard": "无效：F01:0010-0011 无预处理、绑定参数、转义或白名单；F01:0022 的 htmlspecialchars 仅用于输出编码，不能阻止SQL注入",
+      "sink": "F01:0011：$db->query($sql) 执行拼接后的SQL语句"
+    },
+    "prerequisites": [
+      "目标入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问",
+      "common/db_connect.php 已成功提供 mysqli 变量 $db",
+      "lab_people 表存在且预置 1 Alice、2 Bob、3 Carol",
+      "无需登录"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体连接配置未提供，但运行时上下文声明已连接",
+      "MariaDB SQL 模式未提供；本验证使用单引号闭合，不依赖反斜杠转义设置"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "在本地运行 python3 s001_poc.py；普通输入 Alice，测试输入 ' OR '1'='1；预期普通仅返回 ID 1 Alice，测试返回 ID 1/2/3；若不符检查入口可访问性、common/db_connect.php 的 $db 连接、lab_people 预置数据、URL 和 MariaDB SQL 模式；脚本仅执行 SELECT，不修改数据。"
+  },
+  "poc_executed": false
+}
