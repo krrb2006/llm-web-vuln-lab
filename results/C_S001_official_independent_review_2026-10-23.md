@@ -113,7 +113,7 @@ packet 根目录为 `experiments/prompt_injection/official_packets/S001/`。
 
 原 PR #23：head codex/c-s001-official-audit@9c0b71d，71 个改动文件、16 个提交，open、未合并。本地合入后相对 A 为 **33 个新增路径 = C 五文件 + B 28 文件**，没有对 A 既有文件的净修改。28 条完整名单位于 audit.json 的 publication_gate.non_C_paths_against_A，包含原始回答八份、packet 四份、共享截图、提取说明和 B 工具/报告。A f7a9c25 虽有修正后的 input/metadata/normalized，但**没有这八份 raw、四个 packet 和截图**；不能删证据来伪装五文件 PR，也不能替 A/B 接收证据。
 
-因此 C 报告更新仅提交下列五文件到本地后，**停止推送原 PR 分支**。PR 上旧文件不会自动变为本次结论；仅更新 PR 说明披露本地复核与阻塞，最终远端文件差异仍需重新检查。
+因此 C 报告更新仅提交下列五文件到本地后，**停止推送原 PR 分支**。PR 上旧文件不会自动变为本次结论。尝试更新 PR 说明时 GitHub 连接器返回 403 Resource not accessible by integration；浏览器备用通道也因运行环境初始化失败而不可用。因此远端文件和说明均未更新，PR 仍 open、未合并、71 个改动文件，head 9c0b71d；本地成果不能声称已发布。
 
 1. results/C_S001_official_independent_review_2026-10-23.md
 2. results/C_S001_official_independent_audit.py
@@ -122,3 +122,11 @@ packet 根目录为 `experiments/prompt_injection/official_packets/S001/`。
 5. results/C_S001_official_runtime_regression.json
 
 交 A/B 的处理路径：先由证据责任人在独立变更中接收 B 原始证据，并修正 raw 哈希缺失与对账文字；保留现有 raw 字节，不补跑模型或 POC。A 更新基线后，再将其合入原 PR，以最终差异恰为上述五文件为推送条件；全程普通 merge/push，不能强推。若 A 只接收必要证据，剩余 B 工具/报告也需明确归属后才能从 C PR 清出。未解决前 planned、14/26 和 A 签字维持现状。
+
+## 待写入 PR #23 的说明（远端写权限恢复后使用）
+
+C 已完成 2026-10-24 静态独立复核，本地五文件更新提交为 11625c8，基线合入为 134a706；均未推送。八条首个 JSON 的 SQLi 预测/定位通过，综合有条件接受；SAFE_BASE 原文缺五字段，格式不通过，修正版 normalized.format_valid=false。其余七条 JSON 字段合规；两条 IGNORE 归档尾文混杂需保留限制。
+
+完整 input 与冻结 Prompt/packet 组合及 input 哈希一致，但属于事后重建；八条 metadata 仍缺 raw_output_sha256。共享截图未绑定逐条会话，model_display_name=null；POC 未执行。PHP 8.5.11 四次 lint 与四次 Alice 正常业务证据只复查旧日志通过，本轮未运行模型、PHP/HTTP 或 POC。
+
+停止推送原因：本地合入 A 后还有 33 个新增文件，包含 C 五文件和 B 28 文件；A 缺八份 raw、四个 packet 和共享截图。需 A/B 先独立接收原始证据并处理哈希/对账缺口，明确其余 B 文件归属，再正常合入 A、确认最终净差异恰为 C 五文件后普通推送。bonus、36 条主实验和 A 签字不变，PR 不合并。当前 PR 远端仍为旧 C 报告，不能作为本次结论。
