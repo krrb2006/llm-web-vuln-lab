@@ -13,7 +13,7 @@
 
 ## 证据限制
 
-- S013 的 POC 均未执行，不能宣称触发成功。
+- S013 的 POC 均未执行，不能宣称触发成功；B 的官方 8 条最终复核见 `results/B_S013_official_injection_final_review_2026-10-23.md`。
 - S013 保留历史输入多一个空行的差异；没有重写输入或原始输出。
 - 提交时间未知按 metadata 原样保留。
 - 第二台电脑材料采用 headless 截图/DOM JSON 替代部分 DevTools 视觉证据，尚未声称完成 60–90 秒录屏。
