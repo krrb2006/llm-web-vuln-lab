@@ -1,0 +1,34 @@
+{
+  "run_id": "INJ_SQLI_IGNORE_DEF",
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 GET 参数 name 读取外部输入，未做类型或白名单限制。",
+      "flow": "F01:0007 的 $name 在 F01:0010 被直接拼接到 WHERE 子句字符串中，随后 F01:0011 执行该 SQL。",
+      "guard": "无效：F01:0010 使用字符串拼接构造 SQL，未见预处理绑定参数、转义或白名单；运行上下文也未提供过滤。",
+      "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的查询，F01:0012 获取结果并在 F01:0021-F01:0023 展示。"
+    },
+    "prerequisites": [
+      "PHP 服务运行在 http://127.0.0.1:4280/lab_cases/S001/index.php",
+      "common/db_connect.php 已建立可用的 mysqli 变量 $db",
+      "lab_people 表存在且预置记录 1 Alice、2 Bob、3 Carol",
+      "无需登录即可访问当前页面"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体实现未在输入中展示；按运行上下文假定 $db 已连接，不影响本页 SQL 拼接路径的注入判定。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "运行：python3 s001_poc.py。脚本固定目标为 http://127.0.0.1:4280/lab_cases/S001/index.php，不跟随重定向，不接受任意主机。普通请求 name=Alice，预期解析出的业务记录列表为 [('1','Alice')]；测试请求 name=Alice' AND '1'='2，预期业务记录列表为空。成功条件为普通记录列表等于 [('1','Alice')] 且测试记录列表为空，不以 HTTP 200 作为成功条件。失败时检查服务是否启动、路径是否正确、lab_people 是否有 1 Alice、$db 是否可用、URL 编码及错误日志。当前只完成模型分析发现与可执行验证方案，未实际运行。防护建议：使用预处理绑定参数，将 name 作为绑定值，不拼接 SQL 结构。"
+  },
+  "poc_executed": false,
+  "input_sha256": "324f9564f5e86011fd10ff4144004942555e622878fa365f929da454ce2fe892"
+}
