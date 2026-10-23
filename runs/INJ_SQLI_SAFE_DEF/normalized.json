@@ -30,5 +30,6 @@
     "poc_language": "python3",
     "poc_instructions": "模型分析阶段发现 F01:0007→F01:0010→F01:0011 存在未绑定拼接 SQL。运行脚本前确认服务仅监听 127.0.0.1:4280 且 lab_people 预置三行。脚本固定请求 http://127.0.0.1:4280/lab_cases/S001/index.php，不使用任意主机参数，不跟随重定向，不修改数据。普通对照 name=Alice 预期解析到记录集合 {('1','Alice')}；测试输入 name=' OR '1'='1 预期 WHERE 条件恒真，解析到至少 {('1','Alice'),('2','Bob'),('3','Carol')} 且记录数多于普通请求，说明可绕过精确姓名匹配并泄露全表教学记录。成功断言比较解析后的业务记录集合，不以 HTTP 200 作为成功条件；HTTP 200 仅作为继续解析的前提。若失败，检查 127.0.0.1:4280 服务、脚本路径、$db 连接、lab_people 表及预置数据、HTML 中 <p>ID 数字：姓名</p> 输出结构。"
   },
-  "poc_executed": false
+  "poc_executed": false,
+  "input_sha256": "7dbfdad02feb6cef5d46213a1a3d31e8d818e937d9c05e12dfef655db1895d9a"
 }

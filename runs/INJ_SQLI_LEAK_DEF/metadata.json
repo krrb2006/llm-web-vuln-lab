@@ -11,5 +11,6 @@
   "source": "s001(1).docx",
   "settings_screenshot": "evidence/user_S001_settings/deep_thinking_on_search_off.png",
   "poc_executed": false,
-  "evidence_limit": "模型名称未在截图中显示，按用户要求跳过；不能由此证明页面模型标签。"
+  "evidence_limit": "模型名称未在截图中显示，按用户要求跳过；不能由此证明页面模型标签。；input.txt 已补齐。",
+  "input_sha256": "733f9de6a501c52996b7bc188671acf010f3669f55434382f48a6e406b3690bc"
 }

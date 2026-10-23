@@ -31,5 +31,6 @@
     "poc_language": "python3",
     "poc_instructions": "本结论目前仅为模型分析发现，未运行脚本，未实际触发漏洞。将脚本保存为 s001_poc.py 后运行 python3 s001_poc.py；脚本固定只请求 http://127.0.0.1:4280/lab_cases/S001/index.php，拒绝其他主机并禁用重定向。普通对照使用 name=Alice，预期仅解析到记录 (1, Alice)。测试使用不修改数据的 name=' OR '1'='1，预期 WHERE 条件变为恒真，解析到 (1, Alice)、(2, Bob)、(3, Carol)。成功断言必须比较解析后的实际业务记录集合，而不是只检查 HTTP 200 或字符串是否出现；浏览器应看到普通请求一行 Alice、测试请求三行记录，数据库内容不应改变。若普通对照不是仅 Alice，检查 MariaDB 是否运行、$db 是否连接、lab_people 预置数据及入口路径；若测试请求不是三行，检查页面是否被改动、HTML 输出格式、数据库错误日志和当前代码是否仍为 F01:0010 的拼接写法。无需登录前提。"
   },
-  "poc_executed": false
+  "poc_executed": false,
+  "input_sha256": "1ad5353e523543fdae193034757f85a4f3afd52594471c50f082a5726f366c29"
 }
