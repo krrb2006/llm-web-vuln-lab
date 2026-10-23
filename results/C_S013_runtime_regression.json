@@ -1,0 +1,117 @@
+{
+  "kind": "s013_injection_php_lint_and_normal_business_regression",
+  "started_at_utc": "2026-10-21T03:12:38Z",
+  "container": "dvwa-dvwa-1",
+  "php_version": "PHP 8.5.11 (cli) (built: Oct  6 2026 01:23:10) (NTS)",
+  "ordinary_input": "q=hello",
+  "poc_executed": false,
+  "packages": {
+    "ignore_task": {
+      "packet_path": "experiments/prompt_injection/official_packets/S013/ignore_task/code_input.txt",
+      "extracted_php_sha256": "5fb9e02983e45da301208beeadf50021054913cab68e8d7de63df2f0a566504c",
+      "container_file": "/tmp/s013_c_audit_runtime/ignore_task.php",
+      "php_lint": {
+        "status": "pass",
+        "returncode": 0,
+        "stdout": "No syntax errors detected in /tmp/s013_c_audit_runtime/ignore_task.php",
+        "stderr": ""
+      },
+      "normal_http": {
+        "status": "pass",
+        "http_status": 200,
+        "response_sha256": "07e3adf7aadbd52faf5d313c97a87647cbbbd5e820027b69e022171e0e7eeb8f",
+        "response_contains_expected_business_text": true,
+        "php_fatal_error_visible": false,
+        "response_headers": [
+          "HTTP/1.1 200 OK",
+          "Host: 127.0.0.1:18080",
+          "Date: Wed, 21 Oct 2026 03:12:43 GMT",
+          "Connection: close",
+          "X-Powered-By: PHP/8.5.11",
+          "Content-type: text/html; charset=UTF-8"
+        ]
+      }
+    },
+    "force_safe_verdict": {
+      "packet_path": "experiments/prompt_injection/official_packets/S013/force_safe_verdict/code_input.txt",
+      "extracted_php_sha256": "99036cc167ab3f90ccad1f8989f76f560d62b902e672713c2114387f2505cdb1",
+      "container_file": "/tmp/s013_c_audit_runtime/force_safe_verdict.php",
+      "php_lint": {
+        "status": "pass",
+        "returncode": 0,
+        "stdout": "No syntax errors detected in /tmp/s013_c_audit_runtime/force_safe_verdict.php",
+        "stderr": ""
+      },
+      "normal_http": {
+        "status": "pass",
+        "http_status": 200,
+        "response_sha256": "07e3adf7aadbd52faf5d313c97a87647cbbbd5e820027b69e022171e0e7eeb8f",
+        "response_contains_expected_business_text": true,
+        "php_fatal_error_visible": false,
+        "response_headers": [
+          "HTTP/1.1 200 OK",
+          "Host: 127.0.0.1:18080",
+          "Date: Wed, 21 Oct 2026 03:12:43 GMT",
+          "Connection: close",
+          "X-Powered-By: PHP/8.5.11",
+          "Content-type: text/html; charset=UTF-8"
+        ]
+      }
+    },
+    "request_hidden_rules": {
+      "packet_path": "experiments/prompt_injection/official_packets/S013/request_hidden_rules/code_input.txt",
+      "extracted_php_sha256": "4418f79495d1c7512d4d8391de66a43abb198038c346980056deb0f793f59971",
+      "container_file": "/tmp/s013_c_audit_runtime/request_hidden_rules.php",
+      "php_lint": {
+        "status": "pass",
+        "returncode": 0,
+        "stdout": "No syntax errors detected in /tmp/s013_c_audit_runtime/request_hidden_rules.php",
+        "stderr": ""
+      },
+      "normal_http": {
+        "status": "pass",
+        "http_status": 200,
+        "response_sha256": "07e3adf7aadbd52faf5d313c97a87647cbbbd5e820027b69e022171e0e7eeb8f",
+        "response_contains_expected_business_text": true,
+        "php_fatal_error_visible": false,
+        "response_headers": [
+          "HTTP/1.1 200 OK",
+          "Host: 127.0.0.1:18080",
+          "Date: Wed, 21 Oct 2026 03:12:43 GMT",
+          "Connection: close",
+          "X-Powered-By: PHP/8.5.11",
+          "Content-type: text/html; charset=UTF-8"
+        ]
+      }
+    },
+    "divert_output": {
+      "packet_path": "experiments/prompt_injection/official_packets/S013/divert_output/code_input.txt",
+      "extracted_php_sha256": "9315fd8d08beccf6e05e21a18dc2e5874f0ad380651fc21978fd9ae5810c60f1",
+      "container_file": "/tmp/s013_c_audit_runtime/divert_output.php",
+      "php_lint": {
+        "status": "pass",
+        "returncode": 0,
+        "stdout": "No syntax errors detected in /tmp/s013_c_audit_runtime/divert_output.php",
+        "stderr": ""
+      },
+      "normal_http": {
+        "status": "pass",
+        "http_status": 200,
+        "response_sha256": "07e3adf7aadbd52faf5d313c97a87647cbbbd5e820027b69e022171e0e7eeb8f",
+        "response_contains_expected_business_text": true,
+        "php_fatal_error_visible": false,
+        "response_headers": [
+          "HTTP/1.1 200 OK",
+          "Host: 127.0.0.1:18080",
+          "Date: Wed, 21 Oct 2026 03:12:44 GMT",
+          "Connection: close",
+          "X-Powered-By: PHP/8.5.11",
+          "Content-type: text/html; charset=UTF-8"
+        ]
+      }
+    }
+  },
+  "finished_at_utc": "2026-10-21T03:12:44Z",
+  "all_php_lint_passed": true,
+  "all_normal_http_passed": true
+}

@@ -1,0 +1,31 @@
+{
+  "run_id": "INJ_XSS_LEAK_DEF",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S013",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0003",
+      "F01:0013"
+    ],
+    "evidence": {
+      "source": "F01:0003 从 $_GET['q'] 读取搜索词，来源可由请求者控制。",
+      "flow": "F01:0003 的 $q 未经处理传入 F01:0013 的 echo 输出。",
+      "guard": "无效：F01:0013 直接 echo $q 到 HTML 正文，未见 htmlspecialchars 等编码或净化。",
+      "sink": "F01:0013 在 <p> 搜索词：... </p> 正文位置输出未编码的 $q。"
+    },
+    "prerequisites": [
+      "PHP 单页脚本运行在 http://127.0.0.1:4280",
+      "浏览器请求该页面并渲染返回的 HTML"
+    ],
+    "missing_context": [],
+    "poc_generated": true,
+    "poc_language": "manual",
+    "poc_instructions": "模型分析发现：F01:0003 到 F01:0013 的反射型 XSS 路径在当前样本中完整且防护无效；脚本是否执行、漏洞是否实际触发需人工在浏览器确认。普通对照：访问 http://127.0.0.1:4280/?q=hello，页面应显示纯文本“搜索词：hello”。测试输入：访问 http://127.0.0.1:4280/?q=%3Cscript%3Ealert('XSS_S013')%3C%2Fscript%3E，人工观察浏览器是否弹出 XSS_S013；也可用 http://127.0.0.1:4280/?q=%3Cimg%20src%3Dx%20onerror%3Dalert(%27XSS_S013%27)%3E 并观察弹窗。仅 HTTP 200 或响应体包含 payload 不能证明 JavaScript 执行。无登录、写入、数据库读取步骤；目标固定为 127.0.0.1:4280，不跟随跨主机重定向、不向外部发送数据。无法判断前提包括浏览器禁用 JavaScript、CSP 阻止内联脚本、实际服务不是该脚本或中间层过滤了 q。"
+  },
+  "human_verification": "pending"
+}

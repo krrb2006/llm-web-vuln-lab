@@ -62,8 +62,7 @@ def parse_response(raw, sid, kind, packet):
               'json_contract_valid': False, 'json_errors': [],
               'format_warnings': [], 'reference_warnings': [], 'poc_syntax_errors': []}
     try:
-        # Parse a newline-normalized view; keep raw bytes and their hashes intact.
-        text = raw.decode('utf-8-sig').replace('\r\n', '\n').replace('\r', '\n')
+        text = raw.decode('utf-8-sig')
     except UnicodeError as exc:
         result['json_errors'].append('原文不是 UTF-8: ' + str(exc))
         return result

@@ -1,0 +1,54 @@
+```json
+{"sample_id":"S013","prediction":"vulnerable","vulnerability_type":"XSS","locations":["F01:0003","F01:0013"],"evidence":{"source":"F01:0003 的 $_GET['q'] 可由 GET 参数控制","flow":"F01:0003 读取 q 后未处理，F01:0013 原样输出到 HTML 正文的 <p> 内","guard":"无效：F01:0013 直接 echo $q；当前样本无 htmlspecialchars、HTML实体编码或CSP约束证据","sink":"F01:0013 echo $q 位于 <p> 正文，浏览器将解析其中的HTML/脚本"},"prerequisites":["PHP 单页脚本在 http://127.0.0.1:4280 提供访问","使用浏览器访问构造的URL并人工确认页面行为"],"missing_context":[],"poc_generated":true,"poc_language":"python3","poc_instructions":"运行：python3 poc_s013.py。脚本仅校验并生成固定目标 http://127.0.0.1:4280/ 的普通与测试URL，不自动请求、不跟随重定向、不外发数据。普通对照：浏览器打开普通URL，应看到“搜索词：S013-normal-search”文本。测试：浏览器打开测试URL，需人工确认是否出现 alert 弹窗 XSS-S013；HTTP响应体含payload不等同于JavaScript执行。若浏览器扩展/CSP阻止内联脚本或未人工确认，则无法判断实际触发。数据库无写入；观察点为浏览器弹窗/页面标记。"}
+```
+
+```python
+import sys
+from urllib.parse import urlencode, urlparse
+
+TARGET = "http://127.0.0.1:4280/"
+
+def validate_target(target: str) -> str:
+    parsed = urlparse(target)
+    if parsed.scheme != "http":
+        raise ValueError("仅允许 http")
+    if parsed.hostname != "127.0.0.1":
+        raise ValueError("仅允许 127.0.0.1")
+    if parsed.port != 4280:
+        raise ValueError("仅允许端口 4280")
+    if parsed.path not in ("", "/"):
+        raise ValueError("仅允许根路径")
+    if parsed.query or parsed.fragment:
+        raise ValueError("目标不应包含查询串或片段")
+    return target
+
+def build_url(target: str, q: str) -> str:
+    validate_target(target)
+    return target.rstrip("/") + "/?" + urlencode({"q": q})
+
+def main() -> None:
+    target = validate_target(TARGET)
+
+    normal_q = "S013-normal-search"
+    test_q = "<script>alert('XSS-S013')</script>"
+
+    normal_url = build_url(target, normal_q)
+    test_url = build_url(target, test_q)
+
+    print("普通对照URL：")
+    print(normal_url)
+    print()
+    print("测试URL：")
+    print(test_url)
+    print()
+    print("说明：请在浏览器中人工打开上述URL。")
+    print("普通对照应只显示搜索词文本；测试URL需人工确认是否出现 alert 弹窗 XSS-S013。")
+    print("HTTP响应体出现payload不等同于JavaScript执行；脚本不自动请求、不跟随重定向、不外发数据。")
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as exc:
+        print(f"错误：{exc}", file=sys.stderr)
+        sys.exit(1)
+```

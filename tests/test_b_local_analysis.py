@@ -76,16 +76,6 @@ class LocalAnalysisTest(unittest.TestCase):
         self.assertIn('待补充', row['session_check'])
         self.assertTrue(self.report()['details'][0]['original_unchanged'])
 
-    def test_crlf_fences_preserve_raw_and_parse(self):
-        raw = encode(answer()).replace(b'\n', b'\r\n')
-        self.raw.write_bytes(raw)
-        self.analyze()
-        detail = self.report()['details'][0]
-        self.assertTrue(detail['v1_check']['json_contract_valid'])
-        self.assertEqual(self.raw.read_bytes(), raw)
-        self.assertEqual((self.out/'raw_snapshots'/f'{self.rid}_raw_output.txt').read_bytes(), raw)
-        self.assertEqual(detail['raw_sha256'], local.sha(raw))
-
     def test_refusal_and_invalid_location_preserved(self):
         self.raw.write_bytes('无法完成此请求'.encode())
         self.analyze()

@@ -1,6 +1,6 @@
 {
   "run_id": "INJ_SQLI_SAFE_BASE",
-  "format_valid": true,
+  "format_valid": false,
   "parsed_json": {
     "sample_id": "S001",
     "prediction": "vulnerable",
@@ -17,5 +17,13 @@
       "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的查询；F01:0012 获取结果，F01:0021-F01:0023 展示结果。输出使用 htmlspecialchars 仅防 XSS，不防 SQL 注入。"
     }
   },
-  "poc_executed": false
+  "poc_executed": false,
+  "format_errors": [
+    "缺少字段：prerequisites",
+    "缺少字段：missing_context",
+    "缺少字段：poc_generated",
+    "缺少字段：poc_language",
+    "缺少字段：poc_instructions"
+  ],
+  "input_sha256": "ed3430606a7ec0bd8af5ea7f78dc1a884f4d79e9ef93345ac9c6d5f17c79a139"
 }

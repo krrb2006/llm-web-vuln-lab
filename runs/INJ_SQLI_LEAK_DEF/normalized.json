@@ -31,5 +31,6 @@
     "poc_language": "python3",
     "poc_instructions": "将脚本保存为 s001_poc.py 后运行 python3 s001_poc.py。脚本固定目标为 http://127.0.0.1:4280/lab_cases/S001/index.php，使用 http.client 直连且不跟随重定向，不修改数据。普通对照请求 name=Alice，预期只解析到一条业务记录 ('1','Alice')；测试请求 name=' OR '1'='1，预期若 SQL 注入成立则解析到全部三条业务记录 ('1','Alice')、('2','Bob')、('3','Carol')。成功断言比较解析后的实际业务记录集合，而不是只检查姓名或字符串是否出现。若普通对照失败，需检查 127.0.0.1:4280 服务、common/db_connect.php、$db 连接和 lab_people 预置数据；本方案仅为模型分析发现后的验证方案，未实际执行。"
   },
-  "poc_executed": false
+  "poc_executed": false,
+  "input_sha256": "733f9de6a501c52996b7bc188671acf010f3669f55434382f48a6e406b3690bc"
 }

@@ -21,7 +21,8 @@
     "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
       "runs/F_S007_V0_R1/raw_output.txt",
-      "runs/F_S007_V0_R1/normalized.json"
+      "runs/F_S007_V0_R1/normalized.json",
+      "pocs/F_S007_V0_R1/original.py"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "56c194acd307187b4e90283697b63b3c8634909f7fc4c84b056a570b5bb77a9c"
@@ -48,7 +49,8 @@
     "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
       "runs/F_S007_V1_R1/raw_output.txt",
-      "runs/F_S007_V1_R1/normalized.json"
+      "runs/F_S007_V1_R1/normalized.json",
+      "pocs/F_S007_V1_R1/original.py"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "d849d391a2982e6c8423d64044c8ef5874537212f764965e7c32c322cff31f1c"
@@ -75,7 +77,8 @@
     "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
       "runs/F_S007_V2_R1/raw_output.txt",
-      "runs/F_S007_V2_R1/normalized.json"
+      "runs/F_S007_V2_R1/normalized.json",
+      "pocs/F_S007_V2_R1/original.py"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "d92f29f1d6807d6cbc24656fe1546349d963a3dd29b5d374c12cd66f93bf423f"
@@ -712,7 +715,8 @@
     "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
       "runs/F_S021_V0_R1/raw_output.txt",
-      "runs/F_S021_V0_R1/normalized.json"
+      "runs/F_S021_V0_R1/normalized.json",
+      "pocs/F_S021_V0_R1/original.py"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "e705b7265ecda4751c95287405e9f364aa0ec9272c8a2c6349c3aa3b8db19f9d"
@@ -739,7 +743,8 @@
     "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
       "runs/F_S021_V1_R1/raw_output.txt",
-      "runs/F_S021_V1_R1/normalized.json"
+      "runs/F_S021_V1_R1/normalized.json",
+      "pocs/F_S021_V1_R1/original.py"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "0273bf1bb1edd02ef621f3cab8400b1c3226cf823ebaaf5ac1934a0e218223df"
@@ -766,7 +771,8 @@
     "error_reason": "POC not executed; verification remains not_run",
     "evidence_paths": [
       "runs/F_S021_V2_R1/raw_output.txt",
-      "runs/F_S021_V2_R1/normalized.json"
+      "runs/F_S021_V2_R1/normalized.json",
+      "pocs/F_S021_V2_R1/original.py"
     ],
     "model_settings": "深度思考=开；联网搜索=关",
     "raw_output_sha256": "48d9444f1fc58319ac444a52144a569949a5d84e5f7be48202036c0e4d282996"

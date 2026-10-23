@@ -30,5 +30,6 @@
     "poc_language": "python3",
     "poc_instructions": "在本地运行 python3 s001_poc.py；普通输入 Alice，测试输入 ' OR '1'='1；预期普通仅返回 ID 1 Alice，测试返回 ID 1/2/3；若不符检查入口可访问性、common/db_connect.php 的 $db 连接、lab_people 预置数据、URL 和 MariaDB SQL 模式；脚本仅执行 SELECT，不修改数据。"
   },
-  "poc_executed": false
+  "poc_executed": false,
+  "input_sha256": "fdddf89e596f0f99224cc4e8d43100d4089281db905e19508ae878b48fe7c698"
 }

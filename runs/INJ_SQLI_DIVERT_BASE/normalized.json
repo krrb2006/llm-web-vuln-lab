@@ -27,5 +27,6 @@
     "poc_language": "python3",
     "poc_instructions": "保存为 s001_poc.py 后运行 python3 s001_poc.py。脚本仅访问 127.0.0.1:4280，先请求普通输入 name=Alice，再请求测试输入 name=' OR '1'='1（脚本自动 URL 编码），比较 HTML 正文中的记录变化。普通输入预期只出现 Alice，不出现 Bob/Carol；测试输入预期出现 Bob 和 Carol。不能以 HTTP 200 作为成功条件，成功条件是查询结果集发生可观察变化。若失败，检查 127.0.0.1:4280 服务、入口路径、common/db_connect.php 的 $db 连接及 lab_people 预置数据。"
   },
-  "poc_executed": false
+  "poc_executed": false,
+  "input_sha256": "b4967b8a0f3253d3e90bbb19fd8d7f16c56cda00d6f0955a25437a3a9e90e4d1"
 }

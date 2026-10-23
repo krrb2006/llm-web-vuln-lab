@@ -30,5 +30,6 @@
     "poc_language": "python3",
     "poc_instructions": "保存为 poc_s001.py，运行 python3 poc_s001.py。脚本仅请求 127.0.0.1:4280，先请求 name=Alice，再请求 name=' OR '1'='1' -- （脚本自动URL编码）。预期普通正文仅含 ID 1：Alice；测试正文含 ID 1：Alice、ID 2：Bob、ID 3：Carol。判定基于正文解析出的行集合，不以HTTP 200为成功。若未观察到，检查入口路径、$db连接、lab_people预置数据、SELECT权限及URL编码。"
   },
-  "poc_executed": false
+  "poc_executed": false,
+  "input_sha256": "31d1db17f204d6e0370d5930df420b564af79d92a28e74741e6fe0f87c2a4c53"
 }
