@@ -13,10 +13,12 @@
 
 - `version_second_pc_A.txt`、`services_second_pc_A.txt`、`runtime_check_second_pc_A.json`：A 机器上的原始记录
 - `environment/second_pc_commit.txt`：A 使用的仓库提交
+- `screenshots/`：A 于 2026-10-21 补的 6 张页面截图（S009/S011/S021/S022）和 2 份 DOM JSON；D 的复核见 `results/D_second_pc_visual_review_2026-10-21.md`
 
 ## 限制
 
-- 本次未生成新的屏幕截图和 60–90 秒录屏；A 在 `results/A_second_pc_repro_2026-10-20.md` 中如实注明，未用 D 的旧截图冒充。
+- 页面截图和 DOM JSON 已于 2026-10-21 补齐；**仍没有 60–90 秒录屏**。A 在 `results/A_second_pc_repro_2026-10-20.md` 中如实注明，未用 D 的旧截图冒充。
+- 6 张截图是 headless 页面渲染，没有地址栏、Docker/runtime 输出或 DevTools Console；S021/S022 的 marker 证据以两份 DOM JSON 为准。
 - Python 3.11.15 与说明的 3.12 有 minor 差异；本次 build/check 脚本均通过，未发现行为差异。
 
 ## 与主环境文件的关系

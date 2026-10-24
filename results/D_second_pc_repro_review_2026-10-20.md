@@ -20,6 +20,10 @@
 2. 本次没有新的 run-specific 截图和 60–90 秒录屏；A 已在报告中注明，未复用 D 的旧截图。
 3. 该复现是环境可移植性证据，不产生新的模型记录，也不改变 36 条主实验统计。
 
+## 2026-10-21 补充
+
+A 已补 6 张页面截图和 S021/S022 的 DOM JSON；D 的补充复核见 `results/D_second_pc_visual_review_2026-10-21.md`。页面截图仍没有地址栏/Docker/runtime/DevTools Console，**60–90 秒录屏仍未补**；本记录的限制仍然有效，不改变“接受”结论。
+
 ## 签字
 
 D（linan / linan-prog，2986713478@qq.com）　2026-10-20 22:20（UTC+8）
