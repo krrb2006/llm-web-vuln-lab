@@ -1,7 +1,7 @@
 # C 对 S001 官方四类 Prompt Injection 八条的独立复核
 
 复核更新：2026-10-24（Asia/Shanghai）；文件名保留首次复核日期以维持 PR 路径。
-A 基线：`f7a9c256949e8c1a4aeeb6616fd358656a23e6c5`，包含 B 修正 `62d03d9`。
+A 当前基线：`f70c7769f75ee3c36e55a3a9bb82900a931ca7e0`，包含 B 修正 `62d03d9` 和 A 对原文哈希缺失的明确披露。初次重核基线为 f7a9c25；该历史差异保留。
 B 完整修正版：`d0d54c25b138601477008c7f4b34935fcac44c2c`。
 修正前 C：`9c0b71d1534ffab517f6bd01cf565d77ed7269e2`。本文件替代该版结论；原版保留在 Git 历史，机器 JSON 逐条保留 before_after。
 
@@ -30,9 +30,9 @@ B 完整修正版：`d0d54c25b138601477008c7f4b34935fcac44c2c`。
 
 逐条通读完整 input、raw_output、metadata、normalized；JSON 必须来自完整的首个 json 围栏，整块按严格 JSON 解析，拒绝重复键和 NaN/Infinity；检查十个必需字段、容器元素类型、枚举、evidence 的 source/flow/guard/sink、行号与主 POC 结构。八个 JSON 都是可解析、无重复键的对象，`normalized.parsed_json` 均等于原文解析结果。七条主 Python 块及 IGNORE_DEF 的两个附加片段 AST 解析通过；附加片段没有独立入口，语法通过不代表可运行或可触发漏洞。
 
-八条 `input.txt` 均逐字等于冻结 Prompt 去除末尾空白后，加上固定提交引导与对应官方 packet；文件 SHA-256 同时匹配 metadata.input_sha256 与 normalized.input_sha256。补档脚本 `repair_s001_evidence.py` 明确显示这是依据 Prompt 和 packet 事后重建，不能据此证明原会话实际逐字提交了相同内容。metadata 和 normalized 文件分别与 A f7a9c25 及 B d0d54c2 的 Git blob 相同。
+八条 `input.txt` 均逐字等于冻结 Prompt 去除末尾空白后，加上固定提交引导与对应官方 packet；文件 SHA-256 同时匹配 metadata.input_sha256 与 normalized.input_sha256。补档脚本 `repair_s001_evidence.py` 明确显示这是依据 Prompt 和 packet 事后重建，不能据此证明原会话实际逐字提交了相同内容。metadata 和 normalized 文件分别与 A f70c776 及 B d0d54c2 的 Git blob 相同。
 
-八份 raw_output 与修正前 C 9c0b71d 和 B d0d54c2 的对应 blob 字节相同，没有改写；C 已独立计算完整字节 SHA-256。**八份 metadata 中均没有 raw_output_sha256**，因此不存在可供交叉核对的 B 原文哈希；本次不代填。A 的 `results/A_S001_reconciliation_2026-10-23.md` 所述“原始回答哈希与 metadata.raw_output_sha256 一致”与实际字段不符，应由 A/B 更正或补证，C 不据该说法签字。
+八份 raw_output 与修正前 C 9c0b71d 和 B d0d54c2 的对应 blob 字节相同，没有改写；C 已独立计算完整字节 SHA-256。**八份 metadata 中均没有 raw_output_sha256**，因此不存在可供交叉核对的 B 原文哈希；本次不代填。A 已在 f70c776 更正 `results/A_S001_reconciliation_2026-10-23.md`，明确披露八条 metadata 缺原文哈希；本次确认该修正，没有修改 B metadata。旧 f7a9c25 的“已匹配”说法保留为历史问题，不能继续沿用。
 
 ### 漏洞判断与 SAFE_BASE 的影响
 
@@ -44,7 +44,7 @@ B 完整修正版：`d0d54c25b138601477008c7f4b34935fcac44c2c`。
 
 ## 哈希与证据定位
 
-以下 SHA-256 均按完整文件原始字节计算，不裁剪 raw、不重写换行。`C_S001_official_independent_audit.json` 逐条列出 input/raw/metadata/normalized/extraction_note、Prompt、packet、共享截图的路径、存在性和哈希，并记录是否在 A 基线以及是否与 B blob 相同。
+以下 SHA-256 均按完整文件原始字节计算，不裁剪 raw、不重写换行。input/metadata/normalized/Prompt 从当前 A 工作区读取；A 未收录的 raw、packet、提取说明和共享截图从 B 的固定提交 d0d54c2 读取，不复制进本次 PR。每条 evidence 记录明确的 present_in_worktree、evidence_source、evidence_commit 和 evidence_url，避免把 Git 归档误报为 A 工作区已有文件。`C_S001_official_independent_audit.json` 逐条列出 input/raw/metadata/normalized/extraction_note、Prompt、packet、共享截图的路径、存在性和哈希，并记录是否在 A 基线以及是否与 B blob 相同。
 
 原始 packet：`dataset/packets/S001_v1/code_input.txt`，
 SHA-256 `3a84669c84cee3841bf080bb546069a0367b152476cb163a47e533c6661437e1`；
@@ -97,7 +97,7 @@ packet 根目录为 `experiments/prompt_injection/official_packets/S001/`。
 | 项目 | 修正前 C 9c0b71d | 本次独立复核 |
 |---|---|---|
 | 完整 input | 八条缺失 | 八条存在且组合与三方哈希一致；明确为事后重建 |
-| raw_output_sha256 | metadata 八条缺失 | **仍八条缺失**；仅新增 C 独立哈希和 Git 字节对比，不能沿用 A 的已匹配说法 |
+| raw_output_sha256 | metadata 八条缺失 | **仍八条缺失**；C 独立哈希和 Git 字节对比保留；A f70c776 已改为披露缺口 |
 | SAFE_BASE normalized | format_valid=true，与缺五字段冲突 | false，format_errors 列出同五字段；parsed_json 及 raw 未改 |
 | SAFE_BASE 原文格式 | 不通过 | 仍不通过，与漏洞判断通过分开 |
 | 其余七条 | 字段合规、待补证 | 字段合规；两条 IGNORE 全文混杂、若干 POC 方案限制另记 |
@@ -105,15 +105,17 @@ packet 根目录为 `experiments/prompt_injection/official_packets/S001/`。
 | 运行证据 | 已捕获 4 lint + 4 Alice | 复用原日志及提取字节核对，不重跑 |
 | bonus/main/signature | 不更改 | 对齐 A 基线，不更改状态、36 条主实验或 A 签字 |
 
-## Git 安全边界与交付状态
+## Git 安全边界与五文件交付
 
-先 fetch 并检查三个原注册 worktree、所有分支和 stash。主 worktree 在 c/inj-s013-xss@34b36ad，含 environment/compose_effective.redacted.json、D 的三个 exit 日志改动、_c_scratch 及八个未跟踪 XSS 目录；均未触碰。两个 Administrator 路径的历史 worktree 已失效且标为 prunable，仅记录，不 prune/remove；stash 保留。
+首次检查及本轮 fetch 均保留主 worktree c/inj-s013-xss@34b36ad 的未提交环境文件、D 的三个 exit 日志、_c_scratch、八个未跟踪 XSS 目录和原 stash；两个失效 Administrator worktree 只检查、不 prune/remove。本轮使用新的 _c_pr23_five_files 隔离 worktree，未触碰旧 _c_review_s001 成果。
 
-在仓库内新建 `_c_review_s001` 隔离 worktree，从原 PR head 9c0b71d 开始。对 A 合入产生的冲突完整采用 f7a9c25；进一步将所有 A 已有文件对齐为 A 原 blob，保留 B 独有证据。基线合入提交为 `134a706`，保留双方父提交，没有 reset --hard、force push 或历史重写。基线原有空白检查告警未擅自修改。
+C 原更新 11625c8 和状态补充 c31005a 已先推送到 [复核存档分支](https://github.com/krrb2006/llm-web-vuln-lab/tree/codex/c-s001-reaudit-20261024)，两提交及其父历史保留。原先 f7a9c25 基线合入提交 134a706 也在该历史中。本轮正常合入 A f70c776，最终文件树取 A 全部既有内容并仅保留 C 的五个更新文件，保留父提交关系，不 reset --hard、不 rebase、不强推。
 
-原 PR #23：head codex/c-s001-official-audit@9c0b71d，71 个改动文件、16 个提交，open、未合并。本地合入后相对 A 为 **33 个新增路径 = C 五文件 + B 28 文件**，没有对 A 既有文件的净修改。28 条完整名单位于 audit.json 的 publication_gate.non_C_paths_against_A，包含原始回答八份、packet 四份、共享截图、提取说明和 B 工具/报告。A f7a9c25 虽有修正后的 input/metadata/normalized，但**没有这八份 raw、四个 packet 和截图**；不能删证据来伪装五文件 PR，也不能替 A/B 接收证据。
+此前停止推送的原因是净差异含 C 五文件和 B 28 文件；该历史 gate 已保存在 audit.json.previous_publication_gate。本轮按用户要求重建 PR 净差异，将 B 的 28 个路径从本次 PR 文件树中移出，原始字节保留在 B d0d54c2、原 C 9c0b71d 和已发布的存档历史中。没有改写任何模型输出，也没有将 B 文件伪装为 C 新增文件。
 
-因此 C 报告更新仅提交下列五文件到本地后，**停止推送原 PR 分支**。PR 上旧文件不会自动变为本次结论。尝试更新 PR 说明时 GitHub 连接器返回 403 Resource not accessible by integration；浏览器备用通道也因运行环境初始化失败而不可用。因此远端文件和说明均未更新，PR 仍 open、未合并、71 个改动文件，head 9c0b71d；本地成果不能声称已发布。
+当前静态核验器仅允许以下 A 缺失证据从固定 B 提交读取：八份 raw_output、八份 extraction_note、四份官方 packet、一张共享截图，共 21 个路径。input、metadata、normalized、Prompt 和原样本仍要求在当前 A 工作区存在；不使用任意文件缺失回退。非浅克隆或已 fetch 对应 B/C 历史即可复现，离线读取 Git blob，不请求模型或实验目标。每条证据均记录归属提交和可点击 URL；可从 [B 完整修正版](https://github.com/krrb2006/llm-web-vuln-lab/tree/d0d54c25b138601477008c7f4b34935fcac44c2c) 读取归档。
+
+PR #23 的目标 base 仍为 a/criteria-and-sql01。提交/推送门槛为相对 f70c776 的三点比较恰为以下五个路径，且所有非 C 路径的最终 Git tree 与 A 相同：
 
 1. results/C_S001_official_independent_review_2026-10-23.md
 2. results/C_S001_official_independent_audit.py
@@ -121,12 +123,12 @@ packet 根目录为 `experiments/prompt_injection/official_packets/S001/`。
 4. results/C_S001_official_runtime_regression.py
 5. results/C_S001_official_runtime_regression.json
 
-交 A/B 的处理路径：先由证据责任人在独立变更中接收 B 原始证据，并修正 raw 哈希缺失与对账文字；保留现有 raw 字节，不补跑模型或 POC。A 更新基线后，再将其合入原 PR，以最终差异恰为上述五文件为推送条件；全程普通 merge/push，不能强推。若 A 只接收必要证据，剩余 B 工具/报告也需明确归属后才能从 C PR 清出。未解决前 planned、14/26 和 A 签字维持现状。
+独立核验 JSON 的 publication_gate 记录五文件范围、非 C 路径为空及推送允许状态；范围以当前 index 对 A 的比较生成，推送前后另检查实际提交与 PR Files changed。Git 历史保留原 C 两个提交，合并历史中存在 A/B 旧提交不等于当前 PR 的最终文件差异包含 A/B 修改。
 
-## 待写入 PR #23 的说明（远端写权限恢复后使用）
+本次 C 结论不改变：八条首个 JSON 的 SQLi 判断/定位通过，综合有条件接受；SAFE_BASE 原文格式不通过，其余七条 JSON 字段通过。共享截图、model_display_name=null、原文哈希字段缺失、事后重建 input、IGNORE 尾文混杂、POC 未执行限制均保留。
 
-C 已完成 2026-10-24 静态独立复核，本地五文件更新提交为 11625c8，基线合入为 134a706；均未推送。八条首个 JSON 的 SQLi 预测/定位通过，综合有条件接受；SAFE_BASE 原文缺五字段，格式不通过，修正版 normalized.format_valid=false。其余七条 JSON 字段合规；两条 IGNORE 归档尾文混杂需保留限制。
+A f70c776 的对账修正保持原字节；B metadata、S001 八条 planned、36 条主实验、14/26 和 A 签字均不修改。C 只运行本次静态核验器与旧日志复用检查，不运行全项目最终审计；PR 合并及最终审计由 A 完成。
 
-完整 input 与冻结 Prompt/packet 组合及 input 哈希一致，但属于事后重建；八条 metadata 仍缺 raw_output_sha256。共享截图未绑定逐条会话，model_display_name=null；POC 未执行。PHP 8.5.11 四次 lint 与四次 Alice 正常业务证据只复查旧日志通过，本轮未运行模型、PHP/HTTP 或 POC。
+## 交 A 的对接内容
 
-停止推送原因：本地合入 A 后还有 33 个新增文件，包含 C 五文件和 B 28 文件；A 缺八份 raw、四个 packet 和共享截图。需 A/B 先独立接收原始证据并处理哈希/对账缺口，明确其余 B 文件归属，再正常合入 A、确认最终净差异恰为 C 五文件后普通推送。bonus、36 条主实验和 A 签字不变，PR 不合并。当前 PR 远端仍为旧 C 报告，不能作为本次结论。
+C 原提交 11625c8/c31005a 已发布存档，PR 分支以保留历史的正常 merge/push 收敛到 A f70c776 加 C 五文件。请依据 PR 最终 Files changed 核对五路径及头提交后再合并，并运行 A 的最终审计。S001 八条仍 planned；不得仅因 C 已推送就自动提升为 reviewed，需由 A 按最终审计及保留的证据限制裁定。

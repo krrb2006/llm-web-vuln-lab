@@ -6,9 +6,10 @@ import json
 import re
 import subprocess
 from pathlib import Path
+from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
-A = "f7a9c256949e8c1a4aeeb6616fd358656a23e6c5"
+A = "f70c7769f75ee3c36e55a3a9bb82900a931ca7e0"
 B = "d0d54c25b138601477008c7f4b34935fcac44c2c"
 BEFORE = "9c0b71d1534ffab517f6bd01cf565d77ed7269e2"
 RUNS = [("IGNORE", "ignore_task"), ("SAFE", "force_safe_verdict"),
@@ -20,6 +21,17 @@ REQUIRED = {"sample_id": str, "prediction": str, "vulnerability_type": str,
 C_FILES = {"results/C_S001_official_" + n for n in (
     "independent_audit.py", "independent_audit.json", "independent_review_2026-10-23.md",
     "runtime_regression.py", "runtime_regression.json")}
+
+# Only these B-owned evidence artifacts may be read from the pinned archive.
+# Current A input/metadata/normalized/Prompt files must exist in the worktree.
+ARCHIVE_PATHS = {
+    f"runs/INJ_SQLI_{short}_{cond}/{name}"
+    for short, _ in RUNS for cond in ("BASE", "DEF")
+    for name in ("raw_output.txt", "extraction_note.txt")
+} | {
+    f"experiments/prompt_injection/official_packets/S001/{attack}/code_input.txt"
+    for _, attack in RUNS
+} | {"evidence/user_S001_settings/deep_thinking_on_search_off.png"}
 
 def git(*args, optional=False):
     p = subprocess.run(["git", "-c", f"safe.directory={ROOT.as_posix()}", *args],
@@ -33,7 +45,9 @@ def blob(ref, path):
 
 def data(path):
     p = ROOT / path
-    return p.read_bytes() if p.is_file() else None
+    if p.is_file():
+        return p.read_bytes()
+    return blob(B, path) if path in ARCHIVE_PATHS else None
 
 def sha(value):
     return hashlib.sha256(value).hexdigest() if value is not None else None
@@ -63,7 +77,13 @@ def php_rows(packet):
 
 def artifact(path):
     value = data(path)
+    in_worktree = (ROOT / path).is_file()
+    source_commit = A if in_worktree else B
     return {"path": path, "exists": value is not None, "sha256": sha(value),
+            "present_in_worktree": in_worktree,
+            "evidence_source": "worktree" if in_worktree else "pinned_B_git_blob",
+            "evidence_commit": source_commit,
+            "evidence_url": f"https://github.com/krrb2006/llm-web-vuln-lab/blob/{source_commit}/{quote(path, safe='/')}",
             "present_in_A": blob(A, path) is not None,
             "matches_B_blob": value == blob(B, path) if value is not None else False}
 
@@ -73,21 +93,26 @@ def main():
     plan = {e["run_id"]: e for e in load(data("experiments/bonus_runs.plan.json"))}
     source_path = "dataset/packets/S001_v1/code_input.txt"
     source_rows = php_rows(data(source_path))
-    changed = [p.decode("utf-8") for p in git("diff", "--name-only", "-z", A, "HEAD").split(b"\0") if p]
+    changed = [p.decode("utf-8") for p in git("diff", "--cached", "--name-only", "-z", A).split(b"\0") if p]
     extras = sorted(set(changed) - C_FILES)
     result = {
         "audit_kind": "C independent static review after B repair",
         "review_date": "2026-10-24 Asia/Shanghai", "A_baseline": A, "B_repaired_commit": B,
         "B_repair_in_A": "62d03d9528ee0ad3eaa45db2f8408ddbef3b6988",
         "previous_C_commit": BEFORE, "previous_C_audit_sha256": sha(prior_bytes),
+        "previous_repaired_C_commit": "c31005a5663954be6ff196e33adccc266f610a92",
+        "previous_publication_gate": load(blob("c31005a5663954be6ff196e33adccc266f610a92", "results/C_S001_official_independent_audit.json"))["publication_gate"],
+        "archive_only_evidence_paths": sorted(ARCHIVE_PATHS),
         "poc_executed_by_audit": False, "model_rerun": False,
         "source_packet": artifact(source_path),
         "source_extracted_php_matches_raw": ("\n".join(v for _, v in source_rows) + "\n").encode() == data("dataset/raw/S001/index.php"),
         "packets": {}, "runs": {}, "pairs": {},
-        "publication_gate": {"push_allowed": not extras, "changed_files_against_A": len(changed),
+        "publication_gate": {"push_allowed": not extras and set(changed) == C_FILES,
+            "changed_files_against_A": len(changed), "C_paths_against_A": sorted(set(changed) & C_FILES),
             "non_C_paths_against_A": extras,
-            "reason": "B-owned additions include raw outputs/packets absent from A; deleting them breaks evidence.",
-            "resolution": "A/B first integrate B evidence separately without rewriting history, then merge updated A into original PR and require exactly five C paths."},
+            "reason": "Exactly five C files relative to A; B evidence preserved in pinned Git history and published archive branch.",
+            "history_rewritten": False, "force_push_required": False,
+            "A_merge_and_final_audit_pending": True},
     }
     for short, attack in RUNS:
         packet_path = f"experiments/prompt_injection/official_packets/S001/{attack}/code_input.txt"

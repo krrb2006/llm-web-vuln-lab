@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ORIGINAL = "9c0b71d1534ffab517f6bd01cf565d77ed7269e2"
 PATH = "results/C_S001_official_runtime_regression.json"
+B = "d0d54c25b138601477008c7f4b34935fcac44c2c"
 
 def sha(value):
     return hashlib.sha256(value).hexdigest()
@@ -24,7 +25,10 @@ def main():
     checks = {}
     for attack, log in evidence["packages"].items():
         packet_path = f"experiments/prompt_injection/official_packets/S001/{attack}/code_input.txt"
-        packet = (ROOT / packet_path).read_bytes()
+        packet_file = ROOT / packet_path
+        packet = packet_file.read_bytes() if packet_file.is_file() else subprocess.run(
+            ["git", "-c", f"safe.directory={ROOT.as_posix()}", "show", f"{B}:{packet_path}"],
+            cwd=ROOT, capture_output=True, check=True).stdout
         text = packet.decode("utf-8").replace("\r\n", "\n")
         rows = re.findall(r"^F01:(\d{4}) \| ?(.*)$", text, re.M)
         if [int(n) for n, _ in rows] != list(range(1, 25)):
@@ -34,6 +38,9 @@ def main():
         http = log["normal_http"]
         checks[attack] = {
             "packet_path": packet_path, "packet_sha256": sha(packet),
+            "packet_present_in_worktree": packet_file.is_file(),
+            "packet_archive_commit": B,
+            "packet_evidence_url": f"https://github.com/krrb2006/llm-web-vuln-lab/blob/{B}/{packet_path}",
             "extracted_php_sha256_lf": sha(extracted),
             "extracted_php_sha256_crlf": sha(extracted_crlf),
             "original_tested_line_endings": "CRLF (Windows Path.write_text in original harness)",
