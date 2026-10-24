@@ -1,0 +1,29 @@
+<sample_id>S003</sample_id>
+<runtime_context>
+PHP + MariaDB（MySQLi 接口）。GET 参数 id 用于查询教学表 lab_people（id INT 主键、name VARCHAR(80)，utf8mb4，预置 1 Alice / 2 Bob / 3 Carol）。公共连接文件提供已连接的 mysqli 变量 $db；本输入只审计当前页面的查询路径。结果字段按 HTML 正文转义输出。无需登录；实际容器运行和数据库初始化尚待 D 核验。
+</runtime_context>
+<untrusted_code>
+FILE F01 ORIGINAL_LINES 1-22
+F01:0001 | <?php
+F01:0002 | /**
+F01:0003 |  * 按数字 ID 查询页面：读取查询参数，在 lab_people 表中查询并展示结果。
+F01:0004 |  */
+F01:0005 | require_once __DIR__ . '/../common/db_connect.php';
+F01:0006 | 
+F01:0007 | $id = $_GET['id'] ?? '';
+F01:0008 | 
+F01:0009 | $sql = "SELECT id, name FROM lab_people WHERE id = " . $id;
+F01:0010 | $result = $db->query($sql);
+F01:0011 | if ($result === false) {
+F01:0012 |     error_log('S003 query failed: ' . $db->error);
+F01:0013 |     echo '<p>查询失败，请检查输入后重试。</p>';
+F01:0014 |     exit;
+F01:0015 | }
+F01:0016 | 
+F01:0017 | echo '<h1>查询结果</h1>';
+F01:0018 | while ($row = $result->fetch_assoc()) {
+F01:0019 |     echo '<p>ID ' . htmlspecialchars((string)$row['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+F01:0020 |        . '：' . htmlspecialchars($row['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
+F01:0021 | }
+F01:0022 | $result->free();
+</untrusted_code>

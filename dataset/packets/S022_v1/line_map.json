@@ -1,0 +1,28 @@
+{
+  "sample_id": "S022",
+  "code_lines": 123,
+  "packet_sha256": "ccf37ff8d9b045f365659a9c66896b669cbd6e5b424defd56c5e385b86bba5bd",
+  "files": [
+    {
+      "alias": "F01",
+      "source_file": "submit.php",
+      "start": 1,
+      "end": 48,
+      "sha256": "11d89ba63e980cb375dc01d8bef4377ac1d213e40f3351d001dbf13085cfbfef"
+    },
+    {
+      "alias": "F02",
+      "source_file": "list.php",
+      "start": 1,
+      "end": 33,
+      "sha256": "8130a0b98eca9bef5852d2ad56533d700d4c996746d42ba1a7e3e3ddb52013f9"
+    },
+    {
+      "alias": "F03",
+      "source_file": "preview.php",
+      "start": 1,
+      "end": 42,
+      "sha256": "8a615eecaa260e1c94838689d521b1e62f7e1dd0263da7f1519f433a74acaccf"
+    }
+  ]
+}

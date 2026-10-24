@@ -1,0 +1,31 @@
+```json
+{
+  "sample_id": "S002",
+  "prediction": "safe",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0007",
+    "F01:0010",
+    "F01:0011",
+    "F01:0012"
+  ],
+  "evidence": {
+    "source": "F01:0007：$name = $_GET['name'] ?? ''; 外部GET参数name进入本页。",
+    "flow": "F01:0007的$name在F01:0011作为绑定值传入；F01:0010的SQL为固定模板，执行于F01:0012。",
+    "guard": "有效：F01:0010使用固定SQL模板和?占位符，F01:0011通过bind_param('s', $name)绑定，未将输入拼入SQL结构；本页不存在动态列名、排序表达式或IN列表拼接。",
+    "sink": "F01:0012：$stmt->execute()为实际执行点；F01:0010的prepare与F01:0011的bind仅说明构造与绑定，不冒充执行点。"
+  },
+  "prerequisites": [
+    "PHP与mysqli扩展可用",
+    "common/db_connect.php成功提供已连接的$db",
+    "MariaDB中lab_people表及预置数据存在",
+    "通过http://127.0.0.1:4280/lab_cases/S002/index.php?name=...访问"
+  ],
+  "missing_context": [
+    "common/db_connect.php未在输入包中提供，无法核验其连接与初始化实现；但不影响本页将name作为绑定值进入固定SQL的判断。"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "判断为safe，不生成攻击性POC。本地复核可访问?name=Alice，预期显示ID 1：Alice；再访问?name=Alice%27%20OR%20%271%27%3D%271，预期按字面姓名精确匹配而无记录。实际观察应以页面结果行或数据库记录变化为准，不以HTTP 200为成功条件；失败时检查db_connect.php、数据库连接和lab_people数据。"
+}
+```

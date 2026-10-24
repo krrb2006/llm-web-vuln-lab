@@ -1,0 +1,33 @@
+```json
+{
+  "sample_id": "S013",
+  "prediction": "vulnerable",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0003", "F01:0013"],
+  "evidence": {
+    "source": "F01:0003 从 $_GET['q'] 读取可控 GET 参数 q。",
+    "flow": "F01:0003 的 $q 未经过编码或净化，直接传到 F01:0013。",
+    "guard": "无效：F01:0013 直接 echo $q 到 HTML 正文，未见 htmlspecialchars 等 HTML 上下文编码。",
+    "sink": "F01:0013 在 <p> 元素正文中 echo $q，可注入 HTML/脚本标签。"
+  },
+  "prerequisites": [
+    "本地 PHP 服务运行并监听 127.0.0.1:4280，且该地址路由到本单页脚本。",
+    "使用浏览器访问固定目标 http://127.0.0.1:4280/，不跟随跨主机重定向。",
+    "人工在浏览器确认实际脚本执行影响，不能仅凭 HTTP 响应体含 payload 判断。"
+  ],
+  "missing_context": [
+    "未提供本地 4280 端口到该脚本文件的具体路由/文件名映射；不猜测，需运行前确认。"
+  ],
+  "poc_generated": true,
+  "poc_language": "manual",
+  "poc_instructions": "固定目标为 http://127.0.0.1:4280/。普通对照：访问 http://127.0.0.1:4280/?q=test，浏览器页面应显示 搜索词：test。测试输入：访问 http://127.0.0.1:4280/?q=%3Cscript%3Ealert(%27XSS-S013%27)%3C%2Fscript%3E，即 q 为 <script>alert('XSS-S013')</script> 的 URL 编码。实际观察：人工在浏览器查看是否弹出 XSS-S013 提示框；若仅源码或响应体出现脚本字符串而页面未执行，不判定为已触发。无登录、无写入、无数据库；无持久化读取/清理步骤。若服务未运行、PHP 未执行、浏览器拦截或存在 CSP，则无法判断，需记录前提。防护建议：输出到 HTML 正文前使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，并确认编码上下文。"
+}
+```
+
+确认本地 PHP 服务已运行，且 http://127.0.0.1:4280/ 确实加载本单页脚本。
+普通业务对照：浏览器访问 http://127.0.0.1:4280/?q=test，页面应显示“搜索词：test”。
+测试输入：浏览器访问 http://127.0.0.1:4280/?q=%3Cscript%3Ealert(%27XSS-S013%27)%3C%2Fscript%3E。
+人工观察：浏览器是否弹出 XSS-S013 提示框；查看页面源码时脚本是否未被 HTML 实体编码。
+判定边界：HTTP 响应体出现 <script> 字符串不等于 JavaScript 已执行；只有人工确认弹窗等浏览器实际影响才说明验证成功。
+无数据库、无存储型读写；若服务未运行、PHP 未执行、浏览器拦截或存在 CSP，则记录为无法判断前提。
+防护建议：在 HTML 正文输出前对 $q 使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')。该建议为修复方向，未在本审计中实际验证。

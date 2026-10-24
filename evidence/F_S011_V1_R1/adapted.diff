@@ -1,0 +1,26 @@
+git : warning: in the working copy of 'pocs/F_S011_V1_R1/adapted.py', CRLF will be replaced by LF the next time Git tou
+ches it
+所在位置 行:5 字符: 1
++ git diff --no-index -- pocs/F_S011_V1_R1/original.py pocs/F_S011_V1_R ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+diff --git a/pocs/F_S011_V1_R1/original.py b/pocs/F_S011_V1_R1/adapted.py
+index 0ae09be..5d7965d 100644
+--- a/pocs/F_S011_V1_R1/original.py
++++ b/pocs/F_S011_V1_R1/adapted.py
+@@ -1,11 +1,11 @@
+-#!/usr/bin/env python3
++﻿#!/usr/bin/env python3
+ import html
+ import re
+ import sys
+ import urllib.parse
+ import urllib.request
+ 
+-BASE_URL = "http://127.0.0.1:4280/"
++BASE_URL = "http://127.0.0.1:4280/lab_cases/S011/index.php"
+ PARAM = "sort"
+ 
+ 

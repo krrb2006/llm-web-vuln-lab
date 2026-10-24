@@ -1,0 +1,38 @@
+{
+  "run_id": "F_S007_V1_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S007",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0008",
+      "F01:0011",
+      "F02:0007",
+      "F02:0008"
+    ],
+    "evidence": {
+      "source": "F01:0008 从 $_GET['name'] 读取外部输入，未做过滤或类型约束。",
+      "flow": "F01:0011 将 $name 传给 find_people_by_name；F02:0007 将 $name 直接拼入 WHERE 子句。",
+      "guard": "无效：未见转义、预处理绑定或白名单；F02:0007 直接字符串拼接，F01:0008 的输入未经安全处理。",
+      "sink": "F02:0008 执行 $db->query($sql)，其中 $sql 来自 F02:0007 的拼接语句。"
+    },
+    "prerequisites": [
+      "入口 http://127.0.0.1:4280/lab_cases/S007/index.php 可访问。",
+      "$db 已由 common/db_connect.php 建立为 mysqli 连接。",
+      "lab_people 表存在且含 id=1 Alice、id=2 Bob、id=3 Carol。",
+      "GET 参数 name 可由请求控制。"
+    ],
+    "missing_context": [
+      "common/db_connect.php 源码未包含在输入包中；仅依据 runtime_context 声明其已在入口前建立 $db 连接。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "运行 python3 脚本；脚本请求普通输入 Alice 与测试输入 Alice' OR '1'='1；普通预期仅 Alice，测试预期 Alice/Bob/Carol 同时出现；失败时检查 127.0.0.1:4280 服务、db_connect.php 的 $db 连接和 lab_people 三行数据。不以 HTTP 200 作为成功条件。"
+  },
+  "human_verification": "pending",
+  "raw_source": "DeepSeek web session"
+}

@@ -1,0 +1,11 @@
+{
+  "sample_id": "S005",
+  "context": "PHP + MariaDB（MySQLi 接口），本地教学入口 http://127.0.0.1:4280/lab_cases/S005/index.php。GET 参数 q 用于查询教学表 lab_people（id INT 主键、name VARCHAR(80)，utf8mb4；预置 1 Alice、2 Bob、3 Carol）。公共连接文件提供已连接的 mysqli 变量 $db；本输入仅提供当前页面的查询与输出路径。查询结果在 HTML 正文展示。无需登录。 SQL LIKE 模式中的 % 与 _ 仍具有匹配通配符语义。",
+  "fragments": [
+    {
+      "file": "index.php",
+      "start": 1,
+      "end": 24
+    }
+  ]
+}

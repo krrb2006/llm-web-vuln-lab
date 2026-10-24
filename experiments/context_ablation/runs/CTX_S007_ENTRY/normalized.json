@@ -1,0 +1,41 @@
+{
+  "run_id": "CTX_S007_ENTRY",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S007",
+    "prediction": "safe",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0008",
+      "F01:0011",
+      "F01:0012",
+      "F01:0021",
+      "F01:0022",
+      "F01:0023"
+    ],
+    "evidence": {
+      "source": "F01:0008 读取 GET 参数 name 作为查询条件；当前片段未见 name 直接回显。",
+      "flow": "F01:0011 将 name 传入查询；F01:0012 取回 rows；F01:0021-F01:0023 遍历并输出 row 的 id 与 name。",
+      "guard": "有效：F01:0022-F01:0023 在 HTML 正文输出前对 id 和 name 使用 htmlspecialchars(..., ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，覆盖标签与引号相关字符；该上下文为 HTML 正文，未涉及属性、URL 或 JavaScript/DOM 危险位置。",
+      "sink": "F01:0022-F01:0023 通过 echo 输出到 <p> HTML 正文；输出前已编码。"
+    },
+    "prerequisites": [
+      "入口 http://127.0.0.1:4280/lab_cases/S007/index.php 可访问",
+      "repository.php 中的 find_people_by_name 可加载并返回 mysqli_result",
+      "页面由浏览器渲染 PHP echo 输出"
+    ],
+    "missing_context": [
+      "repository.php 中 find_people_by_name 的 SQL 实现和参数绑定方式未提供；这影响 SQL 注入与数据来源分析，但不改变当前已见输出编码对 HTML 正文 XSS 的有效性判断",
+      "common/db_connect.php 未提供；运行上下文已说明 mysqli 连接字符集为 utf8mb4",
+      "当前片段没有写入数据库或存储后读取的代码；是否存在其他写入路径未提供"
+    ],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成POC。普通对照：访问 ?name=Alice，预期显示 Alice 行。测试观察需人工在浏览器确认：若已有测试数据或受控写入使 row['name'] 含 <script>alert(1)</script>，页面源码应显示 &lt;script&gt;... 转义文本且无弹窗；当前 GET name 仅作查询条件，不直接回显，HTTP响应含字符串不等同脚本执行。因缺少 repository.php 实现和可写数据路径，不提供攻击脚本。"
+  },
+  "human_verification": "pending",
+  "raw_source": "DeepSeek web session"
+}

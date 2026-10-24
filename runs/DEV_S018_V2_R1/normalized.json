@@ -1,0 +1,46 @@
+{
+  "run_id": "DEV_S018_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S018",
+    "prediction": "safe",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0008",
+      "F01:0015",
+      "F01:0016",
+      "F01:0017",
+      "F01:0030",
+      "F01:0031",
+      "F01:0032",
+      "F01:0033",
+      "F01:0053"
+    ],
+    "evidence": {
+      "source": "F01:0008 从 $_POST['body'] 读取留言；F01:0007 表明仅 POST 路径进入保存逻辑。",
+      "flow": "F01:0015-F01:0017 使用参数化 INSERT 将 body 写入 lab_guestbook；F01:0030-F01:0033 按 sample_id 参数化 SELECT 读取 body；F01:0052-F01:0053 在页面循环输出到 HTML 正文。",
+      "guard": "有效：F01:0053 在 HTML 正文上下文对 $message['body'] 使用 htmlspecialchars(..., ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')；当前样本未发现属性、URL、JavaScript 或 DOM 输出位置。",
+      "sink": "F01:0053 位于 HTML 正文的 <li><div> 内，经 HTML 实体编码后输出，不构成可执行脚本的 XSS sink。"
+    },
+    "prerequisites": [
+      "PHP 与 MariaDB 教学环境可运行",
+      "common/db_connect.php 提供可用的 $db 数据库连接",
+      "lab_guestbook 表存在，并包含 sample_id、body、id 字段",
+      "样本目录 basename 为 S018，以匹配 sample_id",
+      "无需登录；POST 保存后 303 跳转到 index.php，GET 读取最近 20 条留言"
+    ],
+    "missing_context": [
+      "未提供 common/db_connect.php 的实际连接、字符集和严格模式实现",
+      "未提供 lab_guestbook 表结构及数据库排序规则",
+      "未提供 Web 服务器、模板引擎或客户端脚本；当前样本未引用额外模板或客户端代码"
+    ],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成攻击性 POC。静态分析阶段判断为 safe：普通业务对照可提交“hello”；测试输入可提交仅含 HTML 特殊字符的文本（尖括号、与号、双引号和单引号）。POST 保存并 303 到 index.php 后，GET 页面应在最近留言的 li/div 正文中看到这些字符以字面形式显示，数据库 body 应保存原文；不应出现页面自定义标记或弹窗等脚本执行影响。HTTP 200 或响应体包含测试字符串不能单独证明浏览器执行。若实际部署存在缺失模板、客户端重写输出或其他未提供路径，则需补充上下文后复查。"
+  },
+  "human_verification": "pending",
+  "raw_source": "S001.docx"
+}

@@ -1,0 +1,32 @@
+```json
+{
+  "sample_id": "S012",
+  "prediction": "safe",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0008",
+    "F01:0013",
+    "F01:0015",
+    "F01:0017"
+  ],
+  "evidence": {
+    "source": "F01:0008 从 $_GET['sort'] 读取外部输入，并仅做 trim。",
+    "flow": "F01:0008 的 $sort 在 F01:0013 仅作为 $allowed 数组键查询，$column 被赋值为白名单值 'id' 或 'name'；随后在 F01:0015 拼入 ORDER BY，并在 F01:0017 由 $db->query($sql) 执行。",
+    "guard": "有效：F01:0009-F01:0012 定义仅含 id、name 的映射白名单；F01:0013 使用 isset($allowed[$sort]) 判断，非法值回退 'id'，因此进入 SQL 的 $column 只能是固定列名，不是原始输入。",
+    "sink": "F01:0017 的 $db->query($sql) 是实际执行点；对应 SQL 构造在 F01:0015。"
+  },
+  "prerequisites": [
+    "PHP + MariaDB（MySQLi 接口）环境可运行。",
+    "bootstrap.php 能成功提供已连接的 mysqli 连接 $db。",
+    "数据库中存在 lab_people 表及 id、name 列，并按运行上下文预置数据。"
+  ],
+  "missing_context": [
+    "bootstrap.php 的连接配置、错误处理与数据库初始化细节未包含在输入包中；不影响本路径的 SQL 注入判定。"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "不生成攻击性 POC。判断范围仅限输入包中 sort 到 query 的路径；未运行代码。若需本地普通对照，可部署后分别请求 ?sort=id、?sort=name，预期返回按对应固定列排序的结果；请求 ?sort=name%2Cid 或注入式 sort 值预期因白名单未命中而回退为 id。HTTP 200 不能作为成功条件，应观察返回记录顺序或查询日志；失败时检查 bootstrap.php 连接、lab_people 表及预置数据。"
+}
+```
+
+必要防护建议：继续保留“白名单映射到固定列名”的方式，不要将 sort 原值直接拼入 ORDER BY；若未来支持排序方向、表达式或 IN 列表，也应分别做固定白名单映射，而不是只过滤字符串。上述为建议，未作为已验证事实。

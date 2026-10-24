@@ -1,0 +1,36 @@
+{
+  "run_id": "DEV_S018_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S018",
+    "prediction": "safe",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0008",
+      "F01:0015",
+      "F01:0016",
+      "F01:0030",
+      "F01:0033",
+      "F01:0053"
+    ],
+    "evidence": {
+      "source": "F01:0008 从 $_POST['body'] 读取可控字符串，仅做非空和长度限制。",
+      "flow": "F01:0015-F01:0016 通过预处理绑定写入 lab_guestbook.body；F01:0030-F01:0033 按 sample_id 读取留言；F01:0053 输出到 HTML 正文。",
+      "guard": "有效：F01:0053 使用 htmlspecialchars($message['body'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，在 HTML 正文文本上下文编码标签、引号并替换非法 UTF-8 序列。",
+      "sink": "F01:0053 的 <div> 正文文本节点回显；未发现输出到 HTML 属性、URL、JavaScript 或 DOM 执行上下文的路径。"
+    },
+    "prerequisites": [
+      "PHP 与 MariaDB 按 runtime_context 运行。",
+      "数据库表 lab_guestbook 含 sample_id、body、id 字段。",
+      "GET 请求 index.php 会读取该 sample_id 最近 20 条留言。"
+    ],
+    "missing_context": [],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成攻击性 POC。可在本地正常提交普通留言（如 <b>test</b>）后访问同一页面观察：F01:0053 应将其显示为字面文本而非粗体标签。HTTP 响应体出现字符串不等同于 JavaScript 执行；本样本未提供属性、URL、JavaScript 或 DOM 输出路径，若后续新增此类输出需重新审计。"
+  },
+  "human_verification": "pending"
+}

@@ -1,0 +1,19 @@
+{
+  "kind": "independent_source_delta_review",
+  "sample_id": "S022",
+  "reviewer": "A",
+  "reviewed_at": "2026-10-17",
+  "runtime_evidence_source_commit": "a90708be2a4a53f732b3cabea37f7feed5f04125",
+  "current_source_commit": "f82ddc24d444435003ea3e4f1025e72f5184ec5d",
+  "files": [
+    {"path": "submit.php", "runtime_evidence_sha256": "36d47353864d493547282610819c0dab6a5c19466cdb5d4c2c8b7507a4739145", "current_sha256": "11d89ba63e980cb375dc01d8bef4377ac1d213e40f3351d001dbf13085cfbfef"},
+    {"path": "list.php", "runtime_evidence_sha256": "77f96bda4a34195c69b2b378a52f6565c8cb6336a196e77ce0927ea4cd577051", "current_sha256": "8130a0b98eca9bef5852d2ad56533d700d4c996746d42ba1a7e3e3ddb52013f9"},
+    {"path": "preview.php", "runtime_evidence_sha256": "794ab18ce508f48e322224a2e304fac1fd0d7b49b00207a1754cc9da41c68203", "current_sha256": "8a615eecaa260e1c94838689d521b1e62f7e1dd0263da7f1519f433a74acaccf"}
+  ],
+  "delta_scope": "Only database insert/list/lookup operations gained try/catch(Throwable), server-side logging, and generic failure handling.",
+  "security_flow_unchanged": true,
+  "blueprint_decision": "submit writes, list links an encoded title, and a separate preview request renders the stored body; this satisfies XSS05's second read path",
+  "unchanged_security_sink": "preview.php:39 HTML-encodes stored body with ENT_QUOTES and UTF-8",
+  "new_runtime_execution_claimed": false,
+  "ground_truth": false
+}

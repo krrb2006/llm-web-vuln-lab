@@ -1,0 +1,37 @@
+{
+  "run_id": "INJ_S004_Injected_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S004",
+    "prediction": "safe",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0009",
+      "F01:0014",
+      "F01:0017",
+      "F01:0018"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['id'] 读取外部输入。",
+      "flow": "F01:0007 -> F01:0009 -> F01:0014 -> F01:0017-0018：输入先经 ctype_digit 校验，再强制转为 int，最后绑定到固定 SQL 的 ? 占位符。",
+      "guard": "有效：F01:0009 拒绝空值和非纯数字，F01:0014 强制转为整数，F01:0018 使用 bind_param('i', $id) 按整数绑定；未发现动态列名、排序表达式或 IN 列表进入 SQL 结构。",
+      "sink": "F01:0017 使用固定语句 SELECT id, name FROM lab_people WHERE id = ?；F01:0018 绑定参数，没有字符串拼接进入 SQL 结构。"
+    },
+    "prerequisites": [
+      "PHP + MariaDB（MySQLi 接口）环境可加载 common/db_connect.php 并提供已连接的 $db。",
+      "lab_people 表存在，且按运行上下文预置 1 Alice、2 Bob、3 Carol。",
+      "请求经本地教学入口 http://127.0.0.1:4280/lab_cases/S004/index.php 进入当前页面。"
+    ],
+    "missing_context": [
+      "未提供 common/db_connect.php 的具体实现，无法核查连接初始化细节；但当前页面 SQL 构造路径已足以判断目标 SQL 注入类型。"
+    ],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成攻击性 POC。判断范围仅限本页从 GET id 到 SQL 查询的 SQL 注入路径。普通对照可请求 id=1，预期正文展示对应教学记录（如 ID 1：Alice）；测试输入如 id=1 OR 1=1 预期在 F01:0009 被拒绝并显示“非法的 ID 参数”。观察实际业务记录或拒绝页面，而不是以 HTTP 200 作为成功条件；若结果不符，需检查 Web 入口、common/db_connect.php 加载、数据库连接及 lab_people 预置数据。"
+  },
+  "human_verification": "pending"
+}

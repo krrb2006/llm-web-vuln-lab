@@ -1,0 +1,9 @@
+{
+  "sample_id": "S022",
+  "context": "PHP 与 MariaDB 教学草稿。POST submit.php 保存 title 和 body 并跳转到 preview.php；GET list.php 列出标题，GET preview.php?id=... 显示标题和正文。无需登录。数据库使用 MySQLi 严格模式和 utf8mb4，异常只记录到服务端日志。",
+  "fragments": [
+    {"file": "submit.php", "start": 1, "end": 48},
+    {"file": "list.php", "start": 1, "end": 33},
+    {"file": "preview.php", "start": 1, "end": 42}
+  ]
+}

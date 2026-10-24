@@ -1,0 +1,32 @@
+```json
+{
+  "sample_id": "S004",
+  "prediction": "safe",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0007",
+    "F01:0009",
+    "F01:0014",
+    "F01:0017",
+    "F01:0018"
+  ],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['id'] 读取外部输入。",
+    "flow": "F01:0007 读取 id；F01:0009 要求非空且 ctype_digit；F01:0014 强制转换为 int；F01:0017 使用固定 SQL 模板；F01:0018 绑定整数参数。",
+    "guard": "有效：F01:0009 数字白名单校验，F01:0014 强制整数转换，F01:0018 使用 mysqli bind_param('i', $id) 参数绑定。",
+    "sink": "F01:0017 为固定语句 SELECT id, name FROM lab_people WHERE id = ?；F01:0018 仅绑定整数值，无动态列名、排序表达式或 IN 列表拼接。"
+  },
+  "prerequisites": [
+    "PHP + MariaDB（MySQLi）环境可运行，公共连接文件提供已连接的 mysqli 变量 $db。",
+    "lab_people 表已按运行上下文初始化。",
+    "请求参数 id 为标量；数组等类型异常不会作为 SQL 结构进入查询。"
+  ],
+  "missing_context": [
+    "../common/db_connect.php 的具体实现未提供，但不影响本页 SQL 注入路径判定。",
+    "未运行代码，未获取实际响应、错误日志或数据库状态。"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "不生成攻击性 POC。可作普通/对照观察：访问 http://127.0.0.1:4280/lab_cases/S004/index.php?id=1 应展示 ID 1 对应记录；访问 id=1%20OR%201=1 或非数字输入应被 F01:0009 拒绝并显示非法 ID，不应进入查询执行。失败时检查公共连接文件、lab_people 初始化及 PHP 错误日志；不能以 HTTP 200 作为成功条件。"
+}
+```

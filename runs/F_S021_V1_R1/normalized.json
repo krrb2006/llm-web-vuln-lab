@@ -1,0 +1,44 @@
+{
+  "run_id": "F_S021_V1_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S021",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0009",
+      "F01:0010",
+      "F01:0017",
+      "F01:0019",
+      "F01:0020",
+      "F01:0028",
+      "F03:0007",
+      "F03:0015",
+      "F03:0020",
+      "F03:0039"
+    ],
+    "evidence": {
+      "source": "F01:0009 从 $_POST['body'] 取得原始字符串；F01:0010 仅做非空/长度检查。",
+      "flow": "写入请求：F01:0007 处理 POST，F01:0009 取 body，F01:0016-F01:0020 预处理并 INSERT 到 lab_preview_drafts，F01:0028 303 到 preview；持久化：F01:0017 表 lab_preview_drafts；独立读取/渲染请求：F03:0007 取 id，F03:0015-F03:0020 SELECT title,body，F03:0039 原样输出 body。",
+      "guard": "无效：F03:0038 对 title 使用 htmlspecialchars，F02:0029 对列表 title 转义，但 F03:0039 对 body 未编码/净化；F01:0010 仅做非空和长度限制。建议在 F03:0039 输出前按 HTML 正文上下文编码 body。",
+      "sink": "F03:0039 在 HTML 正文 div 中 echo $draft['body']，未转义。"
+    },
+    "prerequisites": [
+      "应用已按 runtime_context 运行，submit.php 和 preview.php 在 127.0.0.1:4280 可访问",
+      "无需登录",
+      "需用浏览器打开脚本输出的 preview URL 以确认 JavaScript 执行；响应体含字符串不视为执行"
+    ],
+    "missing_context": [
+      "未提供 db_connect.php 与数据库表结构的具体实现；但 F01/F03 原始行已显示 MySQLi 预处理绑定及读取路径",
+      "未提供 127.0.0.1:4280 下应用子目录；运行时需将 BASE_URL 配置为 submit.php 所在目录"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "运行：python3 s021_poc.py --base-url http://127.0.0.1:4280/ normal；再运行：python3 s021_poc.py --base-url http://127.0.0.1:4280/ test。普通输入为纯文本正文，测试输入为 <script>alert('S021-XSS')</script>。脚本提交后打印 preview URL；需人工用浏览器分别打开 normal 与 test 的 preview URL，确认 test 弹出提示框、normal 不弹出。HTTP 返回体出现字符串不等同于 JavaScript 执行。若应用在子目录，把 --base-url 改为 submit.php 所在目录（以 / 结尾）。"
+  },
+  "human_verification": "pending",
+  "raw_source": "DeepSeek web session"
+}

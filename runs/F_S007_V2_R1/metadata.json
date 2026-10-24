@@ -1,0 +1,22 @@
+{
+  "run_id": "F_S007_V2_R1",
+  "phase": "F",
+  "sample_id": "S007",
+  "variant": "Original",
+  "prompt_version": "V2",
+  "vulnerability_type": "SQLi",
+  "status": "raw_recorded",
+  "model_display_name": "DeepSeek-V4.1-Flash",
+  "model_settings": "深度思考=开；联网搜索=关",
+  "submitted_at": "2026-10-19 21:32:29 (UTC+8)",
+  "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
+  "packet_sha256": "0da0b54298c41a089e37c3e1857b02c1cd2124a121ae41f1eaad4ceb0e72861f",
+  "input_sha256": "63beaf9c83d656884ec3e890785162053821bebaa71e9f2380346b5375c2eec4",
+  "raw_output_sha256": "d92f29f1d6807d6cbc24656fe1546349d963a3dd29b5d374c12cd66f93bf423f",
+  "source_code_input": "D:\\桌面\\网络安全课\\大作业\\llm-web-vuln-lab-starter\\llm-web-vuln-lab\\dataset\\packets\\S007_v1\\code_input.txt",
+  "planned_model_display_name": "DeepSeek-V4.1-Flash",
+  "planned_model_settings": "深度思考=开；联网搜索=关",
+  "raw_source": "DeepSeek web session",
+  "submission_mode": "A authorized browser automation",
+  "recorded_at": "2026-10-19T13:32:29.993916+00:00"
+}

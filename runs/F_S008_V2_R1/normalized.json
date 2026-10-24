@@ -1,0 +1,40 @@
+{
+  "run_id": "F_S008_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S008",
+    "prediction": "safe",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0008",
+      "F01:0011",
+      "F02:0006",
+      "F02:0007",
+      "F02:0008",
+      "F02:0009"
+    ],
+    "evidence": {
+      "source": "F01:0008 从 $_GET['name'] 读取外部输入，默认空字符串。",
+      "flow": "F01:0011 将 $name 传入 find_people_by_name($db, $name)；F02:0006 接收该参数，F02:0008 将其作为绑定参数处理。",
+      "guard": "有效：F02:0007 使用固定 SQL 模板 'SELECT id, name FROM lab_people WHERE name = ?'，未将 $name 拼接进 SQL；F02:0008 使用 bind_param('s', $name) 将输入作为字符串绑定值传入。",
+      "sink": "F02:0007-F02:0009 预编译并执行固定 SELECT，name 仅作为查询条件值进入，不进入 SQL 语法结构。"
+    },
+    "prerequisites": [
+      "入口 http://127.0.0.1:4280/lab_cases/S008/index.php 可访问，且 common/db_connect.php 能建立 mysqli 连接 $db。",
+      "lab_people 表存在，并包含运行上下文所述 id=1 Alice、id=2 Bob、id=3 Carol 三行虚构数据。",
+      "repository.php 中 find_people_by_name 的实现与样本一致，未被其他缺失代码改写或包装为动态 SQL。"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体实现未提供，无法核查连接错误模式、字符集设置细节和 $db 初始化代码；但当前样本中 F02:0007-F02:0008 的固定模板与绑定调用已足以判定该 SQL 注入路径为 safe。",
+      "未提供数据库实际初始化脚本，本地运行前需确认 lab_people 表和三行数据已按运行上下文建立。"
+    ],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成攻击性 POC，因为当前样本的 SQL 注入路径判断为 safe。人工本地对照可访问 http://127.0.0.1:4280/lab_cases/S008/index.php?name=Alice，预期浏览器显示 ID 1：Alice；再访问 http://127.0.0.1:4280/lab_cases/S008/index.php?name=Alice%27%20OR%20%271%27%3D%271，预期该输入按字面姓名查询，不显示 Bob 或 Carol，通常无匹配结果。观察者应在浏览器页面看到普通请求返回 Alice 记录，而测试请求不返回其他业务记录；不能以 HTTP 200 作为成功条件。若结果异常，需检查 db_connect.php 是否成功建立 $db、repository.php 是否保持 F02:0007-F02:0008 的固定模板和绑定调用、lab_people 数据是否正确。判断范围仅限本片段所展示的 SQL 查询路径；必要防护建议是继续保持参数化查询，不对姓名条件做字符串拼接。"
+  },
+  "human_verification": "pending",
+  "raw_source": "S001-s024.docx"
+}

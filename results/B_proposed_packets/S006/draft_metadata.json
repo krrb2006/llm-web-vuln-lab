@@ -1,0 +1,10 @@
+{
+  "sample_id": "S006",
+  "status": "draft_pending_C_standardization",
+  "source_commit": "d498903da01d89a695fa49d5392d3776eb901e2f",
+  "source_path": "dataset/raw/S006/index.php",
+  "packet_sha256": "04a71bd0e46c452a8f8aa06065e701aeaefca5a95d42c26fa098b8b71c27a8a7",
+  "v0_input_sha256": "edee680c41a1cc606216c36d40eb843e6f000c07c0032f00152f160d9846025b",
+  "code_lines": 26,
+  "model_submitted": false
+}

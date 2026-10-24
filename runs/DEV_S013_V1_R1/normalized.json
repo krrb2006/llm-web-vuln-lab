@@ -1,0 +1,32 @@
+{
+  "run_id": "DEV_S013_V1_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S013",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0003",
+      "F01:0013"
+    ],
+    "evidence": {
+      "source": "F01:0003 使用 $_GET['q'] 读取攻击者可控的 GET 参数 q。",
+      "flow": "F01:0003 的 q 赋给 $q，随后 F01:0013 在同一请求中直接 echo 到 HTML 正文 <p> 内；属于反射型路径，无存储写入/独立读取阶段。",
+      "guard": "无效：F01:0013 直接输出 $q，未见 htmlspecialchars 等 HTML 上下文编码或净化；输入包中也未见 CSP。",
+      "sink": "F01:0013 将 $q 原样插入 <p>搜索词：...</p> 的 HTML 正文，可形成脚本注入。"
+    },
+    "prerequisites": [
+      "PHP 服务监听 127.0.0.1:4280，并将 F01 单页作为访问入口",
+      "使用浏览器访问本地页面；页面未设置会阻止内联脚本执行的 CSP（输入包未显示 CSP）"
+    ],
+    "missing_context": [],
+    "poc_generated": true,
+    "poc_language": "manual",
+    "poc_instructions": "前提：确保 PHP 服务已按运行上下文监听 127.0.0.1:4280 且 F01 为入口。普通对照：浏览器访问 http://127.0.0.1:4280/?q=hello ，人工观察页面显示“搜索词：hello”且无弹框。测试输入：浏览器访问 http://127.0.0.1:4280/?q=%3Cscript%3Ealert%28%27XSS-S013%27%29%3C%2Fscript%3E ，人工观察是否弹出提示框 XSS-S013。判定只看浏览器是否执行脚本/弹框，HTTP 返回体出现字符串不等同于 JavaScript 执行；本审计未运行代码，实际观察需由执行者记录，若未弹框则记为未复现。"
+  },
+  "human_verification": "pending",
+  "raw_source": "R1-R12.docx"
+}

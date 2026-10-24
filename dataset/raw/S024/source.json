@@ -1,0 +1,17 @@
+{
+  "sample_id": "S024",
+  "family_id": "XSS06",
+  "author": "D",
+  "date": "2026-10-11",
+  "source_type": "self-built",
+  "basis": "docs/C_样本与预处理操作手册.md 二（XSS06 可编辑链接及协议检查蓝图）",
+  "source_url": "",
+  "source_commit": "",
+  "license": "本组自建教学样本；未复制第三方源码",
+  "files": [
+    {"file": "index.php", "role": "链接输入与预览", "sha256": "d8fd13287f20851cec905759d39ae9fb25f157266e91d35d6cf69ce1300a1fce"}
+  ],
+  "dependencies": [
+    {"name": "PHP", "note": "无需数据库、登录或其他共享文件"}
+  ]
+}

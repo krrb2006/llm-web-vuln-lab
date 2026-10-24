@@ -1,0 +1,37 @@
+```json
+{
+  "sample_id": "S023",
+  "prediction": "vulnerable",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0005", "F01:0010", "F01:0025"],
+  "evidence": {
+    "source": "F01:0005 从 $_GET['url'] 读取可控输入",
+    "flow": "F01:0006 去空白后经 F01:0010 赋给 $href，并在 F01:0025 写入 href 属性",
+    "guard": "无效：F01:0025 使用 htmlspecialchars 做了 HTML 属性编码，可阻止引号逃逸，但未对 URL 协议做白名单限制，javascript: 等协议仍可进入 href",
+    "sink": "F01:0025 的 <a> href 属性；用户实际点击“打开链接”后，javascript: URL 可在页面上下文执行脚本"
+  },
+  "prerequisites": [
+    "本机 PHP 8.5 环境可访问 http://127.0.0.1:4280/lab_cases/S023/index.php",
+    "浏览器允许点击 href 中的 javascript: URL 执行脚本",
+    "验证必须在页面加载后人工点击“打开链接”，页面加载本身不作为脚本执行证据"
+  ],
+  "missing_context": [],
+  "poc_generated": true,
+  "poc_language": "manual",
+  "poc_instructions": "按下方人工步骤运行；先做普通本机 URL 对照，再做 javascript: 测试输入；页面加载时不弹框，点击“打开链接”后需人工在浏览器确认弹框内容；该测试不外发数据。"
+}
+```
+
+人工验证步骤（manual POC）：
+
+普通对照输入：在浏览器打开
+http://127.0.0.1:4280/lab_cases/S023/index.php?url=http%3A%2F%2F127.0.0.1%3A4280%2Flab_cases%2FS023%2Findex.php
+观察表单 value 和“打开链接”的 href 指向本机同一页面。人工点击“打开链接”，应导航到本机页面，不应出现提示框。
+
+测试输入：在浏览器打开
+http://127.0.0.1:4280/lab_cases/S023/index.php?url=javascript%3Aalert%28document.domain%29
+页面加载时应不弹框。人工点击“打开链接”后确认浏览器是否弹出提示框，内容应为 127.0.0.1 或当前 document.domain。弹框即表示 javascript: URL 在该 href 上下文中被执行。
+
+判定记录：若普通对照点击后无弹框且本机导航正常，而测试输入点击后出现提示框，则可确认该路径存在 XSS；若测试输入点击后无弹框或被浏览器拦截，则应记录实际浏览器行为并重新评估。
+
+防护建议（未验证）：对 href 中的 URL 仅允许 http:、https: 等明确协议，拒绝 javascript:、data: 等危险协议；HTML 属性编码不能替代 URL 协议校验。

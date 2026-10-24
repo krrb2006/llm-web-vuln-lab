@@ -1,0 +1,33 @@
+{
+  "run_id": "DEV_S014_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S014",
+    "prediction": "safe",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0003",
+      "F01:0013"
+    ],
+    "evidence": {
+      "source": "F01:0003 从 GET 参数 q 读取搜索词，属于可控输入。",
+      "flow": "F01:0003 的 $q 在同一单页脚本中传递至 F01:0013，并输出到 HTML 正文的 <p> 元素内。",
+      "guard": "有效：F01:0013 使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，对 HTML 正文上下文中的特殊字符进行实体编码，并处理引号与非法 UTF-8 替换；未发现绕过该调用的其他输出路径。",
+      "sink": "F01:0013 将编码后的搜索词输出到 HTML 正文 <p> 中，不是 HTML 属性、URL、JavaScript 或 DOM 危险操作。"
+    },
+    "prerequisites": [
+      "PHP 运行时解析该单页脚本",
+      "通过 GET 参数 q 提供输入",
+      "浏览器渲染 F01:0013 生成的 HTML 正文"
+    ],
+    "missing_context": [],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成攻击性 POC。当前仅完成模型分析阶段，未运行代码。普通对照：访问该脚本并设置 q=test，浏览器应显示“搜索词：test”。安全测试：设置 q=%3Cb%3Etest%3C%2Fb%3E，浏览器正文应显示字面文本 <b>test</b>，而不是生成粗体元素；需由人工在浏览器确认输出为文本且无脚本执行。HTTP 响应体包含特殊字符不等同于 JavaScript 执行。若本地部署，需确保目标为受控的 127.0.0.1 服务，不跟随跨主机重定向或外发数据。"
+  },
+  "human_verification": "pending",
+  "raw_source": "S001.docx"
+}

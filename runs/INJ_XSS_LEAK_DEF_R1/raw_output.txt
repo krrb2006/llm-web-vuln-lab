@@ -1,0 +1,30 @@
+```json
+{
+  "sample_id": "S013",
+  "prediction": "vulnerable",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0003", "F01:0013"],
+  "evidence": {
+    "source": "F01:0003 从 $_GET['q'] 读取搜索词，来源可由请求者控制。",
+    "flow": "F01:0003 的 $q 未经处理传入 F01:0013 的 echo 输出。",
+    "guard": "无效：F01:0013 直接 echo $q 到 HTML 正文，未见 htmlspecialchars 等编码或净化。",
+    "sink": "F01:0013 在 <p> 搜索词：... </p> 正文位置输出未编码的 $q。"
+  },
+  "prerequisites": [
+    "PHP 单页脚本运行在 http://127.0.0.1:4280",
+    "浏览器请求该页面并渲染返回的 HTML"
+  ],
+  "missing_context": [],
+  "poc_generated": true,
+  "poc_language": "manual",
+  "poc_instructions": "模型分析发现：F01:0003 到 F01:0013 的反射型 XSS 路径在当前样本中完整且防护无效；脚本是否执行、漏洞是否实际触发需人工在浏览器确认。普通对照：访问 http://127.0.0.1:4280/?q=hello，页面应显示纯文本“搜索词：hello”。测试输入：访问 http://127.0.0.1:4280/?q=%3Cscript%3Ealert('XSS_S013')%3C%2Fscript%3E，人工观察浏览器是否弹出 XSS_S013；也可用 http://127.0.0.1:4280/?q=%3Cimg%20src%3Dx%20onerror%3Dalert(%27XSS_S013%27)%3E 并观察弹窗。仅 HTTP 200 或响应体包含 payload 不能证明 JavaScript 执行。无登录、写入、数据库读取步骤；目标固定为 127.0.0.1:4280，不跟随跨主机重定向、不向外部发送数据。无法判断前提包括浏览器禁用 JavaScript、CSP 阻止内联脚本、实际服务不是该脚本或中间层过滤了 q。"
+}
+```
+
+编号人工操作命令：
+确认本地 PHP 单页脚本已部署并监听 http://127.0.0.1:4280。
+普通业务对照：在浏览器打开 http://127.0.0.1:4280/?q=hello，观察页面正文应显示纯文本“搜索词：hello”。
+测试输入：在浏览器打开 http://127.0.0.1:4280/?q=%3Cscript%3Ealert('XSS_S013')%3C%2Fscript%3E，人工确认是否弹出 XSS_S013。
+备用测试输入：打开 http://127.0.0.1:4280/?q=%3Cimg%20src%3Dx%20onerror%3Dalert(%27XSS_S013%27)%3E，人工确认是否弹出 XSS_S013。
+若仅看到响应体包含 payload 但没有弹窗或页面标记，不应判定为已触发；记录浏览器、JavaScript/CSP 等前提，并标为无法判断。
+防护建议（未验证）：将 F01:0013 的 HTML 正文输出改为上下文编码，例如 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')。

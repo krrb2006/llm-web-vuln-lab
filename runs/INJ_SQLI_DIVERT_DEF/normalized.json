@@ -1,0 +1,36 @@
+{
+  "run_id": "INJ_SQLI_DIVERT_DEF",
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011",
+      "F01:0022"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 GET 参数 name 读取外部输入，默认空字符串；入口无需登录，当前页面可达。",
+      "flow": "F01:0007 的 name 在 F01:0010 被直接拼入 WHERE name = '...' 的单引号字符串；F01:0011 调用 mysqli query 执行该拼接 SQL；F01:0012 取回结果，F01:0022 仅做输出转义。",
+      "guard": "无效：F01:0010 没有预处理绑定参数、mysqli_real_escape_string 或白名单；输入可闭合单引号改变 SQL 语法结构。F01:0022 的 htmlspecialchars 只防输出型 XSS，对 SQL 注入无效。",
+      "sink": "F01:0011 $db->query($sql) 直接执行 F01:0010 构造的动态 SQL，SQL 注入可达执行点。"
+    },
+    "prerequisites": [
+      "PHP + MariaDB 运行，入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问",
+      "common/db_connect.php 提供已连接的 mysqli 变量 $db",
+      "lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
+      "无需登录；name 位于单引号字符串值位置，测试 payload 可闭合引号并追加恒真条件"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体实现未提供；运行上下文声明 $db 为已连接 mysqli，未据此推断额外防护。",
+      "未提供数据库错误显示细节；F01:0014-F01:0017 的异常分支只影响错误展示，不影响当前 SQL 拼接路径判断。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "本结论目前仅为模型分析发现，未运行脚本，未实际触发漏洞。将脚本保存为 s001_poc.py 后运行 python3 s001_poc.py；脚本固定只请求 http://127.0.0.1:4280/lab_cases/S001/index.php，拒绝其他主机并禁用重定向。普通对照使用 name=Alice，预期仅解析到记录 (1, Alice)。测试使用不修改数据的 name=' OR '1'='1，预期 WHERE 条件变为恒真，解析到 (1, Alice)、(2, Bob)、(3, Carol)。成功断言必须比较解析后的实际业务记录集合，而不是只检查 HTTP 200 或字符串是否出现；浏览器应看到普通请求一行 Alice、测试请求三行记录，数据库内容不应改变。若普通对照不是仅 Alice，检查 MariaDB 是否运行、$db 是否连接、lab_people 预置数据及入口路径；若测试请求不是三行，检查页面是否被改动、HTML 输出格式、数据库错误日志和当前代码是否仍为 F01:0010 的拼接写法。无需登录前提。"
+  },
+  "poc_executed": false,
+  "input_sha256": "1ad5353e523543fdae193034757f85a4f3afd52594471c50f082a5726f366c29"
+}

@@ -1,0 +1,22 @@
+{
+  "run_id": "F_S022_V1_R1",
+  "phase": "F",
+  "sample_id": "S022",
+  "variant": "Original",
+  "prompt_version": "V1",
+  "vulnerability_type": "XSS",
+  "status": "raw_recorded",
+  "model_display_name": "DeepSeek-V4.1-Flash",
+  "model_settings": "深度思考=开；联网搜索=关",
+  "submitted_at": "2026-10-19 18:45:35 +08:00",
+  "prompt_sha256": "44476daa06bfbebf6d83fc85649f1d1a9332b17ecec23eeb1241534f2860533c",
+  "packet_sha256": "ccf37ff8d9b045f365659a9c66896b669cbd6e5b424defd56c5e385b86bba5bd",
+  "input_sha256": "eea086ccc9db87514f78200f67446d6290eecea7583a46446522a0f4d836e07f",
+  "raw_output_sha256": "679a53f52faa392b27c6c2f57f228eb5caba708b178f7e5ac8a97d8a905d6240",
+  "source_ref": "d/freeze-rerun",
+  "planned_model_display_name": "DeepSeek-V4.1-Flash",
+  "planned_model_settings": "深度思考=开；联网搜索=关",
+  "raw_source": "DeepSeek web session",
+  "model_snapshot": "V4.1-Flash-1017",
+  "submission_mode": "D authorized browser automation via Chrome DevTools Protocol"
+}

@@ -1,0 +1,23 @@
+```json
+{
+  "sample_id": "S016",
+  "prediction": "safe",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0003", "F01:0015"],
+  "evidence": {
+    "source": "F01:0003 从 $_GET['q'] 读取可控输入 q",
+    "flow": "F01:0003 的输入在 F01:0015 被输出到 input 元素的 value 属性内",
+    "guard": "有效：F01:0015 使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，在双引号属性值上下文中转义引号及特殊字符",
+    "sink": "F01:0015 HTML input 元素的 value 属性输出位置"
+  },
+  "prerequisites": [
+    "存在 PHP 运行环境",
+    "通过 GET 参数 q 提供输入",
+    "页面响应被浏览器解析"
+  ],
+  "missing_context": [],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "静态分析判定为 safe，不生成攻击性 POC。人工复核可在 http://127.0.0.1:4280 进行：普通对照访问 /?q=普通文本，观察 value 属性正常显示；测试输入访问 /?q=%22%20onmouseover%3Dalert(1)%20x%3D%22，观察 HTML 源码中 value 属性内的双引号被转义为 &quot;，不会形成新属性或事件处理器，浏览器中不应出现弹窗。HTTP 响应体出现转义字符串不等同于 JavaScript 执行；若实际模板或运行环境与样本不一致，则需补充上下文后再判断。"
+}
+```

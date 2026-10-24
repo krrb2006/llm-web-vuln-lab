@@ -1,0 +1,38 @@
+{
+  "run_id": "DEV_S005_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S005",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 直接读取外部 GET 参数 $_GET['q']，未见过滤",
+      "flow": "F01:0007 的 q -> F01:0010 被字符串拼接进 LIKE 模式 -> F01:0011 交给 mysqli query 执行",
+      "guard": "无效：F01:0010 直接拼接，未见预处理绑定、转义或白名单；q 可闭合 SQL 字符串并改变布尔条件",
+      "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的 SQL"
+    },
+    "prerequisites": [
+      "本地入口 http://127.0.0.1:4280/lab_cases/S005/index.php 可访问",
+      "PHP + MariaDB（MySQLi），common/db_connect.php 提供已连接变量 $db",
+      "lab_people 表存在且含预置记录 1 Alice、2 Bob、3 Carol",
+      "无需登录，GET 参数 q 可达查询路径"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体连接实现未提供，连接细节未核查",
+      "数据库用户权限与错误显示设置未提供，影响堆叠注入或报错型扩展利用判断，但不影响当前基础注入路径判断"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "保存为 poc_s005.py 后运行 python3 poc_s005.py。脚本固定访问 http://127.0.0.1:4280/lab_cases/S005/index.php，不跟随重定向。普通请求 q=Alice，预期解析记录仅 {ID 1: Alice}；测试请求 q=%' OR '1'='1' -- （末尾空格），预期解析记录至少包含 {ID 1: Alice, ID 2: Bob, ID 3: Carol} 且多于普通请求。成功断言比较解析后的 ID/name 集合，不以 HTTP 200 为准。失败时检查本地服务与路径、common/db_connect.php 的 $db、lab_people 预置数据和 PHP 错误日志。"
+  },
+  "human_verification": "pending",
+  "raw_source": "S001.docx"
+}

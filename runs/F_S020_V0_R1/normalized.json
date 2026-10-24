@@ -1,0 +1,36 @@
+{
+  "run_id": "F_S020_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S020",
+    "prediction": "safe",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0005",
+      "F01:0006",
+      "F01:0008",
+      "F02:0011",
+      "F02:0016"
+    ],
+    "evidence": {
+      "source": "F01:0005 从 POST 字段 content 读取可控输入，F01:0006 仅做 is_string 类型收敛后赋给 $content。",
+      "flow": "F01:0008 将 $content 传入 templates/preview.php；F02:0011 在 textarea 文本位置输出，F02:0016 在 div.preview 的 HTML 正文位置输出。",
+      "guard": "有效：F02:0011 与 F02:0016 均使用 htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')。对 HTML 正文和 textarea 文本上下文，<、>、&、引号被转义；当前样本未发现 URL、JavaScript、属性或 DOM 危险输出位置。",
+      "sink": "F02:0011 textarea 内容与 F02:0016 div.preview 正文均为 HTML 文本输出点，且已编码；未发现未编码的脚本执行型 sink。"
+    },
+    "prerequisites": [
+      "PHP 8.5 本机环境，入口为 http://127.0.0.1:4280/lab_cases/S020/index.php",
+      "通过 GET 显示表单，通过 POST 字段 content 提交字符串",
+      "templates/preview.php 已随样本提供并在同一响应中渲染"
+    ],
+    "missing_context": [],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成攻击性 POC。判断范围仅限提供的 PHP 入口与模板；未运行代码。普通对照：GET 访问入口显示空表单与空预览。测试对照可人工提交 content 为 <script>alert(1)</script> 或 <img src=x onerror=alert(1)>，预期在 textarea 和预览 div 中显示为字面文本，浏览器不应弹窗；该观察需人工在浏览器确认。由于 F02:0011 和 F02:0016 已对 HTML 正文/文本上下文编码，当前样本不构成 XSS，无需本地攻击验证。防护建议：保留上下文相关编码；若未来将同一输入输出到 URL、JavaScript 或 HTML 属性，应使用对应编码与 URL 协议约束；富文本场景应使用白名单净化。"
+  },
+  "human_verification": "pending",
+  "raw_source": "DeepSeek web session"
+}
