@@ -76,8 +76,8 @@ def main() -> int:
     advanced_sql = ""
     if args.reset_advanced:
         advanced_sql = """
-DELETE FROM teaching_lab.profiles;
-DELETE FROM teaching_lab.invoices;
+TRUNCATE TABLE teaching_lab.profiles;
+TRUNCATE TABLE teaching_lab.invoices;
 INSERT INTO teaching_lab.profiles (id, nickname) VALUES
     (1, 'Alice'), (2, 'Bob');
 INSERT INTO teaching_lab.invoices (id, owner_id, total) VALUES

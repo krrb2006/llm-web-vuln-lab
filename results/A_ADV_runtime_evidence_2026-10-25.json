@@ -8,10 +8,10 @@
     "controlled_save_status": 200,
     "vulnerable_lookup_status": 200,
     "fixed_lookup_status": 200,
-    "vulnerable_response_sha256": "f72a4ed131ac99280b54fba24d08780491006e4989289cc1a27c1d350379ce0a",
-    "fixed_response_sha256": "637fb2cb4462c8891797487e377a62173283f7e17990d338cb39f9bdbb2e202c",
-    "vulnerable_response_length": 58,
-    "fixed_response_length": 30,
+    "vulnerable_response_sha256": "1245f39b4fdf21ca3a901ed8610e1c1b1d13c204c075e507b747b22ce3ab3258",
+    "fixed_response_sha256": "ebdecbf14aee5083d6ad60af04d0be2dc8d22b8ea27ade63e8359978087239ab",
+    "vulnerable_response_length": 33,
+    "fixed_response_length": 15,
     "contrast": "vulnerable_response_longer_than_fixed"
   },
   "idor": {

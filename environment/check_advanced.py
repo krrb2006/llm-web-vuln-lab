@@ -62,6 +62,9 @@ def main() -> int:
     status, saved = request("/SECOND_SQLI_01/vulnerable/save_profile.php", {"nickname": "' OR 1=1 #"})
     if status != 200 or "saved" not in saved:
         raise RuntimeError("controlled profile write failed")
+    # init_lab_db.py --reset-advanced seeds ids 1 and 2; the two writes above
+    # therefore create the controlled record at id 4.  Use the second write's
+    # deterministic id rather than relying on rows left by an earlier run.
     vulnerable_status, vulnerable = request("/SECOND_SQLI_01/vulnerable/lookup_profile.php?id=4")
     fixed_status, fixed = request("/SECOND_SQLI_01/fixed/lookup_profile.php?id=4")
     if vulnerable_status != 200 or fixed_status != 200 or len(vulnerable) <= len(fixed):
