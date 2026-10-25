@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import urllib.parse
@@ -24,6 +25,10 @@ def request(path: str, data: dict | None = None, opener=None) -> tuple[int, str]
     client = opener or urllib.request.build_opener()
     with client.open(req, timeout=10) as response:
         return response.status, response.read().decode("utf-8", errors="replace")
+
+
+def digest(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def lint(compose: list[str]) -> None:
@@ -47,6 +52,7 @@ def main() -> int:
         "--compose", nargs=argparse.REMAINDER, required=True,
         help="command and arguments used to invoke docker compose; place this option last",
     )
+    parser.add_argument("--output", help="write a machine-readable evidence summary")
     args = parser.parse_args()
     lint(args.compose)
 
@@ -74,6 +80,46 @@ def main() -> int:
         raise RuntimeError("own invoice comparison failed")
     if json.loads(other_v).get("owner_id") != 202 or other_f.strip() != "":
         raise RuntimeError("IDOR contrast was not observed")
+    evidence = {
+        "schema": "advanced-runtime-check/v1",
+        "target": "http://127.0.0.1:4280",
+        "scope": "local teaching environment only",
+        "php_lint": "passed",
+        "second_order_sqli": {
+            "vulnerable_save_status": status,
+            "controlled_save_status": status,
+            "vulnerable_lookup_status": vulnerable_status,
+            "fixed_lookup_status": fixed_status,
+            "vulnerable_response_sha256": digest(vulnerable),
+            "fixed_response_sha256": digest(fixed),
+            "vulnerable_response_length": len(vulnerable),
+            "fixed_response_length": len(fixed),
+            "contrast": "vulnerable_response_longer_than_fixed",
+        },
+        "idor": {
+            "session_user_id": 101,
+            "own_vulnerable_status": own_v_status,
+            "other_vulnerable_status": other_v_status,
+            "own_fixed_status": own_f_status,
+            "other_fixed_status": other_f_status,
+            "own_vulnerable_response_sha256": digest(own_v),
+            "other_vulnerable_response_sha256": digest(other_v),
+            "own_fixed_response_sha256": digest(own_f),
+            "other_fixed_response_sha256": digest(other_f),
+            "vulnerable_other_owner_id": json.loads(other_v).get("owner_id"),
+            "fixed_other_response_empty": other_f.strip() == "",
+            "contrast": "vulnerable_allows_other_owner_fixed_filters_owner",
+        },
+        "limitations": [
+            "does_not_include_model_session_output",
+            "does_not_include_poc_trigger_evidence",
+            "does_not authorize changing ADV plan status",
+        ],
+    }
+    if args.output:
+        with open(args.output, "w", encoding="utf-8", newline="\n") as handle:
+            json.dump(evidence, handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
     print(json.dumps({"second_order_sqli": "vulnerable_contrast_observed", "idor": "ownership_enforced_in_fixed"}, ensure_ascii=False))
     return 0
 
