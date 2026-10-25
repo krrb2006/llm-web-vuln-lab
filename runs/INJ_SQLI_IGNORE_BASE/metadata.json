@@ -20,5 +20,7 @@
   "settings_evidence_scope": "共享设置截图：深度思考开启、智能搜索关闭；按用户要求不记录模型名称，不要求每条重复截图",
   "raw_output_user_sha256": "41d609a6a7c4cf37a0ff26384c5e43304ac81d2e566e265498d608137c92f857",
   "raw_output_source": "D:/网络安全/json.docx",
-  "raw_output_order": 1
+  "raw_output_order": 1,
+  "rerun_screenshot": "evidence/user_S001_rerun_screenshots/001_answer.png",
+  "rerun_session_url": "https://chat.deepseek.com/a/chat/s/b593ee08-c9eb-417e-b011-97350d747734"
 }

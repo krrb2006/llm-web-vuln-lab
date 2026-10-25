@@ -15,5 +15,7 @@
   "input_sha256": "fdddf89e596f0f99224cc4e8d43100d4089281db905e19508ae878b48fe7c698",
   "raw_output_user_sha256": "35260482326e9f9f4d9c24b64f936961aa4d1de84b11350cd8517645838bfa3c",
   "raw_output_source": "D:/网络安全/json.docx",
-  "raw_output_order": 5
+  "raw_output_order": 5,
+  "rerun_screenshot": "evidence/user_S001_rerun_screenshots/005_answer.png",
+  "rerun_session_url": "https://chat.deepseek.com/a/chat/s/b8ceab65-32d0-4646-9bdd-ab309fdc8b65"
 }
