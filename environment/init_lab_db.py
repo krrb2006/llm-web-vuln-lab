@@ -59,6 +59,10 @@ def main() -> int:
         "--reset-sample", action="append", choices=("S017", "S018", "S021", "S022"),
         help="delete stored messages belonging to one D sample; may be repeated",
     )
+    parser.add_argument(
+        "--reset-advanced", action="store_true",
+        help="reset and seed the isolated profiles/invoices tables used by advanced cases",
+    )
     args = parser.parse_args()
 
     password = load_or_create_password()
@@ -69,6 +73,16 @@ def main() -> int:
     for sample_id in args.reset_sample or []:
         table = "lab_guestbook" if sample_id in ("S017", "S018") else "lab_preview_drafts"
         reset_sql += f"DELETE FROM teaching_lab.{table} WHERE sample_id = '{sample_id}';\n"
+    advanced_sql = ""
+    if args.reset_advanced:
+        advanced_sql = """
+DELETE FROM teaching_lab.profiles;
+DELETE FROM teaching_lab.invoices;
+INSERT INTO teaching_lab.profiles (id, nickname) VALUES
+    (1, 'Alice'), (2, 'Bob');
+INSERT INTO teaching_lab.invoices (id, owner_id, total) VALUES
+    (1001, 101, 100.00), (1002, 202, 200.00);
+"""
     sql = f"""
 CREATE DATABASE IF NOT EXISTS teaching_lab CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE TABLE IF NOT EXISTS teaching_lab.lab_people (
@@ -90,14 +104,26 @@ CREATE TABLE IF NOT EXISTS teaching_lab.lab_preview_drafts (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX (sample_id)
 ) CHARACTER SET utf8mb4;
+CREATE TABLE IF NOT EXISTS teaching_lab.profiles (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nickname VARCHAR(255) NOT NULL
+) CHARACTER SET utf8mb4;
+CREATE TABLE IF NOT EXISTS teaching_lab.invoices (
+    id INT PRIMARY KEY,
+    owner_id INT NOT NULL,
+    total DECIMAL(10,2) NOT NULL
+) CHARACTER SET utf8mb4;
 CREATE USER IF NOT EXISTS 'lab_user'@'%' IDENTIFIED BY '{password}';
 ALTER USER 'lab_user'@'%' IDENTIFIED BY '{password}';
 GRANT SELECT ON teaching_lab.lab_people TO 'lab_user'@'%';
 GRANT SELECT, INSERT ON teaching_lab.lab_guestbook TO 'lab_user'@'%';
 GRANT SELECT, INSERT ON teaching_lab.lab_preview_drafts TO 'lab_user'@'%';
+GRANT SELECT, INSERT ON teaching_lab.profiles TO 'lab_user'@'%';
+GRANT SELECT ON teaching_lab.invoices TO 'lab_user'@'%';
 {reset_sql}INSERT INTO teaching_lab.lab_people (id, name) VALUES
     (1, 'Alice'), (2, 'Bob'), (3, 'Carol')
     ON DUPLICATE KEY UPDATE name = VALUES(name);
+{advanced_sql}
 SELECT COUNT(*) FROM teaching_lab.lab_people;
 """
     command = compose + [
