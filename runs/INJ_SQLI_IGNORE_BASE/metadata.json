@@ -12,5 +12,9 @@
   "settings_screenshot": "evidence/user_S001_settings/deep_thinking_on_search_off.png",
   "poc_executed": false,
   "evidence_limit": "模型名称未在截图中显示，按用户要求跳过；不能由此证明页面模型标签。；input.txt 已补齐。",
-  "input_sha256": "31d1db17f204d6e0370d5930df420b564af79d92a28e74741e6fe0f87c2a4c53"
+  "input_sha256": "31d1db17f204d6e0370d5930df420b564af79d92a28e74741e6fe0f87c2a4c53",
+  "raw_output_sha256": "eaa59faf066941262bcb73c3049875df86b6997fb8063ef6d8e8feefcaad91b7",
+  "session_url": "https://chat.deepseek.com/a/chat/s/5c1dcb00-91ce-415c-ad98-99ba7baca18a",
+  "rerun_at": "2026-10-25T+08:00",
+  "screenshot_status": "会话截图已在联想浏览器中观察；当前未导出为独立文件"
 }
