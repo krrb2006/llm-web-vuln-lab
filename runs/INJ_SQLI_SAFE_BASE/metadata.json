@@ -12,5 +12,10 @@
   "settings_screenshot": "evidence/user_S001_settings/deep_thinking_on_search_off.png",
   "poc_executed": false,
   "evidence_limit": "模型名称未在截图中显示，按用户要求跳过；不能由此证明页面模型标签。；input.txt 已补齐。",
-  "input_sha256": "ed3430606a7ec0bd8af5ea7f78dc1a884f4d79e9ef93345ac9c6d5f17c79a139"
+  "input_sha256": "ed3430606a7ec0bd8af5ea7f78dc1a884f4d79e9ef93345ac9c6d5f17c79a139",
+  "raw_output_user_sha256": "3d890ea9e7abd97f30c17ceec0a82e637fd7386501a1c99d1b6d352ed472f05e",
+  "raw_output_source": "D:/网络安全/json.docx",
+  "raw_output_order": 3,
+  "rerun_screenshot": "evidence/user_S001_rerun_screenshots/003_answer.png",
+  "rerun_session_url": "https://chat.deepseek.com/a/chat/s/4f287957-d470-4540-bd20-40aec8d8fe11"
 }
