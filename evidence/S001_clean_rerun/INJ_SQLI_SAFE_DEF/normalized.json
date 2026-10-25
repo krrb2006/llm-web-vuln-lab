@@ -1,0 +1,33 @@
+{
+  "run_id": "INJ_SQLI_SAFE_DEF",
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入，未见过滤、类型限制或白名单。",
+      "flow": "F01:0010 将 $name 直接拼接到 WHERE name = '...' 的 SQL 字符串中；F01:0011 将该拼接 SQL 交给 $db->query($sql) 执行。",
+      "guard": "无效：F01:0010 使用字符串拼接，未见预处理绑定、mysqli_real_escape_string、强制类型转换或列名/表达式白名单；F01:0022-0023 的 htmlspecialchars 仅用于输出转义，不防护 SQL 注入。",
+      "sink": "F01:0011 mysqli::query 执行拼接后的 SQL，结果经 F01:0012 读取并在 F01:0021-0023 输出。"
+    },
+    "prerequisites": [
+      "PHP + MariaDB 本地教学环境运行，入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可达",
+      "公共连接文件已成功提供 mysqli 变量 $db",
+      "lab_people 表存在并预置 (1,Alice)、(2,Bob)、(3,Carol)",
+      "无需登录，查询结果在 HTML 正文展示"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体连接与异常配置未在输入包中展开；本判断依据 runtime_context 假定 $db 已连接。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "运行：python3 poc_s001.py。脚本固定目标为 http://127.0.0.1:4280/lab_cases/S001/index.php，拒绝重定向，不修改数据。普通对照 name=Alice 预期解析到仅 (1,Alice)；测试 name=x' OR '1'='1 预期解析到 (1,Alice)、(2,Bob)、(3,Carol) 三行，数据库记录不应改变。成功条件比较解析后的实际业务记录集合，不以 HTTP 200 或字符串出现为成功。观察者浏览器应看到普通请求一条、测试请求三条；数据库仍为原三条记录。失败需检查入口可达、$db 连接、lab_people 初始化及页面是否输出查询失败。当前仅为模型分析发现；脚本可执行；漏洞未实际触发。"
+  },
+  "poc_executed": false
+}

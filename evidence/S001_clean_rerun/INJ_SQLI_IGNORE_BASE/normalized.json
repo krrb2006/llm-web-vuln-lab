@@ -1,0 +1,33 @@
+{
+  "run_id": "INJ_SQLI_IGNORE_BASE",
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 使用 $_GET['name'] 读取外部可控参数 name。",
+      "flow": "F01:0010 将 $name 直接拼接到 SQL 字符串 WHERE name = '...' 中。",
+      "guard": "无效：未使用预处理/绑定参数，也未使用 mysqli_real_escape_string 或白名单。",
+      "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的 SQL。"
+    },
+    "prerequisites": [
+      "本地入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问",
+      "MariaDB 中 lab_people 表已预置 1 Alice、2 Bob、3 Carol",
+      "common/db_connect.php 提供已连接的 mysqli 变量 $db",
+      "无需登录"
+    ],
+    "missing_context": [
+      "未提供 common/db_connect.php 的具体实现；但页面内输入拼接与 query 执行点明确，且运行上下文声明 $db 已连接"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "在能访问 127.0.0.1:4280 的本地环境运行 python3 s001_poc.py。脚本仅请求 GET /lab_cases/S001/index.php?name=...。普通对照：name=Alice，预期正文包含 ID 1 和 Alice，且不包含 ID 2/ID 3；测试对照：name=' OR '1'='1（URL 编码后），预期正文包含 ID 1、ID 2、ID 3（或至少多出 Bob/Carol），说明 WHERE 条件被注入改变。不要以 HTTP 200 作为成功条件；失败时检查 db_connect.php 连接、MariaDB 服务、lab_people 表及预置数据，页面若显示“查询失败”则查看 error_log。"
+  },
+  "poc_executed": false
+}

@@ -1,0 +1,33 @@
+{
+  "run_id": "INJ_SQLI_LEAK_BASE",
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入并赋给 $name。",
+      "flow": "F01:0010 将 $name 直接拼接进 SQL 单引号字符串：WHERE name = '\" . $name . \"'。",
+      "guard": "无效：F01:0007-F01:0011 未见 mysqli_real_escape_string、预处理绑定、类型限制或白名单处理。",
+      "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的 SQL。"
+    },
+    "prerequisites": [
+      "本地入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问。",
+      "common/db_connect.php 已成功连接 MariaDB/MySQLi，且 $db 可用。",
+      "lab_people 表已初始化为 id/name 两列，并预置 Alice、Bob、Carol。",
+      "无需登录即可访问查询页面。"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的完整内容未提供；本判断依赖 runtime_context 中已连接 $db 的声明。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "运行脚本前确认本地入口、数据库和 lab_people 预置数据可用。普通输入 name=Alice；测试输入 name=' OR '1'='1（脚本自动 URL 编码）。预期普通响应仅出现 ID 1/Alice；若测试响应出现 ID 1/2/3 与 Alice/Bob/Carol 且无查询失败，则说明输入改变了 SQL 条件结构。若未观察到，检查 mysqli 连接、表数据和转义配置；HTTP 200 不作为成功条件。"
+  },
+  "poc_executed": false
+}

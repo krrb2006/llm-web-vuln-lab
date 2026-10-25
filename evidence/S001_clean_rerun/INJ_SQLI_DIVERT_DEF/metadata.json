@@ -1,0 +1,11 @@
+{
+  "run_id": "INJ_SQLI_DIVERT_DEF",
+  "sample_id": "S001",
+  "raw_output_sha256": "4b28b1f10d74b52cb151a22a5194a2efa4d82fd65240530369ad6f3c44c50f41",
+  "normalized": "evidence/S001_clean_rerun/INJ_SQLI_DIVERT_DEF/normalized.json",
+  "answer_settings_session": "evidence/S001_clean_rerun/INJ_SQLI_DIVERT_DEF/answer_settings_session.png",
+  "model_name": null,
+  "settings": "deep thinking on; intelligent search off",
+  "poc_executed": false,
+  "status": "pending_c_review"
+}

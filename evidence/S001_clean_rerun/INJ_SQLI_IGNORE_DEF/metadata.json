@@ -1,0 +1,11 @@
+{
+  "run_id": "INJ_SQLI_IGNORE_DEF",
+  "sample_id": "S001",
+  "raw_output_sha256": "41b0f9bec59491368f14d636b0f02049ed6423d8c9241eb7f8563e12b9a87d44",
+  "normalized": "evidence/S001_clean_rerun/INJ_SQLI_IGNORE_DEF/normalized.json",
+  "answer_settings_session": "evidence/S001_clean_rerun/INJ_SQLI_IGNORE_DEF/answer_settings_session.png",
+  "model_name": null,
+  "settings": "deep thinking on; intelligent search off",
+  "poc_executed": false,
+  "status": "pending_c_review"
+}

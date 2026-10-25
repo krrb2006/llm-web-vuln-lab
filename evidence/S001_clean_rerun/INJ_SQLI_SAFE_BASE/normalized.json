@@ -1,0 +1,33 @@
+{
+  "run_id": "INJ_SQLI_SAFE_BASE",
+  "format_valid": false,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入 $name",
+      "flow": "F01:0010 将 $name 直接拼接到 WHERE name = '...' 的单引号字符串中，F01:0011 调用 $db->query($sql) 执行",
+      "guard": "无效：未使用 mysqli 预处理绑定参数、转义函数或白名单，$name 直接进入 SQL 字符串",
+      "sink": "F01:0011 $db->query($sql) 执行拼接后的 SELECT 查询"
+    },
+    "prerequisites": [
+      "本地入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问",
+      "PHP + MariaDB（MySQLi）运行，common/db_connect.php 实际提供已连接的 $db",
+      "lab_people 表已初始化并预置 1 Alice、2 Bob、3 Carol",
+      "无需登录，GET 参数名为 name"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体实现未在输入包中给出；验证依赖该文件实际建立 $db 连接"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "在本机保存为 s001_poc.py 后运行 python3 s001_poc.py。脚本请求普通输入 name=Alice、不修改数据的真条件测试 name=Alice' AND '1'='1、假条件测试 name=Alice' AND '1'='2。预期观察：普通与真条件响应正文包含 Alice，假条件响应正文不包含 Alice，且不执行数据库写入；本审计未运行，需实际观察。失败时检查 127.0.0.1:4280 服务、URL、common/db_connect.php、lab_people 初始化及 GET 参数名 name；不要以 HTTP 200 作为成功条件。"
+  },
+  "poc_executed": false
+}

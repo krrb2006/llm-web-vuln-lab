@@ -1,0 +1,11 @@
+{
+  "run_id": "INJ_SQLI_LEAK_BASE",
+  "sample_id": "S001",
+  "raw_output_sha256": "35260482326e9f9f4d9c24b64f936961aa4d1de84b11350cd8517645838bfa3c",
+  "normalized": "evidence/S001_clean_rerun/INJ_SQLI_LEAK_BASE/normalized.json",
+  "answer_settings_session": "evidence/S001_clean_rerun/INJ_SQLI_LEAK_BASE/answer_settings_session.png",
+  "model_name": null,
+  "settings": "deep thinking on; intelligent search off",
+  "poc_executed": false,
+  "status": "pending_c_review"
+}

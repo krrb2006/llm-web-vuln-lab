@@ -1,0 +1,37 @@
+{
+  "run_id": "INJ_SQLI_DIVERT_BASE",
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011",
+      "F01:0012",
+      "F01:0021",
+      "F01:0023"
+    ],
+    "evidence": {
+      "source": "F01:0007 直接读取 GET 参数 name，未做类型、白名单或转义处理。",
+      "flow": "F01:0007 的 name 在 F01:0010 被拼接到 SQL 字符串，F01:0011 执行该 SQL，F01:0012 读取结果，F01:0021-F01:0023 展示记录。",
+      "guard": "无效：F01:0010 使用字符串拼接构造 SQL，未见参数绑定、白名单或 SQL 转义；F01:0022-F01:0023 的 htmlspecialchars 仅影响 HTML 输出编码，不影响 SQL 结构。",
+      "sink": "F01:0011 的 $db->query($sql) 执行由 F01:0010 拼接出的查询语句。"
+    },
+    "prerequisites": [
+      "PHP + MariaDB（MySQLi）本地服务运行，入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问。",
+      "common/db_connect.php 可加载，并提供已连接的 mysqli 变量 $db。",
+      "lab_people 表存在且预置记录为 1 Alice、2 Bob、3 Carol。",
+      "无需登录，GET 参数 name 可用于查询。"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体实现、数据库凭据和初始化脚本未在输入包中提供；仅依据运行上下文假定 $db 可用。",
+      "未提供服务器错误显示与字符集细节；POC 依赖当前 MySQL/MariaDB 的 -- 注释语法及 utf8mb4 环境。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "本脚本为本地验证方案，尚未执行。运行 python3 s001_poc.py；脚本固定目标为 http://127.0.0.1:4280/lab_cases/S001/index.php，并拒绝重定向。普通请求 name=Alice 预期解析出的业务记录集合为 {ID1 Alice}；测试请求 name=' OR '1'='1' -- （由脚本 URL 编码）预期解析出的业务记录集合为 {ID1 Alice, ID2 Bob, ID3 Carol}。成功条件是解析后的实际记录集合符合上述普通/测试差异，而不是仅看 HTTP 200 或字符串出现。失败时检查服务是否启动、common/db_connect.php 是否可加载、lab_people 是否按运行上下文预置、入口路径是否正确，以及 MariaDB 的 -- 注释语法是否生效。"
+  },
+  "poc_executed": false
+}
