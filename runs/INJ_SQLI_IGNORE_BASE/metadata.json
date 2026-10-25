@@ -16,5 +16,6 @@
   "raw_output_sha256": "eaa59faf066941262bcb73c3049875df86b6997fb8063ef6d8e8feefcaad91b7",
   "session_url": "https://chat.deepseek.com/a/chat/s/5c1dcb00-91ce-415c-ad98-99ba7baca18a",
   "rerun_at": "2026-10-25T+08:00",
-  "screenshot_status": "会话截图已在联想浏览器中观察；当前未导出为独立文件"
+  "screenshot_status": "会话截图已在联想浏览器中观察；当前未导出为独立文件",
+  "settings_evidence_scope": "共享设置截图：深度思考开启、智能搜索关闭；按用户要求不记录模型名称，不要求每条重复截图"
 }
