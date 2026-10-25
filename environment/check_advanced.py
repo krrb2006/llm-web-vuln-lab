@@ -43,7 +43,10 @@ def lint(compose: list[str]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--compose", nargs="+", required=True)
+    parser.add_argument(
+        "--compose", nargs=argparse.REMAINDER, required=True,
+        help="command and arguments used to invoke docker compose; place this option last",
+    )
     args = parser.parse_args()
     lint(args.compose)
 
