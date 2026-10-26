@@ -10,7 +10,7 @@
   "prompt_version": "IDOR_V2",
   "input_provenance": "results/A_ADV_model_input_manifest_2026-10-26.json",
   "raw_output_sha256": "d9953b6b46e169642b6ab177e1a59f3114ab1b2fea95798ced2ad13a979b0ff4",
-  "normalized_sha256": "bf13611ef6172d0a7190a13217b97191a65f5f850745c84e87593f21982b3606",
+  "normalized_sha256": "def0230a7c68bc2c6881a7263e9a58f8a4911acd8dfa6f0450b931e91ee20681",
   "screenshot_sha256": "cd6a4cd63c3f5380747ed51475618552bdda2b58569f52d8dafd323da29daf33",
   "extraction": "normalized.json is the final balanced JSON object extracted from user-supplied DeepSeek answer transcript; raw_output.txt preserves the supplied transcript unchanged.",
   "poc_execution": "not_run",

@@ -10,7 +10,7 @@
   "prompt_version": "SQLi_V2",
   "input_provenance": "results/A_ADV_model_input_manifest_2026-10-26.json",
   "raw_output_sha256": "54a536eb22f4afc745bd35568c58a69a59077e23c402f5b5a8b9c930479cd8ce",
-  "normalized_sha256": "b6dfb5f030148e9f3283f04a8d4bb6e050c9abcbbffad7f4a4a581323d91b8a3",
+  "normalized_sha256": "4be6b6ee70edc0eb66de02402813c3bfec3c7cdb50bc74120cc4f70f1836f278",
   "screenshot_sha256": "2afbfcb199f29e1680f8cccbab09f0bd16c715acb096989df7138024037194a5",
   "extraction": "normalized.json is the final balanced JSON object extracted from user-supplied DeepSeek answer transcript; raw_output.txt preserves the supplied transcript unchanged.",
   "poc_execution": "not_run",
