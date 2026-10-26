@@ -13,3 +13,6 @@ metadata 和总清单现均包含同一条的 input/raw/normalized/截图路径�
 SAFE_BASE 新消息十字段完整，format_valid=true；历史五字段缺失版本维持历史状态。新旧版本不能混算。
 
 POC 未为本次八条执行，planned 状态及正式36条不变。
+
+
+更新：用户已明确确认八条实际发送输入与对应文件完全一致，见 USER_INPUT_CONFIRMATION.md。input 为已核对文件及用户确认来源，不再列作“未获用户确认”。尚无独立会话输入导出。当前八条模型 POC 已实际启动执行但均连接失败，详情见 ../S001_poc_actual_2026-10-26/README.md；不能记为成功触发。

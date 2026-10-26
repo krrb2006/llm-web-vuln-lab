@@ -22,7 +22,7 @@
   "packet_sha256": "24afb9c09e4ad78c0a309c56dfacd05781c93b05a73958832cf6c8db8ccc4802",
   "prompt_version": "V0",
   "poc_executed": false,
-  "input_binding_status": "file_verified_and_user_confirmed_exact_submission",
+  "input_binding_status": "submission_file_verified_session_input_not_exported",
   "visible_screenshot_content_check": "matches supplied screenshot visible fields; full answer is user-message transcription",
   "count_as_completed": false,
   "actual_sent_input_confirmation": {

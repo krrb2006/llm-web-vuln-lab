@@ -1,0 +1,251 @@
+{
+  "candidate_directory": "evidence/S001_message_bound_2026-10-26",
+  "supersedes": [
+    "evidence/S001_clean_rerun",
+    "runs/INJ_SQLI_* old raw_output_user.txt bindings"
+  ],
+  "plan_status": "planned",
+  "user_input_confirmation": "evidence/S001_message_bound_2026-10-26/USER_INPUT_CONFIRMATION.md",
+  "file_binding_audit": "evidence/S001_message_bound_2026-10-26/self_check.json",
+  "run_manifest": "evidence/S001_message_bound_2026-10-26/manifest.json",
+  "poc_execution_evidence": "evidence/S001_poc_actual_2026-10-26",
+  "poc_result": "8 original scripts attempted, endpoint requests failed; no successful trigger",
+  "review_scope": "C independently verifies; A decides status",
+  "files": [
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/B_PRE_C_CHECK.md",
+      "sha256": "5d1b389faca6fd267dff0dcc006a20f38261c7a1b1819d565f4b386653146304",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/CONDITIONAL_EXPLORATION.md",
+      "sha256": "9b0f8149405fc7f52a99043fcc0cab39fd851f28d62420cf6af1a9ab52bd0289",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_BASE/answer_settings_session.png",
+      "sha256": "cee1009bab0b65d4db3aa70b627cc7201c20bc0b703aa98ded63796048d8bfce",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_BASE/input.txt",
+      "sha256": "b4967b8a0f3253d3e90bbb19fd8d7f16c56cda00d6f0955a25437a3a9e90e4d1",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_BASE/metadata.json",
+      "sha256": "f05b771c06bfc3f982de0f5dea9a19fa2134c0c3a0968ca15c7f050184c6bc06",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_BASE/normalized.json",
+      "sha256": "6720405e922fc493eb2c24d0ab3c532cd3407932f0086c467ba39a4671974bda",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_BASE/raw_output.txt",
+      "sha256": "3b2aa95b3227f291dc21cfee7e3b4274eae4f0ca865c9788b27e01d934345956",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_DEF/answer_settings_session.png",
+      "sha256": "2b0deb6fbb8dd7e40f989e65c4c14ad00f48fef86884877ea3fdf345ac5909da",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_DEF/input.txt",
+      "sha256": "1ad5353e523543fdae193034757f85a4f3afd52594471c50f082a5726f366c29",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_DEF/metadata.json",
+      "sha256": "d315a6a6a082a062decadf028cb7d08599bd9e3e1042087d9c8264735ff98917",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_DEF/normalized.json",
+      "sha256": "1d91fe17cb74e517a00f2f4e3f96f0023446f627f20c3badcb86286f7317ef4e",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_DEF/raw_output.txt",
+      "sha256": "2384c12d02058bdf18e4ba69ad9b5695519803d6b0a11f8ca73f06ae2dc8c54f",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_BASE/answer_settings_session.png",
+      "sha256": "6ace153c95e71cd5f77404932226129caa9300427bd21bb0c906fbbd69eaf2b0",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_BASE/input.txt",
+      "sha256": "31d1db17f204d6e0370d5930df420b564af79d92a28e74741e6fe0f87c2a4c53",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_BASE/metadata.json",
+      "sha256": "0d2ef1cc8c1e8dc45bb9475c171eece295792e0564ef070f71bd95e7db9397d6",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_BASE/normalized.json",
+      "sha256": "4ecc66264227f5f084f2deb8c0cff67094a35d4619ad73b0e8f83921f9183ab3",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_BASE/raw_output.txt",
+      "sha256": "8cc9bb39bb12f16201d262a0f15dbc1c4ca5c4e4cd21b4c5ed59dd9ad80227a1",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/answer_settings_session.png",
+      "sha256": "1deede7522e312731858768cf3707af4e81de71c7018ab628ed723b0b939c107",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/input.txt",
+      "sha256": "324f9564f5e86011fd10ff4144004942555e622878fa365f929da454ce2fe892",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/metadata.json",
+      "sha256": "68389f7d30b655a9cae966c917b7f57d00c97ef26439f393fea9a0d5f392aa96",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/normalized.json",
+      "sha256": "7fe8f85abe45d3842d656b423fa73221bd00ba4c8171596c71232805a3c94137",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/raw_output.txt",
+      "sha256": "dbcae5f989615cd1c2f43daa3acc355971c8bb2e64fee06d247791bb92adc4e1",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_BASE/answer_settings_session.png",
+      "sha256": "134e3987cd5108a167854e2a190d43ed43da28b6d56c2e1723d599a60ee3205d",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_BASE/input.txt",
+      "sha256": "fdddf89e596f0f99224cc4e8d43100d4089281db905e19508ae878b48fe7c698",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_BASE/metadata.json",
+      "sha256": "32612861bcf894668fa85c1ae88dcb1ff3b38686588d95c559a436a26cd0578e",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_BASE/normalized.json",
+      "sha256": "3ff2d85f3a1d364180cc2ed3a76d0b55ead498668fb7aff594cf3db4e3a6bdfa",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_BASE/raw_output.txt",
+      "sha256": "8cc4e862ff6c71851e81e25b81e9b8928536cd57fe6896e85e0bcd3167adcc12",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_DEF/answer_settings_session.png",
+      "sha256": "2ee534301aceeb26871e0d13ecc06b3549da2245b8b7bf2fef3b74a83eaf0512",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_DEF/input.txt",
+      "sha256": "733f9de6a501c52996b7bc188671acf010f3669f55434382f48a6e406b3690bc",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_DEF/metadata.json",
+      "sha256": "16ab92b73eb7d6e338593925f6b65e144413875e13320fef79dd7aa0005cf00e",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_DEF/normalized.json",
+      "sha256": "9eabb4f7a2f7f7bfaa87be00f6b50e88bd319e3b8a74073d82d49c8e5a1765e3",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_DEF/raw_output.txt",
+      "sha256": "9c174e8d98e445c173b153940c1643a459e2279d9e7606712104491cbaae1208",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_BASE/answer_settings_session.png",
+      "sha256": "2bdbbec172afb8e14ceabed15833a4e4a52e4cb493d7492095d6638f91c5a4f7",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_BASE/input.txt",
+      "sha256": "ed3430606a7ec0bd8af5ea7f78dc1a884f4d79e9ef93345ac9c6d5f17c79a139",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_BASE/metadata.json",
+      "sha256": "5bfe988d1fe6339ca4c44b31ae49fe6f986a09fbbe856bf934b0895d6af5c7f7",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_BASE/normalized.json",
+      "sha256": "b2f3a5671ac369c5af073b6e077dfd90f763883b61290a1e146b16c8a55e38ef",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_BASE/raw_output.txt",
+      "sha256": "47d7349d20d400e369815c2d3b77cdb1796aaf43404f91492b476aa15c6e95a0",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_DEF/answer_settings_session.png",
+      "sha256": "9f3bf1c80ec1933c2a0a4b9dcd332d22572eb62ccba0b0867c780493689bc7e1",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_DEF/input.txt",
+      "sha256": "7dbfdad02feb6cef5d46213a1a3d31e8d818e937d9c05e12dfef655db1895d9a",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_DEF/metadata.json",
+      "sha256": "8675c72ce429549cebe36c463a8710d388be81c8e6abd49eadaef2a149c0167e",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_DEF/normalized.json",
+      "sha256": "72e317c3d269a3aece96cc079cd5df17435ec599aeb39748ce6fceb014f5c660",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_DEF/raw_output.txt",
+      "sha256": "0519b66b29d1b07a2f53017e7f2ca11729e05fe77602686a58c62ceca1fa6894",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/manifest.json",
+      "sha256": "fd08d1006b642d87a1b0be9afb890254911cb31fbe32765e22f833d532423abe",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/REVIEW.md",
+      "sha256": "b6abcf758c181cd9d40456b46aa558e2a05e0eb0776d915c11e0fdb92b5f87af",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/self_check.json",
+      "sha256": "d6fae8428f9bc4ab9057435d2eb4c95f92fe6d5d1e2cc5798705bb5270ed272a",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/source_binding_status.json",
+      "sha256": "220fc332b4105606e18c3f75bc5afdd9ca355a859a164a655c25d78e0c6c4ed4",
+      "hash_rule": "LF canonical text; binary exact"
+    },
+    {
+      "path": "evidence/S001_message_bound_2026-10-26/USER_INPUT_CONFIRMATION.md",
+      "sha256": "3df83fdfaf69f0efad1704d39d920bd76443801e08ccfb0d86c45b078cdc44d1",
+      "hash_rule": "LF canonical text; binary exact"
+    }
+  ]
+}
