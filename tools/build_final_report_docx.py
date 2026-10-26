@@ -421,7 +421,7 @@ def build() -> None:
     add_image(doc, ROOT / "evidence" / "BURP_SQLI_01" / "screenshots" / "burp_sqli_repeater_S009_20261013.jpg", 15.8)
     add_caption(doc, "图 2  S009 的本地 Burp Repeater 受控请求与三条记录响应（目标为 127.0.0.1:4280）")
     add_heading(doc, "4.4 代表性二阶 SQLi 模型记录", 2)
-    add_paragraph(doc, "高级案例 ADV_SECOND_SQLI 采用“先写入受控昵称、再经独立读取路径拼接查询”的二阶数据流。模型会话截图只说明模型对代码的结构化审计与 POC 文本建议；动态对照由独立本地检查脚本完成，并且不把截图本身解释为漏洞已触发。")
+    add_paragraph(doc, "高级案例 ADV_SECOND_SQLI 采用“先写入受控昵称、再经独立读取路径拼接查询”的二阶数据流。模型会话截图只说明模型对代码的结构化审计与 POC 文本建议；四条 ADV 记录的 poc_execution 均为 not_run。动态对照由独立本地检查脚本完成，并且不把截图本身解释为漏洞已触发。")
     add_image(doc, ROOT / "runs" / "ADV_SECOND_SQLI_VULN_R1" / "session_screenshot.png", 15.6)
     add_caption(doc, "图 3  ADV_SECOND_SQLI 漏洞版的网页端模型原始回答截图（模型审计证据）")
 
