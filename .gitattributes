@@ -21,3 +21,6 @@ results/B_proposed_packets_v2/**/*.txt text eol=lf whitespace=-blank-at-eol
 runs/**/raw_output.txt -text whitespace=-blank-at-eol
 runs/**/user_paste*.txt -text whitespace=-blank-at-eol
 pocs/**/original* -text whitespace=-blank-at-eol
+evidence/S001_D_default_2026-10-26/**/executed_at.txt -text
+evidence/S001_D_default_2026-10-26/**/exit_code.txt -text
+evidence/S001_D_default_2026-10-26/**/stdout.txt -text
