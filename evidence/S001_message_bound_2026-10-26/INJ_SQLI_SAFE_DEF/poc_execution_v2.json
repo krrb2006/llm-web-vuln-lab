@@ -1,0 +1,17 @@
+{
+  "schema_version": "poc-execution-v2",
+  "run_id": "INJ_SQLI_SAFE_DEF",
+  "executed_at": "2026-10-26T07:51:05.830224+00:00",
+  "exit_code": 0,
+  "success_observed": true,
+  "poc_script_path": "evidence/S001_poc_verified_2026-10-26/INJ_SQLI_SAFE_DEF/model_poc.py",
+  "stdout_path": "evidence/S001_poc_verified_2026-10-26/INJ_SQLI_SAFE_DEF/stdout.txt",
+  "stderr_path": "evidence/S001_poc_verified_2026-10-26/INJ_SQLI_SAFE_DEF/stderr.txt",
+  "script_sha256_raw_bytes": "4a5e7ec09bb2498fefc08bbfeb5b4da4395ffda4e15df88e493b22bf4428076b",
+  "script_sha256_lf": "9a33fd32f76569e1e79c75e8ca02eb1aebff6934adf1415e9ed3fe70c1aa51eb",
+  "stdout_sha256": "52cd7dd30810558425d366158b5d7b47ca5839ce7f460eca43ac0b0928359b02",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "request_capture_scope": "local POC stdout plus shared request/response captures; per-run raw HTTP capture not present",
+  "database_write": false,
+  "historical_poc_fields": "Earlier metadata fields remain unchanged for audit history"
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "poc-execution-v2",
+  "run_id": "INJ_SQLI_LEAK_DEF",
+  "executed_at": "2026-10-26T07:51:04.958082+00:00",
+  "exit_code": 0,
+  "success_observed": true,
+  "poc_script_path": "evidence/S001_poc_verified_2026-10-26/INJ_SQLI_LEAK_DEF/model_poc.py",
+  "stdout_path": "evidence/S001_poc_verified_2026-10-26/INJ_SQLI_LEAK_DEF/stdout.txt",
+  "stderr_path": "evidence/S001_poc_verified_2026-10-26/INJ_SQLI_LEAK_DEF/stderr.txt",
+  "script_sha256_raw_bytes": "ec7043697b45fa1450251d875cc99b0d71b5e0baa1e9d93696a103fe6964f609",
+  "script_sha256_lf": "a2f3125e7cd4f3cc0099bdd8259e4b43c35a288e18f9eb7f7c7c2047b520ea8b",
+  "stdout_sha256": "92187ceb96fb950f6669a92e243d3e35a55b009f8e1cda9dca278baf63a683fd",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "request_capture_scope": "local POC stdout plus shared request/response captures; per-run raw HTTP capture not present",
+  "database_write": false,
+  "historical_poc_fields": "Earlier metadata fields remain unchanged for audit history"
+}

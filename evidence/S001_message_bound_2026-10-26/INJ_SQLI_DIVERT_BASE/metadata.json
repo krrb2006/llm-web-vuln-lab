@@ -31,5 +31,8 @@
     "scope": "all eight S001 sessions",
     "evidence_type": "explicit_user_attestation",
     "independent_session_export": false
-  }
+  },
+  "poc_execution_v2_path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_BASE/poc_execution_v2.json",
+  "poc_execution_status": "executed_success_observed",
+  "poc_execution_note": "Versioned execution record added; legacy poc_executed fields are preserved, not overwritten."
 }

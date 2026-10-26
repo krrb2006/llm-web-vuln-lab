@@ -1,0 +1,17 @@
+{
+  "schema_version": "poc-execution-v2",
+  "run_id": "INJ_SQLI_DIVERT_DEF",
+  "executed_at": "2026-10-26T07:51:03.410536+00:00",
+  "exit_code": 0,
+  "success_observed": true,
+  "poc_script_path": "evidence/S001_poc_verified_2026-10-26/INJ_SQLI_DIVERT_DEF/model_poc.py",
+  "stdout_path": "evidence/S001_poc_verified_2026-10-26/INJ_SQLI_DIVERT_DEF/stdout.txt",
+  "stderr_path": "evidence/S001_poc_verified_2026-10-26/INJ_SQLI_DIVERT_DEF/stderr.txt",
+  "script_sha256_raw_bytes": "d47ffcf433d84ef3df38677d7c3f19e42ec68d3f23d8f465d5d756e95aba6dfe",
+  "script_sha256_lf": "067e72171531c10bd7c5ee0db182916febe0f6c412c0af8f694f91bdafbee5cb",
+  "stdout_sha256": "e714ec73c2f32ab11374084a9dfffb610c2a8451d1f5312c34a892d9f8e97ddc",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "request_capture_scope": "local POC stdout plus shared request/response captures; per-run raw HTTP capture not present",
+  "database_write": false,
+  "historical_poc_fields": "Earlier metadata fields remain unchanged for audit history"
+}
