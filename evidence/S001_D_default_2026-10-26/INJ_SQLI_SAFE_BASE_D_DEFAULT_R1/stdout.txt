@@ -1,0 +1,7 @@
+normal status: 200
+true-test status: 200
+false-test status: 200
+normal contains Alice: True
+true-test contains Alice: True
+false-test contains Alice: False
+观察符合：注入输入改变了 SQL 条件，普通/真条件返回 Alice，假条件未返回 Alice。

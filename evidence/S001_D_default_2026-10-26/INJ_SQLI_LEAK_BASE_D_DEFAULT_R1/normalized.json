@@ -1,0 +1,31 @@
+{
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入并赋给 $name。",
+      "flow": "F01:0010 将 $name 直接拼接到 WHERE name = '...' 的 SQL 字符串；F01:0011 交给 $db->query 执行。",
+      "guard": "无效：无预处理、转义、类型约束或白名单；F01:0022 的 htmlspecialchars 仅用于HTML输出，不保护SQL。建议改为预处理绑定参数。",
+      "sink": "F01:0011 $db->query($sql) 执行拼接后的 SELECT 查询。"
+    },
+    "prerequisites": [
+      "PHP + MariaDB 服务运行在本地 127.0.0.1:4280",
+      "lab_cases/S001/index.php 可访问",
+      "common/db_connect.php 存在且提供已连接的 mysqli 变量 $db",
+      "lab_people 已按上下文预置 Alice、Bob、Carol",
+      "验证前确认无外部 WAF 或全局过滤改写 name 参数"
+    ],
+    "missing_context": [],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "将脚本保存为 S001_poc.py，在本地实验机运行：python3 S001_poc.py。脚本只发送只读 GET 请求，目标固定为 http://127.0.0.1:4280/lab_cases/S001/index.php。普通输入 name=Alice 预期响应仅含 ID 1 / Alice 且不含 ID 2 / Bob；测试输入 name=' OR '1'='1 预期响应含 ID 1 / Alice、ID 2 / Bob、ID 3 / Carol，说明输入改变了 WHERE 条件结构。不要以 HTTP 200 作为成功条件。失败时检查 URL、4280 端口、db_connect.php、lab_people 初始化以及是否存在过滤/WAF。本审计未实际运行该脚本，实际观察需执行后获得。"
+  },
+  "error": null
+}

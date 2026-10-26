@@ -1,0 +1,32 @@
+{
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入",
+      "flow": "F01:0007 -> F01:0010 将 name 直接拼接进 SQL 字符串 -> F01:0011 执行查询",
+      "guard": "无效：没有预处理绑定、转义或白名单；name 直接进入单引号 SQL 字面量",
+      "sink": "F01:0011 $db->query($sql) 执行动态构造的 SQL"
+    },
+    "prerequisites": [
+      "PHP 与 MariaDB/MySQLi 服务运行在 127.0.0.1:4280",
+      "入口 /lab_cases/S001/index.php 可访问",
+      "common/db_connect.php 成功提供已连接的 mysqli 变量 $db",
+      "lab_people 表及预置 1 Alice、2 Bob、3 Carol 存在"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体实现未展示，但不影响当前 SQL 拼接路径判定"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "保存为 s001_poc.py 后运行 python3 s001_poc.py。普通输入 name=Alice 应仅返回 ID 1 Alice；测试输入 name=' OR '1'='1 应返回 Alice、Bob、Carol 三行（仅 SELECT，不修改数据）。预期普通正文不含 Bob/Carol，测试正文含三者。若不符，检查 127.0.0.1:4280 服务、/lab_cases/S001/index.php 路径、common/db_connect.php 连接、lab_people 预置数据和 PHP 错误日志；不要以 HTTP 200 作为成功条件。"
+  },
+  "error": null
+}

