@@ -1,6 +1,6 @@
 # ADV 四条 A 自主复核结论（2026-10-26）
 
-复核人：A（自主复核，替代原计划中的 D 复核）  
+复核人：A（自主复核，替代原计划中的 D 复核）
 范围：`ADV_SECOND_SQLI_VULN`、`ADV_SECOND_SQLI_FIXED`、`ADV_IDOR_VULN`、`ADV_IDOR_FIXED`
 
 ## 核验结果
