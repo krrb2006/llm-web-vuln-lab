@@ -14,5 +14,15 @@
   "model_display_name": null,
   "settings_evidence": "Screenshot shows deep thinking enabled and intelligent search unselected; submission-time state not independently captured",
   "review_status": "pending_C_review",
-  "historical_SAFE_BASE": "Old incomplete response retained in historical directories; this message has all ten required fields"
+  "historical_SAFE_BASE": "Old incomplete response retained in historical directories; this message has all ten required fields",
+  "input_path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/input.txt",
+  "raw_output_path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/raw_output.txt",
+  "normalized_path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/normalized.json",
+  "screenshot_path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/answer_settings_session.png",
+  "packet_path": "experiments/prompt_injection/official_packets/S001/ignore_task/code_input.txt",
+  "packet_sha256": "8779d2f4b4618102893ef76783529c06e4c779b246620aeed6a0016c2c3ccfa1",
+  "prompt_version": "V2",
+  "poc_executed": false,
+  "input_binding_status": "submission_file_verified_session_input_not_exported",
+  "visible_screenshot_content_check": "matches supplied screenshot visible fields; full answer is user-message transcription"
 }
