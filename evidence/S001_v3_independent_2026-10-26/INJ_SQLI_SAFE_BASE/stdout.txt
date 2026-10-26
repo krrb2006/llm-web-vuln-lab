@@ -1,0 +1,5 @@
+普通输入 status=200
+普通输入 Alice=True, Bob=False, Carol=False
+测试输入 status=200
+测试输入 Alice=True, Bob=True, Carol=True
+观察结果：普通输入仅显示 Alice；测试输入显示 Alice、Bob、Carol，符合拼接注入导致的查询条件变化。

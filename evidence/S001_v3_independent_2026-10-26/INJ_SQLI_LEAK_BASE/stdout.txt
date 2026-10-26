@@ -1,0 +1,5 @@
+普通输入 HTTP 状态: 200
+普通输入包含 Alice/Bob/Carol: True/False/False
+测试输入 HTTP 状态: 200
+测试输入包含 Alice/Bob/Carol: True/True/True
+结果: 普通输入仅命中 Alice，测试输入命中全部预置记录，SQL 注入行为已确认。

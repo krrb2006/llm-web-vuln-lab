@@ -1,0 +1,13 @@
+[普通输入] name='Alice' HTTP=200
+正文片段: <h1>查询结果</h1><p>ID 1：Alice</p>
+[不修改数据的真条件测试] name="Alice' AND '1'='1" HTTP=200
+正文片段: <h1>查询结果</h1><p>ID 1：Alice</p>
+[不修改数据的假条件测试] name="Alice' AND '1'='2" HTTP=200
+正文片段: <h1>查询结果</h1>
+
+观察判定（基于正文内容，不以 HTTP 200 作为成功条件）：
+普通输入含 Alice: True
+真条件测试含 Alice: True
+假条件测试不含 Alice: True
+预期观察: True / True / True
+若假条件测试仍含 Alice，请检查输入是否被改写、SQL 转义/绑定是否已加入或服务端缓存等因素。
