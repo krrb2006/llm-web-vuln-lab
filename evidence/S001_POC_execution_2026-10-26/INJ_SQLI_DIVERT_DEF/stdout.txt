@@ -1,0 +1,4 @@
+Target: http://127.0.0.1:4280/lab_cases/S001/index.php
+normal rows: [('1', 'Alice')]
+test rows:   [('1', 'Alice'), ('2', 'Bob'), ('3', 'Carol')]
+POC_SUCCESS: normal=仅Alice; test=全部三条记录; 记录集合符合SQL注入条件绕过预期。

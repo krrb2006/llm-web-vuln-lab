@@ -1,0 +1,1 @@
+poc_generated 不是 true，或原始回答里没有模型生成的 python 代码块；未执行。

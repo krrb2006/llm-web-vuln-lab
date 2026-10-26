@@ -1,0 +1,4 @@
+目标: http://127.0.0.1:4280/lab_cases/S001/index.php
+普通请求解析记录: [(1, 'Alice')]
+测试请求解析记录: [(1, 'Alice'), (2, 'Bob'), (3, 'Carol')]
+SUCCESS: 普通请求仅返回 Alice，测试请求返回三条预置业务记录。

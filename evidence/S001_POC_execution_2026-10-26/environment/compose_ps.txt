@@ -1,0 +1,4 @@
+NAME          IMAGE                                                                                             COMMAND                  SERVICE   CREATED       STATUS         PORTS
+dvwa-db-1     ghcr.io/mariadb/mariadb@sha256:9d7f7220a4d9b9f5a70a845241bba5ffe94788fb2f7913ff7c8fa3cf28b5715a   "docker-entrypoint.s…"   db        2 weeks ago   Up 3 minutes   3306/tcp
+dvwa-dvwa-1   ghcr.io/digininja/dvwa@sha256:1af2cedda7617e4d22937e61c98bbf71d8b74b98e46f5e41dd6aa0a5183311b0    "docker-php-entrypoi…"   dvwa      6 days ago    Up 3 minutes   127.0.0.1:4280->80/tcp
+

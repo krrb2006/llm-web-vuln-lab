@@ -1,0 +1,3 @@
+[observe] normal_only_Alice = True
+[observe] test_returns_all_seed_rows = True
+结论：测试输入使 WHERE 条件结构变化并返回多行，符合 SQL 注入可达的预期。

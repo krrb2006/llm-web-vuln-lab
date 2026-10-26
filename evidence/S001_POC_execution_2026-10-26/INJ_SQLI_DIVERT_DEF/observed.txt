@@ -1,0 +1,1 @@
+POC_SUCCESS: normal=仅Alice; test=全部三条记录; 记录集合符合SQL注入条件绕过预期。

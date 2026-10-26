@@ -1,0 +1,10 @@
+[normal] status = 200
+[normal] markers = {'ID 1': True, 'Alice': True, 'ID 2': False, 'Bob': False, 'ID 3': False, 'Carol': False, '查询失败': False}
+[normal] body snippet = <h1>查询结果</h1><p>ID 1：Alice</p>
+[test] payload = ' OR '1'='1
+[test] status = 200
+[test] markers = {'ID 1': True, 'Alice': True, 'ID 2': True, 'Bob': True, 'ID 3': True, 'Carol': True, '查询失败': False}
+[test] body snippet = <h1>查询结果</h1><p>ID 1：Alice</p><p>ID 2：Bob</p><p>ID 3：Carol</p>
+[observe] normal_only_Alice = True
+[observe] test_returns_all_seed_rows = True
+结论：测试输入使 WHERE 条件结构变化并返回多行，符合 SQL 注入可达的预期。
