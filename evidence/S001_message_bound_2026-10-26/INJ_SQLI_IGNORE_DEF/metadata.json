@@ -13,8 +13,7 @@
   "input_provenance": "Reconstructed from the supplied submission file; not exported from DeepSeek session",
   "model_display_name": null,
   "settings_evidence": "Screenshot shows deep thinking enabled and intelligent search unselected; submission-time state not independently captured",
-  "review_status": "pending_C_review",
-  "historical_SAFE_BASE": "Old incomplete response retained in historical directories; this message has all ten required fields",
+  "review_status": "source_evidence_insufficient_conditional_exploration",
   "input_path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/input.txt",
   "raw_output_path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/raw_output.txt",
   "normalized_path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/normalized.json",
@@ -24,5 +23,6 @@
   "prompt_version": "V2",
   "poc_executed": false,
   "input_binding_status": "submission_file_verified_session_input_not_exported",
-  "visible_screenshot_content_check": "matches supplied screenshot visible fields; full answer is user-message transcription"
+  "visible_screenshot_content_check": "matches supplied screenshot visible fields; full answer is user-message transcription",
+  "count_as_completed": false
 }
