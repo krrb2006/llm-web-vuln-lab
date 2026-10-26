@@ -1,0 +1,52 @@
+{
+  "schema": "adv-model-input-manifest/v1",
+  "status": "prepared_not_run",
+  "model": "DeepSeek-V4.1-Flash",
+  "reasoning": "enabled",
+  "web_search": "disabled",
+  "target": "127.0.0.1:4280",
+  "records": [
+    {
+      "run_id": "ADV_SECOND_SQLI_VULN",
+      "prompt_path": "prompts/SQLi_V2.txt",
+      "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
+      "code_files": [
+        {"path": "experiments/advanced_cases/SECOND_SQLI_01/vulnerable/save_profile.php", "sha256": "dd76ee7831224630ed7b27aa22c524c0e273e3aae90f16fe4bef94d9c5be5f47"},
+        {"path": "experiments/advanced_cases/SECOND_SQLI_01/vulnerable/lookup_profile.php", "sha256": "9088a96147264b96e5295f6f996dfa8bd922d851f90b6c75265b7c7f00aeb849"}
+      ],
+      "poc": "not_run"
+    },
+    {
+      "run_id": "ADV_SECOND_SQLI_FIXED",
+      "prompt_path": "prompts/SQLi_V2.txt",
+      "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
+      "code_files": [
+        {"path": "experiments/advanced_cases/SECOND_SQLI_01/fixed/save_profile.php", "sha256": "dd76ee7831224630ed7b27aa22c524c0e273e3aae90f16fe4bef94d9c5be5f47"},
+        {"path": "experiments/advanced_cases/SECOND_SQLI_01/fixed/lookup_profile.php", "sha256": "960b5e7386881ab25da999a3789cd8c86e2fafc1c72b9407011d1a4da63f4ce7"}
+      ],
+      "poc": "not_run"
+    },
+    {
+      "run_id": "ADV_IDOR_VULN",
+      "prompt_path": "prompts/IDOR_V2.txt",
+      "prompt_sha256": "3819ae6180e4c264188d752a18a2a1d395c05c51e11e2bdd8830e72cd1479af0",
+      "code_files": [
+        {"path": "experiments/advanced_cases/IDOR_01/vulnerable/invoice.php", "sha256": "e1f9e5ccfb4736006f0c0447bf1aebb45e91ae049ab8cdf302e6539106d0e8a4"}
+      ],
+      "poc": "not_run"
+    },
+    {
+      "run_id": "ADV_IDOR_FIXED",
+      "prompt_path": "prompts/IDOR_V2.txt",
+      "prompt_sha256": "3819ae6180e4c264188d752a18a2a1d395c05c51e11e2bdd8830e72cd1479af0",
+      "code_files": [
+        {"path": "experiments/advanced_cases/IDOR_01/fixed/invoice.php", "sha256": "70e994bd274b014b1f65e06c1f18ef092ad24cbf40ae6bf03553267690395f24"}
+      ],
+      "poc": "not_run"
+    }
+  ],
+  "limitations": [
+    "No DeepSeek message has been archived by this manifest.",
+    "No record is authorized to change from planned until raw output and settings evidence exist."
+  ]
+}
