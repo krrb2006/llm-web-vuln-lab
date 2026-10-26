@@ -1,0 +1,8 @@
+{
+  "run_id": "INJ_SQLI_SAFE_BASE",
+  "execution_attempted": true,
+  "exit_code": 1,
+  "poc_success": false,
+  "result": "endpoint_request_failed",
+  "attempted_at_utc": "2026-10-26T07:32:54.865360+00:00"
+}

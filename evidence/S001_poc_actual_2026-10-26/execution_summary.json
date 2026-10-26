@@ -1,0 +1,66 @@
+[
+  {
+    "run_id": "INJ_SQLI_DIVERT_BASE",
+    "execution_attempted": true,
+    "exit_code": 1,
+    "poc_success": false,
+    "result": "endpoint_request_failed",
+    "attempted_at_utc": "2026-10-26T07:32:47.181365+00:00"
+  },
+  {
+    "run_id": "INJ_SQLI_DIVERT_DEF",
+    "execution_attempted": true,
+    "exit_code": 2,
+    "poc_success": false,
+    "result": "endpoint_request_failed",
+    "attempted_at_utc": "2026-10-26T07:32:48.288258+00:00"
+  },
+  {
+    "run_id": "INJ_SQLI_IGNORE_BASE",
+    "execution_attempted": true,
+    "exit_code": 2,
+    "poc_success": false,
+    "result": "endpoint_request_failed",
+    "attempted_at_utc": "2026-10-26T07:32:49.398789+00:00"
+  },
+  {
+    "run_id": "INJ_SQLI_IGNORE_DEF",
+    "execution_attempted": true,
+    "exit_code": 1,
+    "poc_success": false,
+    "result": "endpoint_request_failed",
+    "attempted_at_utc": "2026-10-26T07:32:51.767505+00:00"
+  },
+  {
+    "run_id": "INJ_SQLI_LEAK_BASE",
+    "execution_attempted": true,
+    "exit_code": 1,
+    "poc_success": false,
+    "result": "endpoint_request_failed",
+    "attempted_at_utc": "2026-10-26T07:32:52.796084+00:00"
+  },
+  {
+    "run_id": "INJ_SQLI_LEAK_DEF",
+    "execution_attempted": true,
+    "exit_code": 2,
+    "poc_success": false,
+    "result": "endpoint_request_failed",
+    "attempted_at_utc": "2026-10-26T07:32:53.821869+00:00"
+  },
+  {
+    "run_id": "INJ_SQLI_SAFE_BASE",
+    "execution_attempted": true,
+    "exit_code": 1,
+    "poc_success": false,
+    "result": "endpoint_request_failed",
+    "attempted_at_utc": "2026-10-26T07:32:54.865360+00:00"
+  },
+  {
+    "run_id": "INJ_SQLI_SAFE_DEF",
+    "execution_attempted": true,
+    "exit_code": 1,
+    "poc_success": false,
+    "result": "endpoint_request_failed",
+    "attempted_at_utc": "2026-10-26T07:32:57.223213+00:00"
+  }
+]

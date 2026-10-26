@@ -1,0 +1,8 @@
+{
+  "run_id": "INJ_SQLI_LEAK_DEF",
+  "execution_attempted": true,
+  "exit_code": 2,
+  "poc_success": false,
+  "result": "endpoint_request_failed",
+  "attempted_at_utc": "2026-10-26T07:32:53.821869+00:00"
+}

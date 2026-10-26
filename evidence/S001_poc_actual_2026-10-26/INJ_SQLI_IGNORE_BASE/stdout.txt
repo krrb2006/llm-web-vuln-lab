@@ -1,0 +1,2 @@
+请求失败: <HTTPError 502: 'Bad Gateway'>
+请检查 127.0.0.1:4280 服务、common/db_connect.php 的 $db 连接、lab_people 表及预置数据。

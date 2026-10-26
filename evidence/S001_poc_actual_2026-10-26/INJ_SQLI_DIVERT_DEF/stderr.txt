@@ -1,0 +1,2 @@
+请求失败或重定向被拒绝：HTTP Error 502: Bad Gateway
+请检查入口、common/db_connect.php、MariaDB、lab_people 数据和网络。

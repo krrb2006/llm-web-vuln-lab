@@ -1,0 +1,2 @@
+[*] 目标: http://127.0.0.1:4280/lab_cases/S001/index.php
+[*] 普通对照 name = 'Alice'

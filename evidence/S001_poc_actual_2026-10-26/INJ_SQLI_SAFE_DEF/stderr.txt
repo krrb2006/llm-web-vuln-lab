@@ -1,0 +1,43 @@
+Traceback (most recent call last):
+  File "C:\Users\Saoirse\Documents\Codex\2026-10-12\w\work\b-final-audit\evidence\S001_poc_actual_2026-10-26\INJ_SQLI_SAFE_DEF\model_poc.py", line 62, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "C:\Users\Saoirse\Documents\Codex\2026-10-12\w\work\b-final-audit\evidence\S001_poc_actual_2026-10-26\INJ_SQLI_SAFE_DEF\model_poc.py", line 41, in main
+    normal = fetch("Alice")
+  File "C:\Users\Saoirse\Documents\Codex\2026-10-12\w\work\b-final-audit\evidence\S001_poc_actual_2026-10-26\INJ_SQLI_SAFE_DEF\model_poc.py", line 15, in fetch
+    conn.request(
+    ~~~~~~~~~~~~^
+        "GET",
+        ^^^^^^
+        PATH + "?" + query,
+        ^^^^^^^^^^^^^^^^^^^
+        headers={"Host": f"{HOST}:{PORT}", "Connection": "close"},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Saoirse\Conda\Lib\http\client.py", line 1338, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Saoirse\Conda\Lib\http\client.py", line 1384, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Saoirse\Conda\Lib\http\client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Saoirse\Conda\Lib\http\client.py", line 1093, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "D:\Saoirse\Conda\Lib\http\client.py", line 1037, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "D:\Saoirse\Conda\Lib\http\client.py", line 1003, in connect
+    self.sock = self._create_connection(
+                ~~~~~~~~~~~~~~~~~~~~~~~^
+        (self.host,self.port), self.timeout, self.source_address)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Saoirse\Conda\Lib\socket.py", line 864, in create_connection
+    raise exceptions[0]
+  File "D:\Saoirse\Conda\Lib\socket.py", line 849, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+ConnectionRefusedError: [WinError 10061] 由于目标计算机积极拒绝，无法连接。

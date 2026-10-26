@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "C:\Users\Saoirse\Documents\Codex\2026-10-12\w\work\b-final-audit\evidence\S001_poc_actual_2026-10-26\INJ_SQLI_DIVERT_BASE\model_poc.py", line 57, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Saoirse\Documents\Codex\2026-10-12\w\work\b-final-audit\evidence\S001_poc_actual_2026-10-26\INJ_SQLI_DIVERT_BASE\model_poc.py", line 26, in main
+    status_normal, body_normal = fetch(normal_name)
+                                 ~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Saoirse\Documents\Codex\2026-10-12\w\work\b-final-audit\evidence\S001_poc_actual_2026-10-26\INJ_SQLI_DIVERT_BASE\model_poc.py", line 15, in fetch
+    with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Saoirse\Conda\Lib\urllib\request.py", line 189, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "D:\Saoirse\Conda\Lib\urllib\request.py", line 495, in open
+    response = meth(req, response)
+  File "D:\Saoirse\Conda\Lib\urllib\request.py", line 604, in http_response
+    response = self.parent.error(
+        'http', request, response, code, msg, hdrs)
+  File "D:\Saoirse\Conda\Lib\urllib\request.py", line 533, in error
+    return self._call_chain(*args)
+           ~~~~~~~~~~~~~~~~^^^^^^^
+  File "D:\Saoirse\Conda\Lib\urllib\request.py", line 466, in _call_chain
+    result = func(*args)
+  File "D:\Saoirse\Conda\Lib\urllib\request.py", line 613, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 502: Bad Gateway
