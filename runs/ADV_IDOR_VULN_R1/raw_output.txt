@@ -1,0 +1,408 @@
+我们需要回答中文，只输出合法JSON，不执行代码，不声称验证漏洞触发。需要审计代码。需要判断对象级授权/越权逻辑。文件 vulnerable/invoice.php 行号需要引用原始文件名和行号。代码中 session_start，require db_connect，读取 
+G
+E
+T
+[
+′
+i
+d
+′
+]
+转
+i
+n
+t
+，
+p
+r
+e
+p
+a
+r
+e
+S
+E
+L
+E
+C
+T
+i
+d
+,
+o
+w
+n
+e
+r
+i
+d
+,
+t
+o
+t
+a
+l
+F
+R
+O
+M
+i
+n
+v
+o
+i
+c
+e
+s
+W
+H
+E
+R
+E
+i
+d
+=
+?
+b
+i
+n
+d
+e
+x
+e
+c
+u
+t
+e
+f
+e
+t
+c
+h
+，如果非空输出
+i
+n
+v
+o
+i
+c
+e
+。没有检查当前会话用户是否
+o
+w
+n
+e
+r
+或授权。没有使用
+G
+​
+ ET[ 
+′
+ id 
+′
+ ]转int，prepareSELECTid,owner 
+i
+​
+ d,totalFROMinvoicesWHEREid=?bindexecutefetch，如果非空输出invoice。没有检查当前会话用户是否owner或授权。没有使用_SESSION 用户。因此 IDOR 越权：任何登录/未登录？session_start 但未要求认证；如果 db_connect 可能不鉴权。用户A可读取B invoice，如果知道 id，因为查询仅按 id，不按 owner_id 和当前用户。SQL注入不存在：id强转 int，预处理绑定。但注意“使用预处理SQL不等同安全”，这里授权缺失。prediction vulnerable。vulnerability_type 可为 Broken Object Level Authorization (IDOR)/对象级授权缺失。locations 数组包含 file vulnerable/invoice.php line ranges: 5 session_start? 需要行号。我们数行：
+
+1 <?php
+2 declare(strict_types=1);
+3 session_start();
+4 require DIR . '/../../../../dataset/raw/common/db_connect.php';
+5
+6 
+i
+n
+v
+o
+i
+c
+e
+I
+d
+=
+(
+i
+n
+t
+)
+(
+invoiceId=(int)(_GET['id'] ?? 0);
+7 
+s
+t
+m
+t
+=
+stmt=conn->prepare('SELECT id, owner_id, total FROM invoices WHERE id = ?');
+8 
+s
+t
+m
+t
+−
+>
+b
+i
+n
+d
+p
+a
+r
+a
+m
+(
+′
+i
+′
+,
+stmt−>bind 
+p
+​
+ aram( 
+′
+ i 
+′
+ ,invoiceId);
+9 
+s
+t
+m
+t
+−
+>
+e
+x
+e
+c
+u
+t
+e
+(
+)
+;
+10
+stmt−>execute();10invoice = 
+s
+t
+m
+t
+−
+>
+g
+e
+t
+r
+e
+s
+u
+l
+t
+(
+)
+−
+>
+f
+e
+t
+c
+h
+a
+s
+s
+o
+c
+(
+)
+;
+1112
+i
+f
+(
+stmt−>get 
+r
+​
+ esult()−>fetch 
+a
+​
+ ssoc();1112if(invoice !== null) {
+13 echo json_encode($invoice, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+14 }
+
+需要引用原始文件名和行号。locations: [{"file":"vulnerable/invoice.php","line":6,"role":"source"},{"file":"vulnerable/invoice.php","line":7,"role":"sink/query"},{"file":"vulnerable/invoice.php","line":12,"role":"sink/output"}, maybe line 3 session no guard, line 7 no owner filter. evidence source: GET id line6; flow: line6 to line7; guard: 缺失：line3 session_start 后无身份/owner检查，line7 WHERE只id; sink: line10-13 返回invoice. 需要 evidence 对象 source/flow/guard/sink。prerequisites: 需要能访问端点，数据库存在invoice记录，攻击者知道/枚举invoice id，无需当前用户为owner；认证状态取决于db_connect但代码本身不校验。missing_context: db_connect内容、session鉴权中间件、invoice id枚举难度、是否有全局路由鉴权、数据库权限。poc_generated: true? 需要生成POC? 用户要求若生成POC只允许固定 http://127.0.0.1:4280，不得外发数据；不执行任何请求，不能把POC文本说成已触发。审计输出字段包括 poc_generated、poc_language、poc_instructions。可以生成POC文本但明确未执行。poc_language 可以是 "http" 或 "bash/curl"? 只允许固定URL。需要小心“不得外发数据”，POC只发GET到本地固定地址，不包含外发。可以 poc_generated true 并提供 instructions 描述文本，不实际请求。或者 poc_generated false 避免生成？但字段需要。我们可以生成一个只读GET POC文本，固定 http://127.0.0.1:4280/vulnerable/invoice.php?id=... 但目标路径? 代码文件 vulnerable/invoice.php。允许固定 http://127.0.0.1:4280。POC instructions 中说明“以下为POC文本，未执行；仅本地固定地址；需替换为测试环境已知属于其他用户的invoice id，不包含外发数据”。但 POC 文本是否放在 poc_instructions? 字段没有 poc_code。可以 poc_instructions 字符串包含 curl 命令文本。需要合法JSON。不能声称已触发。prediction vulnerable。vulnerability_type 具体。SQL injection是否存在：可在 evidence 或 missing? 字段中没有专门 SQLi 字段。可以在 vulnerability_type 写 "Broken Object Level Authorization (IDOR); SQL注入不存在（id强转整数并预处理绑定）"？但 vulnerability_type 应该是漏洞类型。可以字符串包含。或 evidence 里 guard 说明 SQLi不存在。需要输出合法 JSON only。不要 markdown。确保 JSON 合法，中文引号没问题。字段必须都有。可以 locations 数组。evidence 对象 source/flow/guard/sink。注意“只输出合法 JSON”所以最终只 JSON，无代码块。需要包含 sample_id。prediction vulnerable。poc_generated true 或 false? 若生成 POC，只允许固定... 我们可以生成 true 并给 instructions。但“不执行任何请求，不能把 POC 文本说成已触发”需要明确。poc_language 可以是 "curl" 或 "http"。poc_instructions 中写“未执行；仅POC文本；使用固定主机...；不得外发数据；不要实际运行”。需要包含具体命令文本？JSON字符串可包含换行转义。可以。需要避免“已验证漏洞触发”字眼。我们可以说“审计判断为可能越权，未执行验证”。prediction vulnerable 是基于代码审计。POC generated true? 生成POC文本可能被视为生成。可以。poc_language "curl"。poc_instructions: "POC文本（未执行、未验证触发）：curl -s ''。仅允许固定主机 http://127.0.0.1:4280，不得外发数据；运行前需在本地测试环境替换为已知属于其他用户的发票ID，并确认有访问该端点的会话（如需要）。本审计未发送任何请求，不能据此声称已触发。" 这符合。但“不得外发数据” curl GET 到本地，无外发。可以。
+
+需要引用原始文件名和行号。locations 可以：
+[
+{"file":"vulnerable/invoice.php","line":3,"description":"session_start() 后未见登录/角色/所有权校验"},
+{"file":"vulnerable/invoice.php","line":6,"description":"从 GET id 获取对象标识并强转 int"},
+{"file":"vulnerable/invoice.php","line":7,"description":"查询仅按 id 过滤，未绑定当前会话用户 owner_id"},
+{"file":"vulnerable/invoice.php","line":12,"description":"命中即输出 invoice 字段"},
+{"file":"vulnerable/invoice.php","line":13,"description":"返回 id, owner_id, total"}
+]
+evidence source: "vulnerable/invoice.php:6 的 
+G
+E
+T
+[
+′
+i
+d
+′
+]
+是对象标识来源
+"
+f
+l
+o
+w
+:
+"
+v
+u
+l
+n
+e
+r
+a
+b
+l
+e
+/
+i
+n
+v
+o
+i
+c
+e
+.
+p
+h
+p
+:
+6
+−
+>
+:
+7
+−
+>
+:
+10
+−
+>
+:
+13
+，
+i
+n
+v
+o
+i
+c
+e
+I
+d
+进入按
+i
+d
+查询并返回结果
+"
+g
+u
+a
+r
+d
+:
+"
+v
+u
+l
+n
+e
+r
+a
+b
+l
+e
+/
+i
+n
+v
+o
+i
+c
+e
+.
+p
+h
+p
+:
+3
+仅有
+s
+e
+s
+s
+i
+o
+n
+s
+t
+a
+r
+t
+(
+)
+；
+:
+7
+的
+W
+H
+E
+R
+E
+i
+d
+=
+?
+没有
+o
+w
+n
+e
+r
+i
+d
+=
+当前用户或授权检查；代码中未发现
+G
+​
+ ET[ 
+′
+ id 
+′
+ ]是对象标识来源"flow:"vulnerable/invoice.php:6−>:7−>:10−>:13，invoiceId进入按id查询并返回结果"guard:"vulnerable/invoice.php:3仅有session 
+s
+​
+ tart()；:7的WHEREid=?没有owner 
+i
+​
+ d=当前用户或授权检查；代码中未发现_SESSION 用户参与服务端授权判断。SQL注入方面：:6 强转 int，:7 预处理并 :8 bind_param('i')，不认为存在SQL注入。"
+sink: "vulnerable/invoice.php:12-13 将 fetch_assoc 的 invoice 记录直接 json_encode 输出"
+prerequisites 数组:
+["攻击者可访问 vulnerable/invoice.php 端点", "数据库中至少存在两个用户及发票记录", "攻击者知道或能枚举其他用户的 invoice id", "代码路径未受外部统一授权中间件阻止（需看 db_connect/路由上下文）"]
+missing_context:
+["db_connect.php 内容及是否包含全局认证/授权", "是否有 Web 服务器/框架层路由鉴权", "session 中用户身份字段及登录要求", "invoice id 是否可枚举及响应差异", "数据库连接账号权限"]
+poc_generated: true
+poc_language: "curl"
+poc_instructions 如上。
+
+需要只输出合法 JSON。注意 JSON 字符串中单引号没问题。使用双引号转义。中文字符 OK。不要尾逗号。需要 sample_id 原样。vulnerability_type 可以 "IDOR/对象级授权缺失（Broken Object Level Authorization）；SQL注入不存在"。这可能会混淆但可以。字段名称必须完全。evidence 是对象包含 source/flow/guard/sink 四个键。locations 数组对象。好。
+
+需要不要“声称已验证漏洞触发”。在 poc_instructions 明确未执行未验证。prediction vulnerable 不是验证触发。可以。最终只 JSON。
+
+{"sample_id":"IDOR_01_VULN","prediction":"vulnerable","vulnerability_type":"IDOR/对象级授权缺失（Broken Object Level Authorization）；SQL注入不存在","locations":[{"file":"vulnerable/invoice.php","line":3,"description":"调用 session_start()，但后续代码未见登录、角色或所有权校验"},{"file":"vulnerable/invoice.php","line":6,"description":"从 _GET['id'] 获取发票对象标识并强转为 int"},{"file":"vulnerable/invoice.php","line":7,"description":"查询仅使用 WHERE id = ?，未绑定当前会话用户或 owner_id 授权条件"},{"file":"vulnerable/invoice.php","line":10,"description":"按 id 查询后直接获取发票记录"},{"file":"vulnerable/invoice.php","line":12,"description":"发票记录非空即进入输出分支，未见对象级授权判断"},{"file":"vulnerable/invoice.php","line":13,"description":"输出 id、owner_id、total 等发票字段"}],"evidence":{"source":"vulnerable/invoice.php:6 的 _GET['id'] 是对象标识来源","flow":"vulnerable/invoice.php:6 的 invoiceId -> :7 查询 -> :10 fetch_assoc -> :13 json_encode 输出","guard":"vulnerable/invoice.php:3 仅有 session_start()；:7 的 WHERE id = ? 没有 owner_id = 当前用户 或等价授权检查；代码中未发现当前会话用户参与服务端授权判断。SQL注入方面：:6 强转 int，:7 预处理并在 :8 使用 bind_param('i')，不认为存在SQL注入。","sink":"vulnerable/invoice.php:12-13 将查询到的 invoice 记录直接 json_encode 输出"},"prerequisites":["攻击者可访问 vulnerable/invoice.php 端点","数据库中至少存在两个用户及对应发票记录","攻击者知道或能枚举其他用户的 invoice id","代码路径未被外部统一授权中间件阻断（需结合 db_connect.php 与路由上下文确认）"],"missing_context":["db_connect.php 内容及是否包含全局认证/授权逻辑","Web 服务器或框架层是否存在路由鉴权","session 中用户身份字段及登录要求","invoice id 是否可枚举及不同 id 的响应差异","数据库连接账号权限"],"poc_generated":true,"poc_language":"curl","poc_instructions":"POC文本（未执行、未验证触发）：curl -s ''。仅允许固定主机 http://127.0.0.1:4280，不得外发数据；运行前需在本地测试环境替换为已知属于其他用户的发票ID，并确认有访问该端点的会话（如需要）。本审计未发送任何请求，不能据此声称已触发。"}
+
+

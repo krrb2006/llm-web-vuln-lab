@@ -1,0 +1,23 @@
+{
+  "schema": "adv-chat-evidence/v1",
+  "run_id": "ADV_IDOR_VULN",
+  "sample_id": "IDOR_01_VULN",
+  "captured_date": "2026-10-26",
+  "session_url": "https://chat.deepseek.com/a/chat/s/a5cf3bf2-9a72-4caa-b8ec-87a4593aa26a",
+  "model": "DeepSeek web UI (exact UI model label not visible in supplied screenshot)",
+  "reasoning": "enabled (visible in supplied screenshot)",
+  "web_search": "disabled (visible as unselected in supplied screenshot)",
+  "prompt_version": "IDOR_V2",
+  "input_provenance": "results/A_ADV_model_input_manifest_2026-10-26.json",
+  "raw_output_sha256": "5ccf6654ad3b0aeddcfabf29a7f764f0665e4ddf0c4139d582a20b0ee3cd8a9c",
+  "normalized_sha256": "835d0c4460690d4303720aa8868250ffbcc88f25b8cc4cbb1afbb3f976e4dfe4",
+  "screenshot_sha256": "a2b3895d10fbb6997524fe3eac1931de10cafc3413385fdafe61e488c2b7bdf7",
+  "extraction": "normalized.json is the final balanced JSON object extracted from user-supplied DeepSeek answer transcript; raw_output.txt preserves the supplied transcript unchanged.",
+  "poc_execution": "not_run",
+  "status": "executed_pending_independent_review",
+  "limitations": [
+    "The exact full submitted input was not exported from the DeepSeek UI; source/code hashes are bound by the prepared input manifest and visible prompt screenshot.",
+    "The supplied screenshots do not display the exact model-version label or a generated timestamp.",
+    "No POC was executed as part of this chat-evidence capture."
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "sample_id": "SECOND_SQLI_01_VULN",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    {
+      "file": "vulnerable/save_profile.php",
+      "line": 4,
+      "role": "source-write",
+      "description": "POST 参数 nickname 可被攻击者控制并写入 profiles"
+    },
+    {
+      "file": "vulnerable/save_profile.php",
+      "line": 5,
+      "role": "guard",
+      "description": "写入使用 prepare"
+    },
+    {
+      "file": "vulnerable/save_profile.php",
+      "line": 6,
+      "role": "guard",
+      "description": "使用 bind_param('s') 绑定 nickname"
+    },
+    {
+      "file": "vulnerable/lookup_profile.php",
+      "line": 4,
+      "role": "source-select",
+      "description": "GET 参数 id 经 int 转换后用于选择记录"
+    },
+    {
+      "file": "vulnerable/lookup_profile.php",
+      "line": 5,
+      "role": "guard",
+      "description": "读取 id 使用 prepare"
+    },
+    {
+      "file": "vulnerable/lookup_profile.php",
+      "line": 6,
+      "role": "guard",
+      "description": "id 使用 bind_param('i') 绑定"
+    },
+    {
+      "file": "vulnerable/lookup_profile.php",
+      "line": 8,
+      "role": "flow",
+      "description": "从数据库取出 nickname，内容可能来自先前可控写入"
+    },
+    {
+      "file": "vulnerable/lookup_profile.php",
+      "line": 10,
+      "role": "sink",
+      "description": "nickname 被直接拼接到 SQL 字符串并交给 query 执行"
+    }
+  ],
+  "evidence": {
+    "source": "F01:4 的 $_POST['nickname'] 可被攻击者控制并存储；F02:4 的 $_GET['id'] 用于选择记录；F02:8 从数据库取出该 nickname。",
+    "flow": "F02:8 的 $nickname 流向 F02:10 的双引号 SQL 字符串，形成二阶注入数据流。",
+    "guard": "F01:5-7 与 F02:5-7 仅对写入值和 id 使用 prepare/bind_param；F02:10 未对 $nickname 使用 prepare/bind_param 或转义。",
+    "sink": "F02:10 $conn->query(\"SELECT id, nickname FROM profiles WHERE nickname = '$nickname'\") 将 $nickname 直接插入 SQL。"
+  },
+  "prerequisites": [
+    "攻击者可访问 F01 写入 nickname，或 profiles 中已存在可控 nickname",
+    "攻击者可访问 F02 并知道或可枚举对应记录 id",
+    "profiles 表存在且 DB 用户对 profiles 有 SELECT 权限",
+    "F02:10 的 query 调用允许注入后的单条 SELECT 语义，例如 UNION 或布尔条件"
+  ],
+  "missing_context": [
+    "未提供 db_connect.php 的连接配置、字符集和错误模式",
+    "未提供 profiles 表结构、主键生成方式和现有数据",
+    "未提供 Web 路由到 vulnerable/*.php 的实际 URL 映射",
+    "未确认是否存在 WAF、输入过滤或数据库权限限制",
+    "未执行任何请求，因此未确认实际触发结果"
+  ],
+  "poc_generated": true,
+  "poc_language": "HTTP/curl",
+  "poc_instructions": [
+    "仅限本地：向 http://127.0.0.1:4280/vulnerable/save_profile.php 发送 POST 表单，参数 nickname 设为 x' UNION SELECT 1,'poc' -- （URL 编码示例 nickname=x%27%20UNION%20SELECT%201%2C%27poc%27%20--%20），用于存入可控 nickname。",
+    "仅限本地：访问 http://127.0.0.1:4280/vulnerable/lookup_profile.php?id=<刚写入记录的主键>；<id> 需替换为实际主键，可枚举。该请求会使 F02:10 执行拼接后的 SQL。",
+    "不得将请求或数据外发到 127.0.0.1:4280 以外的地址；以上仅为 POC 文本，未执行。"
+  ]
+}

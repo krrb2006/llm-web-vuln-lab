@@ -1,0 +1,72 @@
+{
+  "sample_id": "IDOR_01_FIXED",
+  "prediction": "safe",
+  "vulnerability_type": "对象级授权/IDOR（当前代码已修复）",
+  "locations": [
+    {
+      "file": "fixed/invoice.php",
+      "line": 6,
+      "description": "从 GET 参数 id 获取发票ID，并强制转换为 int。"
+    },
+    {
+      "file": "fixed/invoice.php",
+      "line": 7,
+      "description": "从 _SESSION['user_id'] 获取当前会话用户ID，并强制转换为 int。"
+    },
+    {
+      "file": "fixed/invoice.php",
+      "line": 9,
+      "description": "SQL 查询条件包含 id = ? AND owner_id = ?，将对象归属绑定到当前会话用户。"
+    },
+    {
+      "file": "fixed/invoice.php",
+      "line": 11,
+      "description": "使用 bind_param('ii', invoiceId, currentUserId) 绑定发票ID和当前用户ID。"
+    },
+    {
+      "file": "fixed/invoice.php",
+      "line": 15,
+      "description": "仅当查询结果非 null 时输出发票 JSON。"
+    },
+    {
+      "file": "fixed/invoice.php",
+      "line": 16,
+      "description": "输出发票字段的 sink；输出前已受 owner_id 条件约束。"
+    }
+  ],
+  "evidence": {
+    "source": [
+      "fixed/invoice.php:6 用户可控输入为 _GET['id']，转换为 int 后作为发票ID。",
+      "fixed/invoice.php:7 当前会话用户来自 _SESSION['user_id']，转换为 int 后作为当前用户ID。"
+    ],
+    "flow": [
+      "fixed/invoice.php:6-7 获取 invoiceId 与 currentUserId。",
+      "fixed/invoice.php:8-11 构造 prepared statement 并绑定 invoiceId、currentUserId。",
+      "fixed/invoice.php:12-13 执行查询并获取单条 invoice 结果。"
+    ],
+    "guard": [
+      "fixed/invoice.php:9 查询条件为 WHERE id = ? AND owner_id = ?，当前会话用户参与服务端查询条件，形成对象级授权约束。",
+      "fixed/invoice.php:11 currentUserId 被绑定到 owner_id 条件；用户 A 的会话用户ID无法匹配用户 B 的 owner_id，因此用户 A 不能读取用户 B 的 invoice（前提是 owner_id 正常对应真实用户且 session user_id 不可伪造）。",
+      "与 IDOR_01_VULN 的修复差异：本文件将当前会话用户ID加入 WHERE owner_id 条件；未提供 IDOR_01_VULN 原文，无法逐行比对，但该模式相比仅按 id 查询可阻止水平越权。",
+      "SQL 注入：fixed/invoice.php:8-11 使用 prepare 与 bind_param，未见 SQL 拼接；未发现 SQL 注入证据。"
+    ],
+    "sink": [
+      "fixed/invoice.php:15-16 仅当查询返回非 null 时输出 invoice JSON；输出对象已受 owner_id 条件过滤。"
+    ]
+  },
+  "prerequisites": [
+    "攻击者需要拥有有效会话；若未登录，currentUserId 默认为 0，仅可能查询 owner_id=0 的记录，需数据库 schema 与约束确认是否敏感。",
+    "目标 invoice 的 owner_id 必须等于当前会话 user_id 才会返回；用户 A 读取用户 B 的 invoice 需要 owner_id 与 A 的会话用户ID一致，正常场景下不成立。",
+    "需要确认 owner_id 字段是否允许为 0 或存在特殊记录；若存在 owner_id=0 的敏感发票，未登录会话可能读取该特殊记录。",
+    "需要确认 _SESSION['user_id'] 由可信登录流程设置且不可由客户端任意指定。"
+  ],
+  "missing_context": [
+    "未提供 common/db_connect.php、数据库 schema、owner_id 外键约束与是否允许 0 值。",
+    "未提供登录/会话初始化代码，无法确认 $_SESSION['user_id'] 的完整可信来源。",
+    "未提供 IDOR_01_VULN 原始文件，无法逐行确认修复差异。",
+    "未执行代码或请求，不能声称任何漏洞已触发或利用成功。"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "不生成 POC，不执行任何请求，不声称已触发。若后续人工验证，仅允许固定 http://127.0.0.1:4280 且不得外发数据；本审计仅基于代码静态判断。"
+}

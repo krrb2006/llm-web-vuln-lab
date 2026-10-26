@@ -1,0 +1,59 @@
+{
+  "sample_id": "IDOR_01_VULN",
+  "prediction": "vulnerable",
+  "vulnerability_type": "IDOR/对象级授权缺失（Broken Object Level Authorization）；SQL注入不存在",
+  "locations": [
+    {
+      "file": "vulnerable/invoice.php",
+      "line": 3,
+      "description": "调用 session_start()，但后续代码未见登录、角色或所有权校验"
+    },
+    {
+      "file": "vulnerable/invoice.php",
+      "line": 6,
+      "description": "从 _GET['id'] 获取发票对象标识并强转为 int"
+    },
+    {
+      "file": "vulnerable/invoice.php",
+      "line": 7,
+      "description": "查询仅使用 WHERE id = ?，未绑定当前会话用户或 owner_id 授权条件"
+    },
+    {
+      "file": "vulnerable/invoice.php",
+      "line": 10,
+      "description": "按 id 查询后直接获取发票记录"
+    },
+    {
+      "file": "vulnerable/invoice.php",
+      "line": 12,
+      "description": "发票记录非空即进入输出分支，未见对象级授权判断"
+    },
+    {
+      "file": "vulnerable/invoice.php",
+      "line": 13,
+      "description": "输出 id、owner_id、total 等发票字段"
+    }
+  ],
+  "evidence": {
+    "source": "vulnerable/invoice.php:6 的 _GET['id'] 是对象标识来源",
+    "flow": "vulnerable/invoice.php:6 的 invoiceId -> :7 查询 -> :10 fetch_assoc -> :13 json_encode 输出",
+    "guard": "vulnerable/invoice.php:3 仅有 session_start()；:7 的 WHERE id = ? 没有 owner_id = 当前用户 或等价授权检查；代码中未发现当前会话用户参与服务端授权判断。SQL注入方面：:6 强转 int，:7 预处理并在 :8 使用 bind_param('i')，不认为存在SQL注入。",
+    "sink": "vulnerable/invoice.php:12-13 将查询到的 invoice 记录直接 json_encode 输出"
+  },
+  "prerequisites": [
+    "攻击者可访问 vulnerable/invoice.php 端点",
+    "数据库中至少存在两个用户及对应发票记录",
+    "攻击者知道或能枚举其他用户的 invoice id",
+    "代码路径未被外部统一授权中间件阻断（需结合 db_connect.php 与路由上下文确认）"
+  ],
+  "missing_context": [
+    "db_connect.php 内容及是否包含全局认证/授权逻辑",
+    "Web 服务器或框架层是否存在路由鉴权",
+    "session 中用户身份字段及登录要求",
+    "invoice id 是否可枚举及不同 id 的响应差异",
+    "数据库连接账号权限"
+  ],
+  "poc_generated": true,
+  "poc_language": "curl",
+  "poc_instructions": "POC文本（未执行、未验证触发）：curl -s ''。仅允许固定主机 http://127.0.0.1:4280，不得外发数据；运行前需在本地测试环境替换为已知属于其他用户的发票ID，并确认有访问该端点的会话（如需要）。本审计未发送任何请求，不能据此声称已触发。"
+}
