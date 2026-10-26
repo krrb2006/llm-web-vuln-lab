@@ -1,0 +1,45 @@
+{
+  "run_id": "INJ_SQLI_SAFE_BASE_D_DEFAULT_R1",
+  "source_run_id": "INJ_SQLI_SAFE_BASE",
+  "sample_id": "S001",
+  "prompt_version": "V0",
+  "operator": "D",
+  "execution_mode": "DeepSeek web default/快速模式 (exploratory)",
+  "model_display_name": "unknown/default (快速模式)",
+  "model_version_proven": false,
+  "exploratory_only": true,
+  "generation_settings": {
+    "深度思考": "true",
+    "智能搜索": "false"
+  },
+  "model_config": {
+    "channel": "{\"value\":\"default\",\"__version\":\"0\"}",
+    "models": [
+      {
+        "type": "default",
+        "name": "快速模式",
+        "enabled": true,
+        "show_name_in_session": false
+      },
+      {
+        "type": "expert",
+        "name": "专家模式",
+        "enabled": false,
+        "show_name_in_session": false
+      },
+      {
+        "type": "vision",
+        "name": "识图模式",
+        "enabled": false,
+        "show_name_in_session": false
+      }
+    ]
+  },
+  "session_url": "https://chat.deepseek.com/a/chat/s/67009710-b763-4e94-ae42-065582cfac24",
+  "started_at": "2026-10-26T20:23:21+08:00",
+  "finished_at": "2026-10-26T20:23:52+08:00",
+  "input_sha256": "ed3430606a7ec0bd8af5ea7f78dc1a884f4d79e9ef93345ac9c6d5f17c79a139",
+  "raw_output_sha256": "c043542a5703ec133d0e22aa888ec06dbae7c169b5d9185df8fc33400772b2e6",
+  "input_source": "local/b-final/evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_BASE/input.txt",
+  "ui_note": "deep thinking on, web search off; model name hidden by DeepSeek UI"
+}

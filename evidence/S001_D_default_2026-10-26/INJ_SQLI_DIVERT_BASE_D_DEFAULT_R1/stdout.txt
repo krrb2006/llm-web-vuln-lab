@@ -1,0 +1,4 @@
+normal: status=200, has_alice=True, expect_alice=True, query_failed=False
+true_condition: status=200, has_alice=True, expect_alice=True, query_failed=False
+false_condition: status=200, has_alice=False, expect_alice=False, query_failed=False
+RESULT: boolean SQL injection behavior matched expectations; HTTP 200 alone was not used.

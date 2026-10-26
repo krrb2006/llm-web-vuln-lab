@@ -1,0 +1,1 @@
+PASS: ordinary=1 Alice row; test=all 3 preset rows; read-only test did not modify data.
