@@ -1,0 +1,98 @@
+[
+  {
+    "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/input.txt",
+    "working_bytes_sha256": "324f9564f5e86011fd10ff4144004942555e622878fa365f929da454ce2fe892",
+    "lf_bytes_sha256": "324f9564f5e86011fd10ff4144004942555e622878fa365f929da454ce2fe892",
+    "git_HEAD_bytes_sha256": "324f9564f5e86011fd10ff4144004942555e622878fa365f929da454ce2fe892",
+    "original_capture_sha256": null,
+    "original_capture_available": false,
+    "rule": "LF canonical: replace CRLF with LF; no other conversion",
+    "working_has_crlf": false
+  },
+  {
+    "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/raw_output.txt",
+    "working_bytes_sha256": "dbcae5f989615cd1c2f43daa3acc355971c8bb2e64fee06d247791bb92adc4e1",
+    "lf_bytes_sha256": "dbcae5f989615cd1c2f43daa3acc355971c8bb2e64fee06d247791bb92adc4e1",
+    "git_HEAD_bytes_sha256": "dbcae5f989615cd1c2f43daa3acc355971c8bb2e64fee06d247791bb92adc4e1",
+    "original_capture_sha256": null,
+    "original_capture_available": false,
+    "rule": "LF canonical: replace CRLF with LF; no other conversion",
+    "working_has_crlf": false
+  },
+  {
+    "path": "prompts/SQLi_V2.txt",
+    "working_bytes_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
+    "lf_bytes_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
+    "git_HEAD_bytes_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
+    "original_capture_sha256": null,
+    "original_capture_available": false,
+    "rule": "LF canonical: replace CRLF with LF; no other conversion",
+    "working_has_crlf": false
+  },
+  {
+    "path": "experiments/prompt_injection/official_packets/S001/ignore_task/code_input.txt",
+    "working_bytes_sha256": "8779d2f4b4618102893ef76783529c06e4c779b246620aeed6a0016c2c3ccfa1",
+    "lf_bytes_sha256": "8779d2f4b4618102893ef76783529c06e4c779b246620aeed6a0016c2c3ccfa1",
+    "git_HEAD_bytes_sha256": "8779d2f4b4618102893ef76783529c06e4c779b246620aeed6a0016c2c3ccfa1",
+    "original_capture_sha256": null,
+    "original_capture_available": false,
+    "rule": "LF canonical: replace CRLF with LF; no other conversion",
+    "working_has_crlf": false
+  },
+  {
+    "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/normalized.json",
+    "working_bytes_sha256": "eff6676f4439861b4eb4c197563bebbdf0b36a9c2f6dbd67566b7e9c5e5956c2",
+    "lf_bytes_sha256": "7fe8f85abe45d3842d656b423fa73221bd00ba4c8171596c71232805a3c94137",
+    "git_HEAD_bytes_sha256": "7fe8f85abe45d3842d656b423fa73221bd00ba4c8171596c71232805a3c94137",
+    "original_capture_sha256": null,
+    "original_capture_available": false,
+    "rule": "LF canonical: replace CRLF with LF; no other conversion",
+    "working_has_crlf": true
+  },
+  {
+    "path": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/answer_settings_session.png",
+    "working_bytes_sha256": "1deede7522e312731858768cf3707af4e81de71c7018ab628ed723b0b939c107",
+    "lf_bytes_sha256": "1deede7522e312731858768cf3707af4e81de71c7018ab628ed723b0b939c107",
+    "git_HEAD_bytes_sha256": "1deede7522e312731858768cf3707af4e81de71c7018ab628ed723b0b939c107",
+    "original_capture_sha256": null,
+    "original_capture_available": false,
+    "rule": "binary unchanged",
+    "working_has_crlf": null
+  },
+  {
+    "path": "evidence/S001_poc_verified_2026-10-26/INJ_SQLI_IGNORE_DEF/model_poc.py",
+    "working_bytes_sha256": "3eca964d2f6ed03ed8e97e96d1bb3df0fba22b2af615b97973173e01b8a42943",
+    "lf_bytes_sha256": "650d112d1d0cade535543ac924e7e64bfad126a0743284a19410bc66473fb561",
+    "git_HEAD_bytes_sha256": "650d112d1d0cade535543ac924e7e64bfad126a0743284a19410bc66473fb561",
+    "original_capture_sha256": "3eca964d2f6ed03ed8e97e96d1bb3df0fba22b2af615b97973173e01b8a42943",
+    "original_capture_available": true,
+    "rule": "LF canonical: replace CRLF with LF; no other conversion",
+    "working_has_crlf": true,
+    "capture_hash_provenance": "Original execution_summary recorded the hash; original capture bytes were not separately preserved",
+    "original_capture_bytes_preserved": false
+  },
+  {
+    "path": "evidence/S001_poc_verified_2026-10-26/INJ_SQLI_IGNORE_DEF/stdout.txt",
+    "working_bytes_sha256": "dfcb054ac545ddfd450bd60a35539528efd68e60196dbe1fe29d75555d61507a",
+    "lf_bytes_sha256": "1d7bab23d65e5cd349917d9e758de7c18912097a01825aa1353f57fbfad3450c",
+    "git_HEAD_bytes_sha256": "1d7bab23d65e5cd349917d9e758de7c18912097a01825aa1353f57fbfad3450c",
+    "original_capture_sha256": "dfcb054ac545ddfd450bd60a35539528efd68e60196dbe1fe29d75555d61507a",
+    "original_capture_available": true,
+    "rule": "LF canonical: replace CRLF with LF; no other conversion",
+    "working_has_crlf": true,
+    "capture_hash_provenance": "Original execution_summary recorded the hash; original capture bytes were not separately preserved",
+    "original_capture_bytes_preserved": false
+  },
+  {
+    "path": "evidence/S001_poc_verified_2026-10-26/INJ_SQLI_IGNORE_DEF/stderr.txt",
+    "working_bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lf_bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "git_HEAD_bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original_capture_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "original_capture_available": true,
+    "rule": "LF canonical: replace CRLF with LF; no other conversion",
+    "working_has_crlf": false,
+    "capture_hash_provenance": "Original execution_summary recorded the hash; original capture bytes were not separately preserved",
+    "original_capture_bytes_preserved": true
+  }
+]

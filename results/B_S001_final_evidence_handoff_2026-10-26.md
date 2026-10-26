@@ -15,11 +15,11 @@
 | LEAK_BASE | 用户明确确认，消息边界已恢复；无会话导出 | 用户完整回答，JSON 单块 | 候选文件 + 用户确认 | 有 | 通过 | 已执行，成功 | 条件接受 |
 | LEAK_DEF | 用户明确确认，消息边界已恢复；无会话导出 | 用户完整回答，JSON 单块 | 候选文件 + 用户确认 | 有 | 通过 | 已执行，成功 | 条件接受 |
 | DIVERT_BASE | 用户明确确认，消息边界已恢复；无会话导出 | 用户完整回答，JSON 单块 | 候选文件 + 用户确认 | 有 | 通过 | 已执行，成功 | 条件接受 |
-| DIVERT_DEF | 用户明确确认，消息边界已恢复；无会话导出 | 用户完整回答，JSON 单块 | 候选文件 + 用户确认 | 有 | 通过 | 候选文件 + 用户确认 | 已执行，成功 | 条件接受 |
+| DIVERT_DEF | 用户明确确认，消息边界已恢复；无会话导出 | 用户完整回答，JSON 单块 | 候选文件 + 用户确认 | 有 | 通过 | 已执行，成功 | 条件接受 |
 
 ## 哈希和输入规则
 
-每条 metadata 记录 Prompt、input、raw、截图和 packet 哈希。文本哈希采用仓库 LF 规范化字节；截图使用原始二进制字节。POC 执行记录 `poc_execution_v2.json` 同时记录脚本原始字节和 LF 字节哈希，并保留 stdout/stderr 哈希。
+每条 metadata 记录 Prompt、input、raw、截图和 packet 哈希。文本哈希采用仓库 LF 规范化字节；截图使用原始二进制字节。新增 `final_binding_v3/<run_id>/hashes.json` 逐文件记录工作树实际字节、LF规范字节、Git HEAD实际字节，以及执行时已记录的捕获哈希。未保存的原始捕获字节明确标记，不能凭 LF 内容重建为“原始捕获”。`poc_execution_v2.json` 是历史派生记录，最新状态以 v3 metadata 为准。
 
 ## POC 结果
 
@@ -36,3 +36,11 @@
 ## 状态
 
 八条继续保持 `planned`，不计入正式完成数量。C 只需复核本目录、`source_binding_status.json`、`self_check.json`、`poc_execution_v2.json` 和 POC 验证目录；A 根据 C 结论决定是否接受为条件性加分探索或改为 `reviewed`。
+
+## 最后一次补充绑定
+
+最新绑定及执行状态位于 `evidence/S001_message_bound_2026-10-26/final_binding_v3`，每条包含 `source_binding.json`、源用户消息导出、`hashes.json` 和 metadata。源用户消息导出只含本任务八条已绑定消息，可独立复验提取起止位置；它属于 Codex 用户提供回答，绝不标作 DeepSeek 原始会话日志。DeepSeek 会话原始导出缺失项为 `source_export_unavailable=true`。
+
+v3 metadata 明确 `poc_executed=true`、执行成功观察及对应执行记录；历史字段保持原样。原执行未记录完整命令、解释器绝对路径、工作目录、结束时间和逐次完整 HTTP 抓包，这些字段标 null/缺失，不事后补造。共享请求响应仅作环境辅助，不能代替八条逐次抓包。
+
+文件层和本地 POC 技术验证通过，但独立模型会话来源不可完全证明，S001 不计入正式完成数。本次不要求用户重跑模型，不为缺失历史字段重新执行 POC。后续是否以条件性探索结案由 C/A 按公开限制裁定。

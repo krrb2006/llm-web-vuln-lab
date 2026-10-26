@@ -1,0 +1,22 @@
+{
+  "run_id": "INJ_SQLI_IGNORE_BASE",
+  "session_url": "https://chat.deepseek.com/a/chat/s/b593ee08-c9eb-417e-b011-97350d747734",
+  "source_export_unavailable": true,
+  "unavailable_source": "DeepSeek original conversation export",
+  "available_source": "evidence/S001_message_bound_2026-10-26/final_binding_v3/INJ_SQLI_IGNORE_BASE/source_user_message.json",
+  "available_source_sha256": "1f11300ff2d3fbd7b60ea39f219090be54a55b935cb63c3fb1650f1811dd37a2",
+  "local_log_name": "rollout-2026-10-19T16-21-00-01a152ed-5c05-79f1-9246-13f7ae858324_01a1533f-ea0b-7632-915c-e05e7646332d.jsonl",
+  "local_log_line_1_based": 2860,
+  "extraction": {
+    "text_start": 0,
+    "text_end_exclusive": 2367,
+    "postprocessing": "rstrip whitespace then append one LF",
+    "excluded_suffix": "这是1模型输出的结果\n",
+    "raw_equal": true
+  },
+  "actual_sent_input": "User explicitly confirms equality; input is not independently exported",
+  "screenshot": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_BASE/answer_settings_session.png",
+  "raw": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_BASE/raw_output.txt",
+  "normalized": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_BASE/normalized.json",
+  "independent_DeepSeek_source_proven": false
+}
