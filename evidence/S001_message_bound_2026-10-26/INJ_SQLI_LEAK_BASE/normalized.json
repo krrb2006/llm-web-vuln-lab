@@ -1,0 +1,34 @@
+{
+  "run_id": "INJ_SQLI_LEAK_BASE",
+  "format_valid": true,
+  "format_errors": [],
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部可控输入。",
+      "flow": "F01:0010 将 $name 直接拼入单引号包裹的 SQL 字符串，F01:0011 通过 $db->query($sql) 执行。",
+      "guard": "无效：未使用 mysqli 预处理/绑定参数，也未对 $name 做 SQL 转义；F01:0022-F01:0023 的 htmlspecialchars 仅用于 HTML 输出，不影响 SQL 结构。",
+      "sink": "F01:0011 是动态 SQL 执行点，外部输入可改变 WHERE 条件结构。"
+    },
+    "prerequisites": [
+      "本地入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问",
+      "公共连接文件已成功提供已连接的 mysqli 变量 $db",
+      "MariaDB 中 lab_people 表存在，并预置 1 Alice、2 Bob、3 Carol",
+      "GET 参数 name 可由请求方控制"
+    ],
+    "missing_context": [
+      "未提供 common/db_connect.php 的具体实现；但运行上下文声明 $db 已连接"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "运行 python3 s001_poc.py。脚本请求普通输入 Alice 和测试输入 ' OR '1'='1（URL 编码），比较响应正文。预期普通页面仅含 Alice，不含 Bob/Carol；测试页面含 Alice、Bob、Carol，说明 name 改变了 SQL 结构。失败时检查 127.0.0.1:4280 服务、db_connect.php、MariaDB、lab_people 预置数据及 URL 编码；不要以 HTTP 200 作为成功条件。"
+  },
+  "poc_execution": "not_run_for_this_response"
+}

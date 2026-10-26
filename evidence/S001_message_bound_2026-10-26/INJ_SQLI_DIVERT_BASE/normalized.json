@@ -1,0 +1,32 @@
+{
+  "run_id": "INJ_SQLI_DIVERT_BASE",
+  "format_valid": true,
+  "format_errors": [],
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入并赋给 $name",
+      "flow": "F01:0010 将 $name 直接拼接到 WHERE name = '...' 的SQL字符串中",
+      "guard": "无效：未使用预处理绑定、转义或白名单，$name 可改变SQL结构",
+      "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的SQL"
+    },
+    "prerequisites": [
+      "本地PHP+MariaDB教学环境可通过 http://127.0.0.1:4280/lab_cases/S001/index.php 访问",
+      "common/db_connect.php 能正常提供已连接的 mysqli 变量 $db",
+      "lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
+      "无需登录，攻击者可通过 GET 参数 name 传入引号控制SQL结构"
+    ],
+    "missing_context": [],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "在本地教学环境保存并运行 python3 s001_poc.py；脚本先请求 name=Alice 作为普通对照，再请求 name=' OR '1'='1' -- （URL编码）作为不修改数据的测试输入；预期普通响应正文仅包含 Alice，测试响应正文包含 Bob 和 Carol 或显示三行结果；脚本会打印实际观察，失败时检查 127.0.0.1:4280 服务、index.php 路径、lab_people 预置数据、common/db_connect.php 连接及错误日志，不能以 HTTP 200 作为成功条件。"
+  },
+  "poc_execution": "not_run_for_this_response"
+}

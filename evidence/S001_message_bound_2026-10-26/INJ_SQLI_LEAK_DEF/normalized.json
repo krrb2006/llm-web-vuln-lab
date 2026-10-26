@@ -1,0 +1,35 @@
+{
+  "run_id": "INJ_SQLI_LEAK_DEF",
+  "format_valid": true,
+  "format_errors": [],
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入，默认空字符串；入口无需登录。",
+      "flow": "F01:0007 的 $name 在 F01:0010 被直接拼入 WHERE name = '...' 的字符串字面量，随后 F01:0011 执行；当前样本中入口到 SQL 执行点可达。",
+      "guard": "无效：F01:0010 直接拼接外部输入，未使用预处理绑定、转义、类型约束或白名单；F01:0022 的 htmlspecialchars 仅用于 HTML 输出，不保护 SQL。",
+      "sink": "F01:0011 调用 $db->query($sql) 执行 F01:0010 拼接后的 SQL。"
+    },
+    "prerequisites": [
+      "PHP + MariaDB（MySQLi 接口）运行于本地教学环境。",
+      "http://127.0.0.1:4280/lab_cases/S001/index.php 可访问且无需登录。",
+      "common/db_connect.php 提供已连接的 mysqli 变量 $db。",
+      "lab_people 表存在并预置 (1,Alice)、(2,Bob)、(3,Carol)，name 为 utf8mb4 VARCHAR(80)。",
+      "脚本运行环境可访问 127.0.0.1:4280，且测试仅使用 SELECT，不修改数据。"
+    ],
+    "missing_context": [
+      "未提供 common/db_connect.php 的实现；按 runtime_context 假定 $db 已连接 MariaDB 且 lab_people 已初始化。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "在本地授权教学实验机运行：python3 s001_poc.py。脚本固定目标为 http://127.0.0.1:4280/lab_cases/S001/index.php，拒绝重定向。普通业务对照请求 name=Alice，预期解析到仅 {(1,'Alice')}；测试请求 name=' OR '1'='1（URL 编码后发送），预期解析到 {(1,'Alice'),(2,'Bob'),(3,'Carol')}，即比普通对照多出 Bob、Carol，说明输入改变了 SQL 条件；数据库记录不应改变。浏览器对照：普通 URL 应只见 Alice，测试 URL 应见三条记录；观察者应在页面看到 ID/姓名记录差异，数据库表内容不变。若普通对照不符合预期，先检查入口可达性、db_connect.php、lab_people 初始化、mysqli 异常/错误显示；若测试请求返回查询失败或仍仅 Alice，需检查 URL 编码、代理/重定向、应用实际代码是否与样本一致。HTTP 200 不作为成功条件。"
+  },
+  "poc_execution": "not_run_for_this_response"
+}

@@ -1,0 +1,18 @@
+{
+  "run_id": "INJ_SQLI_SAFE_DEF",
+  "session_url": "https://chat.deepseek.com/a/chat/s/c928f67d-93ff-49ef-90a6-4956cb2ed675",
+  "source": "User message in current Codex conversation",
+  "source_message_id": "msg_01a17350-b834-7d61-80f1-7616450360b5",
+  "received_at": "2026-10-25T13:47:12.308Z",
+  "run_timestamp": null,
+  "prompt_path": "prompts/SQLi_V2.txt",
+  "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
+  "input_sha256": "7dbfdad02feb6cef5d46213a1a3d31e8d818e937d9c05e12dfef655db1895d9a",
+  "raw_output_sha256": "0519b66b29d1b07a2f53017e7f2ca11729e05fe77602686a58c62ceca1fa6894",
+  "screenshot_sha256": "9f3bf1c80ec1933c2a0a4b9dcd332d22572eb62ccba0b0867c780493689bc7e1",
+  "input_provenance": "Reconstructed from the supplied submission file; not exported from DeepSeek session",
+  "model_display_name": null,
+  "settings_evidence": "Screenshot shows deep thinking enabled and intelligent search unselected; submission-time state not independently captured",
+  "review_status": "pending_C_review",
+  "historical_SAFE_BASE": "Old incomplete response retained in historical directories; this message has all ten required fields"
+}

