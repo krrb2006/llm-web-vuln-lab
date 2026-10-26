@@ -4,9 +4,10 @@
   "sample_id": "S001",
   "prompt_version": "V0",
   "operator": "D",
-  "execution_mode": "DeepSeek web default/快速模式 (V4.1-Flash-1017)",
-  "model_display_name": "DeepSeek-V4.1-Flash-1017",
-  "model_version_proven": true,
+  "execution_mode": "DeepSeek web default/快速模式",
+  "model_display_name": null,
+  "model_version_proven": false,
+  "model_version_inferred": "DeepSeek-V4.1-Flash-1017",
   "exploratory_only": false,
   "generation_settings": {
     "深度思考": "true",
@@ -42,7 +43,7 @@
   "raw_output_sha256": "f5de5c52423217af010d3c4d5cbf609cf1644b6689273aeb70510a72cb18d36a",
   "input_source": "local/b-final/evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_BASE/input.txt",
   "ui_note": "deep thinking on, web search off; model name hidden by DeepSeek UI",
-  "model_version_proven_scope": "official_platform_announcement",
+  "model_version_inference_scope": "official_platform_announcement",
   "model_version_basis": "DeepSeek official 2026-10-17 announcement: web/app/API synced to V4.1-Flash-1017",
   "per_run_model_field_captured": false
 }

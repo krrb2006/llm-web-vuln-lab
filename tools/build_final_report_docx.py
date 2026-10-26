@@ -18,7 +18,7 @@ from docx.shared import Cm, Pt, RGBColor
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "docs" / "最终实验报告_2026-10-26.docx"
+OUT = ROOT / "docs" / "最终实验报告_2026-10-26_交付版.docx"
 TMP = ROOT / "artifacts" / "final_report_2026-10-26"
 
 NAVY = "12355B"
@@ -459,7 +459,7 @@ def build() -> None:
     add_heading(doc, "6.1 高级案例的价值", 2)
     add_paragraph(doc, "高级案例覆盖了单文件直接 sink 之外的两种安全逻辑：二阶 SQLi 需要追踪跨请求、跨存储的污染值；IDOR 则要求区分 SQL 参数化与对象级授权。其目的不是扩大攻击面，而是检验模型是否能将“使用预处理 SQL”与“授权逻辑正确”分开判断。")
     add_heading(doc, "6.2 S001 默认/快速模式记录", 2)
-    add_paragraph(doc, "S001 官方 8 条采用独立的网页默认/快速模式会话。每条保存模型原文、输入、DOM 回答、截图、元数据和 POC 执行结果；A 对输入/原文哈希、JSON、会话截图和 loopback 限制完成自主复核，并在本机对 8 条模型 POC 逐条复跑，均以 exit code 0 结束。该批记录与早期存在绑定缺陷的历史 S001 文件并存，不覆盖历史证据。")
+    add_paragraph(doc, "S001 官方 8 条采用 D 操作的八个不同网页默认/快速模式会话。每条保存模型原文、输入、DOM 回答、截图、元数据和 POC 执行结果；A 对输入/原文哈希、JSON、会话截图和 loopback 限制完成项目内自审，并在本机对 8 条模型 POC 逐条复跑。八条均以 exit code 0 结束；同时，普通请求与测试请求在 Alice、Bob、Carol 记录或真假条件响应上出现预期业务差异，因此触发结论不只依据退出码。plan 如实记录 operator=D、reviewer=A_self_review，不声称 C 独立复核通过。该批记录与早期存在绑定缺陷的历史 S001 文件并存，不覆盖历史证据。")
 
     add_heading(doc, "7. 限制、反思与改进", 1)
     add_table(doc, ["限制", "可能影响", "后续改进"], [

@@ -46,6 +46,31 @@ def validate_bonus_plan(records):
     return issues
 
 
+def validate_model_provenance(root, records):
+    """Reject a per-run model proof claim when the run did not capture that field."""
+    root = Path(root).resolve()
+    issues = []
+    checked = set()
+    for record in records:
+        for item in record.get("evidence_paths", []):
+            if not item.endswith("/metadata.json") or item in checked:
+                continue
+            checked.add(item)
+            path = (root / item).resolve()
+            if not path.is_relative_to(root) or not path.is_file():
+                continue
+            metadata = _read_json(path)
+            if (
+                metadata.get("per_run_model_field_captured") is False
+                and metadata.get("model_version_proven") is True
+            ):
+                issues.append(
+                    f"{record.get('run_id')}: model version cannot be proven "
+                    "when the per-run model field was not captured"
+                )
+    return issues
+
+
 def audit_repository(root):
     root = Path(root).resolve()
     manifest = _read_json(root / "dataset" / "manifest.json")
@@ -53,6 +78,7 @@ def audit_repository(root):
     bonus_path = root / "experiments" / "bonus_runs.plan.json"
     bonus = _read_json(bonus_path) if bonus_path.is_file() else []
     bonus_issues = validate_bonus_plan(bonus)
+    bonus_issues.extend(validate_model_provenance(root, bonus))
 
     raw_ids = {
         path.name
