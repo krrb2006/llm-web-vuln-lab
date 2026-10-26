@@ -10,7 +10,8 @@
       "value": null,
       "candidate_file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_BASE/input.txt",
       "candidate_sha256": "31d1db17f204d6e0370d5930df420b564af79d92a28e74741e6fe0f87c2a4c53",
-      "status": "insufficient_session_export_missing"
+      "status": "explicit_user_attestation_matches_candidate_file",
+      "confirmation": "用户确认八条实际发送输入与对应文件完全一致；未取得独立会话导出。"
     },
     "full_answer": {
       "file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_BASE/raw_output.txt",
@@ -54,7 +55,8 @@
       "value": null,
       "candidate_file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/input.txt",
       "candidate_sha256": "324f9564f5e86011fd10ff4144004942555e622878fa365f929da454ce2fe892",
-      "status": "insufficient_session_export_missing"
+      "status": "explicit_user_attestation_matches_candidate_file",
+      "confirmation": "用户确认八条实际发送输入与对应文件完全一致；未取得独立会话导出。"
     },
     "full_answer": {
       "file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_IGNORE_DEF/raw_output.txt",
@@ -98,7 +100,8 @@
       "value": null,
       "candidate_file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_BASE/input.txt",
       "candidate_sha256": "ed3430606a7ec0bd8af5ea7f78dc1a884f4d79e9ef93345ac9c6d5f17c79a139",
-      "status": "insufficient_session_export_missing"
+      "status": "explicit_user_attestation_matches_candidate_file",
+      "confirmation": "用户确认八条实际发送输入与对应文件完全一致；未取得独立会话导出。"
     },
     "full_answer": {
       "file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_BASE/raw_output.txt",
@@ -142,7 +145,8 @@
       "value": null,
       "candidate_file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_DEF/input.txt",
       "candidate_sha256": "7dbfdad02feb6cef5d46213a1a3d31e8d818e937d9c05e12dfef655db1895d9a",
-      "status": "insufficient_session_export_missing"
+      "status": "explicit_user_attestation_matches_candidate_file",
+      "confirmation": "用户确认八条实际发送输入与对应文件完全一致；未取得独立会话导出。"
     },
     "full_answer": {
       "file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_SAFE_DEF/raw_output.txt",
@@ -186,7 +190,8 @@
       "value": null,
       "candidate_file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_BASE/input.txt",
       "candidate_sha256": "fdddf89e596f0f99224cc4e8d43100d4089281db905e19508ae878b48fe7c698",
-      "status": "insufficient_session_export_missing"
+      "status": "explicit_user_attestation_matches_candidate_file",
+      "confirmation": "用户确认八条实际发送输入与对应文件完全一致；未取得独立会话导出。"
     },
     "full_answer": {
       "file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_BASE/raw_output.txt",
@@ -230,7 +235,8 @@
       "value": null,
       "candidate_file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_DEF/input.txt",
       "candidate_sha256": "733f9de6a501c52996b7bc188671acf010f3669f55434382f48a6e406b3690bc",
-      "status": "insufficient_session_export_missing"
+      "status": "explicit_user_attestation_matches_candidate_file",
+      "confirmation": "用户确认八条实际发送输入与对应文件完全一致；未取得独立会话导出。"
     },
     "full_answer": {
       "file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_DEF/raw_output.txt",
@@ -274,7 +280,8 @@
       "value": null,
       "candidate_file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_BASE/input.txt",
       "candidate_sha256": "b4967b8a0f3253d3e90bbb19fd8d7f16c56cda00d6f0955a25437a3a9e90e4d1",
-      "status": "insufficient_session_export_missing"
+      "status": "explicit_user_attestation_matches_candidate_file",
+      "confirmation": "用户确认八条实际发送输入与对应文件完全一致；未取得独立会话导出。"
     },
     "full_answer": {
       "file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_BASE/raw_output.txt",
@@ -318,7 +325,8 @@
       "value": null,
       "candidate_file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_DEF/input.txt",
       "candidate_sha256": "1ad5353e523543fdae193034757f85a4f3afd52594471c50f082a5726f366c29",
-      "status": "insufficient_session_export_missing"
+      "status": "explicit_user_attestation_matches_candidate_file",
+      "confirmation": "用户确认八条实际发送输入与对应文件完全一致；未取得独立会话导出。"
     },
     "full_answer": {
       "file": "evidence/S001_message_bound_2026-10-26/INJ_SQLI_DIVERT_DEF/raw_output.txt",
