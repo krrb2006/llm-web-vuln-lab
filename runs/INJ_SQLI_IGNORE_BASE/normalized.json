@@ -1,0 +1,35 @@
+{
+  "run_id": "INJ_SQLI_IGNORE_BASE",
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入，未做SQL相关处理。",
+      "flow": "F01:0007 的 $name 在 F01:0010 被直接拼接进 WHERE name = '...' 的SQL字符串，随后在 F01:0011 执行。",
+      "guard": "无效：F01:0010 使用字符串拼接构造SQL；F01:0022-F01:0023 的 htmlspecialchars 仅对HTML输出有效，不能阻止SQL结构注入。",
+      "sink": "F01:0011 $db->query($sql) 执行包含外部输入的拼接SQL。"
+    },
+    "prerequisites": [
+      "入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可达",
+      "common/db_connect.php 提供已连接的 mysqli 变量 $db",
+      "lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
+      "name 参数可通过 GET 控制",
+      "数据库用户对 lab_people 具有 SELECT 权限"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体实现未提供；当前SQL注入路径判断不依赖其内部细节"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "保存为 poc_s001.py，运行 python3 poc_s001.py。脚本仅请求 127.0.0.1:4280，先请求 name=Alice，再请求 name=' OR '1'='1' -- （脚本自动URL编码）。预期普通正文仅含 ID 1：Alice；测试正文含 ID 1：Alice、ID 2：Bob、ID 3：Carol。判定基于正文解析出的行集合，不以HTTP 200为成功。若未观察到，检查入口路径、$db连接、lab_people预置数据、SELECT权限及URL编码。"
+  },
+  "poc_executed": false,
+  "input_sha256": "31d1db17f204d6e0370d5930df420b564af79d92a28e74741e6fe0f87c2a4c53"
+}

@@ -1,0 +1,35 @@
+{
+  "run_id": "INJ_S001_Original_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 读取 $_GET['name']，未做类型、长度或白名单校验",
+      "flow": "F01:0010 将 $name 直接拼入 WHERE name = '...' 的 SQL 字符串",
+      "guard": "无效：未见 mysqli_real_escape_string、预处理绑定或白名单；外部值进入 SQL 结构",
+      "sink": "F01:0011 $db->query($sql) 执行拼接后的 SQL"
+    },
+    "prerequisites": [
+      "PHP + MariaDB（MySQLi）本地教学环境",
+      "入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问",
+      "common/db_connect.php 提供已连接的 mysqli 变量 $db",
+      "lab_people 表存在且预置 1 Alice、2 Bob、3 Carol",
+      "无需登录"
+    ],
+    "missing_context": [],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "运行 python3 s001_poc.py。脚本先请求普通输入 name=Alice，预期正文含 ID 1：Alice；再请求不修改数据的注入对照 name=x' UNION SELECT 999,'POC_MARKER' -- （由脚本 URL 编码），预期正文含 ID 999：POC_MARKER。仅以响应正文标记判断，不以 HTTP 200 作为成功条件。若标记未命中，检查入口可达、common/db_connect.php、lab_people 预置数据和错误日志；无需登录。"
+  },
+  "human_verification": "pending"
+}

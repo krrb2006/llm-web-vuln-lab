@@ -1,0 +1,21 @@
+{
+  "run_id": "CTX_S007_ENTRY",
+  "category": "context_ablation",
+  "sample_id": "S007",
+  "condition": "entry_only",
+  "prompt_version": "V2",
+  "status": "executed_pending_review",
+  "operator": "A (delegated execution for C)",
+  "reviewer": "A",
+  "model_display_name": "DeepSeek-V4.1-Flash",
+  "model_settings": "深度思考=开；联网搜索=关",
+  "submitted_at": "2026-10-19 22:45:26 (UTC+8)",
+  "prompt_sha256": "3666ebeb28980e192172852639ab1759c94b6cbb2e5cdfe0c6f185a946841178",
+  "context_sha256": "ab7a9ad4c5fd4125b194f306582135be58629da621ba556d020a3ec02efee29b",
+  "input_sha256": "3d6df4fc6a0109bea666c9cc6506bc72ce313020d3cb316e92d49cb971254162",
+  "planned_model_display_name": "DeepSeek-V4.1-Flash",
+  "planned_model_settings": "深度思考=开；联网搜索=关",
+  "raw_source": "DeepSeek web session",
+  "submission_mode": "A authorized browser automation",
+  "raw_output_sha256": "96c82e6f9fc3ee0cf7d5cd66c639c21dc3599498cdd30a08dda7fffa5a06c23e"
+}

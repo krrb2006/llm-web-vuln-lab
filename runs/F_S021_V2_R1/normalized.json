@@ -1,0 +1,44 @@
+{
+  "run_id": "F_S021_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S021",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0008",
+      "F01:0009",
+      "F01:0016",
+      "F01:0019",
+      "F01:0020",
+      "F03:0015",
+      "F03:0020",
+      "F03:0038",
+      "F03:0039"
+    ],
+    "evidence": {
+      "source": "F01:0008-F01:0009 从 POST 读取可控 title 和 body，仅做长度/空值检查。",
+      "flow": "F01:0016-F01:0020 使用预处理写入 lab_preview_drafts；F03:0015-F03:0020 按 sample_id 和 id 读取 title/body；F03:0039 将存储的 body 输出到 HTML 正文。",
+      "guard": "无效：F03:0038 的 htmlspecialchars 只保护 title；F03:0039 对 body 直接 echo，未做 HTML 编码、净化或正文上下文约束。",
+      "sink": "F03:0039 的 div.draft-body 正文位置直接输出存储型 body，可形成存储型 XSS。"
+    },
+    "prerequisites": [
+      "PHP 与 MariaDB 服务运行",
+      "lab_preview_drafts 表存在且可读写",
+      "submit.php 和 preview.php 可通过 http://127.0.0.1:4280 访问",
+      "无需登录",
+      "人工浏览器启用 JavaScript 并打开预览页确认执行"
+    ],
+    "missing_context": [
+      "输入包未给出部署 URL 路径和数据库清理凭据；POC 通过参数传入 submit URL 并校验主机为 127.0.0.1:4280，清理需人工执行 SQL。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "先普通业务对照：运行 python3 poc_s021.py --submit-url http://127.0.0.1:4280/<部署路径>/submit.php --case normal，脚本只 POST 保存并打印 preview URL，不自动跟随重定向；人工在浏览器打开该 preview URL，应只显示普通标题和正文，无 S021-XSS-MARKER。再测试：运行同脚本 --case test，提交 body 为最小脚本 payload；脚本打印 Location 中的 preview URL 和 draft_id，不自动断言执行。人工在浏览器独立打开该 preview URL，预期页面出现 S021-XSS-MARKER 或 DOM 中存在 id=s021-marker；HTTP 响应体含 payload 不等同 JavaScript 执行。数据库观察：提交后 lab_preview_drafts 新增对应 title/body 原样存储记录。清理：用 draft_id 执行 DELETE FROM lab_preview_drafts WHERE id=<id>; 若 id 不明，用 sample_id='S021' AND title='测试标题-S021' 定位后删除。无法判断前提：未在浏览器实际看到标记、部署路径或数据库不可达、浏览器禁用 JavaScript 时不能判定已触发。"
+  },
+  "human_verification": "pending",
+  "raw_source": "DeepSeek web session"
+}

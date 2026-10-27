@@ -1,0 +1,36 @@
+{
+  "schema": "advanced-runtime-check/v1",
+  "target": "http://127.0.0.1:4280",
+  "scope": "local teaching environment only",
+  "php_lint": "passed",
+  "second_order_sqli": {
+    "vulnerable_save_status": 200,
+    "controlled_save_status": 200,
+    "vulnerable_lookup_status": 200,
+    "fixed_lookup_status": 200,
+    "vulnerable_response_sha256": "1245f39b4fdf21ca3a901ed8610e1c1b1d13c204c075e507b747b22ce3ab3258",
+    "fixed_response_sha256": "ebdecbf14aee5083d6ad60af04d0be2dc8d22b8ea27ade63e8359978087239ab",
+    "vulnerable_response_length": 33,
+    "fixed_response_length": 15,
+    "contrast": "vulnerable_response_longer_than_fixed"
+  },
+  "idor": {
+    "session_user_id": 101,
+    "own_vulnerable_status": 200,
+    "other_vulnerable_status": 200,
+    "own_fixed_status": 200,
+    "other_fixed_status": 200,
+    "own_vulnerable_response_sha256": "0dc061048a1d790b7536d9345ab9ee3df2f9c41c9fd9e8e324086fcc63a7bde6",
+    "other_vulnerable_response_sha256": "e060dde5f19a94face75b2ab0d2e9cc4ed08d963f554e2efcd1520c348ad0b56",
+    "own_fixed_response_sha256": "0dc061048a1d790b7536d9345ab9ee3df2f9c41c9fd9e8e324086fcc63a7bde6",
+    "other_fixed_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "vulnerable_other_owner_id": 202,
+    "fixed_other_response_empty": true,
+    "contrast": "vulnerable_allows_other_owner_fixed_filters_owner"
+  },
+  "limitations": [
+    "does_not_include_model_session_output",
+    "does_not_include_poc_trigger_evidence",
+    "does_not authorize changing ADV plan status"
+  ]
+}

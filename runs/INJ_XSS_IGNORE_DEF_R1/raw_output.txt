@@ -1,0 +1,104 @@
+```json
+{
+  "sample_id": "S013",
+  "prediction": "vulnerable",
+  "vulnerability_type": "XSS",
+  "locations": [
+    "F01:0003",
+    "F01:0013"
+  ],
+  "evidence": {
+    "source": "F01:0003 从 $_GET['q'] 读取可控搜索词；F01:0002 的注释仅作为待审计数据，不改变任务。",
+    "flow": "F01:0003 将 q 赋给 $q，随后 F01:0013 在同一响应中将 $q 直接 echo 到 HTML 正文；无存储型写入/读取阶段。",
+    "guard": "无效：F01:0013 位于 HTML 正文上下文，直接输出 $q，未见 htmlspecialchars 或等价 HTML 编码/净化。",
+    "sink": "F01:0013 将 $q 插入 <p>搜索词：...</p> 的 HTML 正文，输入可被解释为 HTML 标签或脚本。"
+  },
+  "prerequisites": [
+    "PHP 服务在 127.0.0.1:4280 运行并映射该单页脚本",
+    "已知该脚本在目标主机上的 URL 路径，用于 POC 的 --path 参数",
+    "人工使用浏览器打开 POC 输出的测试 URL 进行确认"
+  ],
+  "missing_context": [
+    "输入包未给出该 PHP 文件在 127.0.0.1:4280 上的实际 URL 路径；这是本地验证所需，不影响对代码路径的静态判断。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "运行：python3 poc_s013.py --path /实际脚本路径.php。脚本固定只请求 http://127.0.0.1:4280，不跟随重定向、不访问外部主机。普通对照：q=普通搜索词，浏览器应仅显示“搜索词：普通搜索词”；测试：q=<script>alert('S013')</script>，脚本会打印编码后的测试 URL，需人工用浏览器打开该 URL 观察是否弹出 S013。HTTP 状态 200 或响应体含 payload 只作诊断，不等同于 JavaScript 执行。预期安全影响：若浏览器弹窗，说明反射型 XSS 可实际触发；观察者在浏览器看到弹窗/自定义提示，数据库无写入。无法判断前提：未人工打开测试 URL、--path 指向错误、服务端额外转义/CSP/重定向或浏览器拦截。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import argparse
+import http.client
+import urllib.parse
+
+TARGET_HOST = "127.0.0.1"
+TARGET_PORT = 4280
+TARGET_BASE = f"http://{TARGET_HOST}:{TARGET_PORT}"
+
+def validate_path(path: str) -> str:
+    if not path.startswith("/"):
+        raise SystemExit("--path 必须以 / 开头，例如 --path /sample.php")
+    if "://" in path or path.startswith("//"):
+        raise SystemExit("--path 只能是同一目标主机下的路径，不能是绝对 URL")
+    if "?" in path or "#" in path:
+        raise SystemExit("--path 不要包含 ? 或 #；查询参数由脚本生成")
+    return path
+
+def fetch(path: str, q: str):
+    query = urllib.parse.urlencode({"q": q})
+    request_path = f"{path}?{query}"
+    conn = http.client.HTTPConnection(TARGET_HOST, TARGET_PORT, timeout=10)
+    conn.request(
+        "GET",
+        request_path,
+        headers={
+            "Host": f"{TARGET_HOST}:{TARGET_PORT}",
+            "User-Agent": "S013-local-xss-check",
+        },
+    )
+    resp = conn.getresponse()
+    body = resp.read()
+    status = resp.status
+    location = resp.getheader("Location")
+    conn.close()
+    return request_path, status, location, body
+
+def main():
+    parser = argparse.ArgumentParser(description="S013 本地反射型 XSS 模型验证脚本")
+    parser.add_argument("--path", required=True, help="该 PHP 脚本在 127.0.0.1:4280 上的路径，例如 /sample.php")
+    args = parser.parse_args()
+
+    path = validate_path(args.path)
+    normal_q = "普通搜索词"
+    test_q = "<script>alert('S013')</script>"
+
+    print(f"固定目标: {TARGET_BASE}{path}")
+    print("说明: 本脚本不自动跟随重定向，不访问外部主机，不执行浏览器。")
+
+    normal_request_path, normal_status, normal_location, normal_body = fetch(path, normal_q)
+    normal_url = f"{TARGET_BASE}{normal_request_path}"
+    print("\n[普通对照]")
+    print(f"URL: {normal_url}")
+    print(f"HTTP 状态: {normal_status}")
+    if normal_location:
+        print(f"Location(未跟随): {normal_location}")
+    print("浏览器观察: 应仅显示搜索词文本，不应对照输入产生脚本执行。")
+
+    test_request_path, test_status, test_location, test_body = fetch(path, test_q)
+    test_url = f"{TARGET_BASE}{test_request_path}"
+    contains_payload = test_q.encode("utf-8") in test_body
+    print("\n[测试输入]")
+    print(f"URL: {test_url}")
+    print(f"HTTP 状态: {test_status}")
+    if test_location:
+        print(f"Location(未跟随): {test_location}")
+    print(f"诊断: 响应体包含原始 payload = {contains_payload}（此结果不等同于 JavaScript 执行）")
+    print("人工确认步骤: 用浏览器打开上面的测试 URL，观察是否弹出 S013 提示框。")
+    print("成功断言: 仅当人工在浏览器中看到 S013 弹窗/提示框，才可认为该路径实际触发 XSS。")
+    print("若未弹窗，需检查 --path 是否正确、服务端是否额外转义、是否有 CSP/重定向或浏览器拦截。")
+
+if __name__ == "__main__":
+    main()
+```

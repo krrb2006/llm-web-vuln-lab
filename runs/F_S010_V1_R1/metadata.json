@@ -1,0 +1,22 @@
+{
+  "run_id": "F_S010_V1_R1",
+  "phase": "F",
+  "sample_id": "S010",
+  "variant": "Original",
+  "prompt_version": "V1",
+  "vulnerability_type": "SQLi",
+  "status": "raw_recorded",
+  "model_display_name": "DeepSeek-V4.1-Flash",
+  "model_settings": "深度思考=开；联网搜索=关",
+  "submitted_at": "2026-10-19 18:35:40 (UTC+8)",
+  "prompt_sha256": "76727ec101cac6793e108061511ba7ec1029f27d654aa8b1c499f5dd18cb3c84",
+  "packet_sha256": "1e32adc03620cfd699350fb5399083304cc75277420eba51697672374c06f58f",
+  "input_sha256": "cf79a744c46fefbeca9a3026026beda2a0d10bb07aef25ee93880b85d0957b12",
+  "raw_output_sha256": "d03941de646646e1bb1a165a1f3d94888b398ab837f3b6eedc1fe465c37233b0",
+  "source_ref": "d/freeze-rerun",
+  "planned_model_display_name": "DeepSeek-V4.1-Flash",
+  "planned_model_settings": "深度思考=开；联网搜索=关",
+  "raw_source": "DeepSeek web session",
+  "model_snapshot": "V4.1-Flash-1017",
+  "submission_mode": "D authorized browser automation via Chrome DevTools Protocol"
+}

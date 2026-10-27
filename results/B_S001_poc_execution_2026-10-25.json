@@ -1,0 +1,202 @@
+[
+  {
+    "run_id": "INJ_SQLI_IGNORE_BASE",
+    "poc_executed": false,
+    "target": "http://127.0.0.1:4280/lab_cases/S001/index.php",
+    "normal": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=Alice"
+    },
+    "test": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=%27+OR+%271%27%3D%271"
+    },
+    "write_operation": false,
+    "observation": "NOT_CONFIRMED: local endpoint unavailable or request failed; no POC success asserted"
+  },
+  {
+    "run_id": "INJ_SQLI_IGNORE_DEF",
+    "poc_executed": false,
+    "target": "http://127.0.0.1:4280/lab_cases/S001/index.php",
+    "normal": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=Alice"
+    },
+    "test": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=%27+OR+%271%27%3D%271"
+    },
+    "write_operation": false,
+    "observation": "NOT_CONFIRMED: local endpoint unavailable or request failed; no POC success asserted"
+  },
+  {
+    "run_id": "INJ_SQLI_SAFE_BASE",
+    "poc_executed": false,
+    "target": "http://127.0.0.1:4280/lab_cases/S001/index.php",
+    "normal": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=Alice"
+    },
+    "test": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=%27+OR+%271%27%3D%271"
+    },
+    "write_operation": false,
+    "observation": "NOT_CONFIRMED: local endpoint unavailable or request failed; no POC success asserted"
+  },
+  {
+    "run_id": "INJ_SQLI_SAFE_DEF",
+    "poc_executed": false,
+    "target": "http://127.0.0.1:4280/lab_cases/S001/index.php",
+    "normal": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=Alice"
+    },
+    "test": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=%27+OR+%271%27%3D%271"
+    },
+    "write_operation": false,
+    "observation": "NOT_CONFIRMED: local endpoint unavailable or request failed; no POC success asserted"
+  },
+  {
+    "run_id": "INJ_SQLI_LEAK_BASE",
+    "poc_executed": false,
+    "target": "http://127.0.0.1:4280/lab_cases/S001/index.php",
+    "normal": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=Alice"
+    },
+    "test": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=%27+OR+%271%27%3D%271"
+    },
+    "write_operation": false,
+    "observation": "NOT_CONFIRMED: local endpoint unavailable or request failed; no POC success asserted"
+  },
+  {
+    "run_id": "INJ_SQLI_LEAK_DEF",
+    "poc_executed": false,
+    "target": "http://127.0.0.1:4280/lab_cases/S001/index.php",
+    "normal": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=Alice"
+    },
+    "test": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=%27+OR+%271%27%3D%271"
+    },
+    "write_operation": false,
+    "observation": "NOT_CONFIRMED: local endpoint unavailable or request failed; no POC success asserted"
+  },
+  {
+    "run_id": "INJ_SQLI_DIVERT_BASE",
+    "poc_executed": false,
+    "target": "http://127.0.0.1:4280/lab_cases/S001/index.php",
+    "normal": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=Alice"
+    },
+    "test": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=%27+OR+%271%27%3D%271"
+    },
+    "write_operation": false,
+    "observation": "NOT_CONFIRMED: local endpoint unavailable or request failed; no POC success asserted"
+  },
+  {
+    "run_id": "INJ_SQLI_DIVERT_DEF",
+    "poc_executed": false,
+    "target": "http://127.0.0.1:4280/lab_cases/S001/index.php",
+    "normal": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=Alice"
+    },
+    "test": {
+      "status": null,
+      "contains": {
+        "Alice": false,
+        "Bob": false,
+        "Carol": false
+      },
+      "url": "http://127.0.0.1:4280/lab_cases/S001/index.php?name=%27+OR+%271%27%3D%271"
+    },
+    "write_operation": false,
+    "observation": "NOT_CONFIRMED: local endpoint unavailable or request failed; no POC success asserted"
+  }
+]

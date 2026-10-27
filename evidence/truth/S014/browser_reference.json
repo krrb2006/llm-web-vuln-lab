@@ -1,0 +1,50 @@
+{
+  "sample_id": "S014",
+  "checked_at_utc": "2026-10-19T07:49:39Z",
+  "browser": {
+    "name": "Edge",
+    "version": "155.0.4283.45",
+    "fresh_temporary_profile_per_request": true
+  },
+  "source": {
+    "c_commit": "6a746b2f1a84efcd5c1df0203a335bab8df3c918",
+    "source_path": "dataset/raw/S014/index.php",
+    "source_sha256": "c098e3db8a9e03e3b6e85d09ec545ebf7f7d974a134866839e4ccd862b7c78ac",
+    "local_sha256": "c098e3db8a9e03e3b6e85d09ec545ebf7f7d974a134866839e4ccd862b7c78ac",
+    "container_sha256": "c098e3db8a9e03e3b6e85d09ec545ebf7f7d974a134866839e4ccd862b7c78ac"
+  },
+  "normal": {
+    "request_path_query": "/lab_cases/S014/index.php?q=hello",
+    "http_status": 200,
+    "rendered_dom": "<!DOCTYPE html>\r\n<html lang=\"zh-CN\"><head>\r\n<meta charset=\"utf-8\">\r\n<title>教学搜索</title>\r\n</head>\r\n<body>\r\n<h1>搜索</h1>\r\n<p>搜索词：hello</p>\r\n\r\n\r\n</body></html>\r\n",
+    "dom": {
+      "html_data_lab_xss": null,
+      "script_element_count": 0,
+      "marker_script_element_present": false,
+      "paragraph_text": [
+        "搜索词：hello"
+      ],
+      "q_input_value": null
+    }
+  },
+  "marker": {
+    "request_path_query": "/lab_cases/S014/index.php?q=%3Cscript%3Edocument.documentElement.dataset.labXss%3D%27yes%27%3C%2Fscript%3E",
+    "http_status": 200,
+    "rendered_dom": "<!DOCTYPE html>\r\n<html lang=\"zh-CN\"><head>\r\n<meta charset=\"utf-8\">\r\n<title>教学搜索</title>\r\n</head>\r\n<body>\r\n<h1>搜索</h1>\r\n<p>搜索词：&lt;script&gt;document.documentElement.dataset.labXss='yes'&lt;/script&gt;</p>\r\n\r\n\r\n</body></html>\r\n",
+    "dom": {
+      "html_data_lab_xss": null,
+      "script_element_count": 0,
+      "marker_script_element_present": false,
+      "paragraph_text": [
+        "搜索词：<script>document.documentElement.dataset.labXss='yes'</script>"
+      ],
+      "q_input_value": null
+    }
+  },
+  "observations": {
+    "normal_business_observed": true,
+    "normal_dom_marker_present": false,
+    "marker_dom_marker_present": false
+  },
+  "note": "Observed DOM only; C review is required before any ground_truth update."
+}

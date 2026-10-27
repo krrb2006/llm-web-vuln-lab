@@ -1,0 +1,11 @@
+{
+  "sample_id": "S001",
+  "context": "PHP + MariaDB（MySQLi 接口）。GET 参数 name 用于查询教学表 lab_people（id INT 主键、name VARCHAR(80)，utf8mb4，预置 1 Alice / 2 Bob / 3 Carol）。公共连接文件提供已连接的 mysqli 变量 $db；本输入只审计当前页面的查询路径。结果字段按 HTML 正文转义输出。无需登录；实际容器运行和数据库初始化尚待 D 核验。",
+  "fragments": [
+    {
+      "file": "index.php",
+      "start": 1,
+      "end": 22
+    }
+  ]
+}

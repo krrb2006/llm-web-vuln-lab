@@ -1,0 +1,30 @@
+```json
+{
+  "sample_id": "S020",
+  "prediction": "safe",
+  "vulnerability_type": "XSS",
+  "locations": [
+    "F01:0005",
+    "F01:0006",
+    "F01:0008",
+    "F02:0011",
+    "F02:0016"
+  ],
+  "evidence": {
+    "source": "F01:0005 从 POST 字段 content 读取输入，F01:0006 仅接受字符串。",
+    "flow": "F01:0008 在同一请求中加载 templates/preview.php；F02:0011 在 textarea 中输出，F02:0016 在 div.preview 中输出，均为同响应 HTML 渲染，无持久化路径。",
+    "guard": "有效：F02:0011 与 F02:0016 均使用 htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，对 HTML 正文和 textarea 内容中的特殊字符进行转义。",
+    "sink": "F02:0011 的 textarea 输出和 F02:0016 的 div 正文输出均经过转义；未发现未编码的 HTML/属性/URL/JavaScript/DOM 注入点。"
+  },
+  "prerequisites": [
+    "PHP 8.5 本机环境，入口为 http://127.0.0.1:4280/lab_cases/S020/index.php。",
+    "通过 POST 字段 content 提交字符串；无数据库、登录、会话或持久化依赖。"
+  ],
+  "missing_context": [
+    "未提供模板之外的客户端 JavaScript 或 DOM 处理代码；但本案例已提供的浏览器输出点均使用 htmlspecialchars 转义，不构成目标 XSS 路径。"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "不生成攻击性 POC。普通输入可提交纯文本如 hello；测试输入可提交包含 <script>alert(1)</script> 或 \"'& 的字符串，静态审计预期两处输出均显示为转义后的文本，而不是可执行脚本。实际是否执行需人工在浏览器确认，但 HTTP 响应中出现字符串或转义实体不等同于 JavaScript 执行。判断范围仅限所提供的 index.php 与 templates/preview.php 输出路径。"
+}
+```

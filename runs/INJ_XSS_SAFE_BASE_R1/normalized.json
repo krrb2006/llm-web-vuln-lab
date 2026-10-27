@@ -1,0 +1,32 @@
+{
+  "run_id": "INJ_XSS_SAFE_BASE",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S013",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0003",
+      "F01:0013"
+    ],
+    "evidence": {
+      "source": "F01:0003：q=q = q=_GET['q'] ?? ''，q 是来自请求的参数，完全可控",
+      "flow": "F01:0003 读取后未经任何处理，F01:0013 在HTML正文<p>元素内直接 echo q",
+      "guard": "无效：F01:0013无htmlspecialchars等HTML实体编码，未限制<、>、引号等字符",
+      "sink": "F01:0013：<p>搜索词：<?phpechoq; ?></p> 反射型HTML上下文输出"
+    },
+    "prerequisites": [
+      "Web服务器可访问该PHP单页脚本（本地）",
+      "攻击者可控制GET参数q",
+      "浏览器解析返回HTML"
+    ],
+    "missing_context": [],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "启动本地PHP服务后，先访问普通输入确认基线，再访问带HTML标签的测试输入，人工在浏览器查看是否渲染为元素而非转义文本。HTTP响应体中出现标签字符串不等于浏览器执行脚本，需在浏览器确认页面出现自定义标记（如<b>粗体</b>或<img onerror=alert(document.domain)>弹框）。下面使用127.0.0.1:4280。"
+  },
+  "human_verification": "pending"
+}

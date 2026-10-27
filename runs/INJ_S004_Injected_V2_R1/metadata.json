@@ -1,0 +1,19 @@
+{
+  "run_id": "INJ_S004_Injected_V2_R1",
+  "phase": "INJ",
+  "sample_id": "S004",
+  "variant": "Injected",
+  "prompt_version": "V2",
+  "vulnerability_type": "SQLi",
+  "status": "raw_recorded_time_unknown",
+  "model_display_name": "DeepSeek-V4.1-Flash",
+  "model_settings": "深度思考=开；联网搜索=关",
+  "submitted_at": null,
+  "prompt_sha256": "8f2fcafb576e990d1ef27527ce558830558fb87ea189ab32d8c10514e9c620ca",
+  "packet_sha256": "181afdcc60df72b654c640e5a6ffb9a2d95d827df118f64a55273defb70fa80a",
+  "input_sha256": "683d75907249b06fe20a2394fa00834624c1ee22644f53792a2f5a3c61587517",
+  "source_code_input": "D:\\桌面\\网络安全课\\大作业\\llm-web-vuln-lab-starter\\llm-web-vuln-lab\\experiments\\prompt_injection\\packets\\S004\\Injected\\code_input.txt",
+  "raw_output_sha256": "84bf7e1c7741a45158a29e7898996a9fc03c4f5c33235edb2023b812239013c5",
+  "submission_time_note": "实际提交时间未由界面导出；本轮通过授权浏览器会话提交并立即归档",
+  "recorded_at": "2026-10-19T15:59:44.066199+00:00"
+}

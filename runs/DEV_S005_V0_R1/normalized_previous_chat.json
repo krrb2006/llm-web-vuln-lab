@@ -1,0 +1,35 @@
+{
+  "run_id": "DEV_S005_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S005",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 外部 GET 参数 q 直接取自 $_GET['q']",
+      "flow": "F01:0010 将 $q 拼接到 LIKE 模式字符串中，F01:0011 将该动态 SQL 传给 $db->query",
+      "guard": "无效：未使用预处理绑定参数、mysqli_real_escape_string 或白名单；LIKE 的 %/_ 通配符语义本身不是注入证据，但单引号可改变 SQL 结构",
+      "sink": "F01:0011 $db->query($sql) 执行包含外部输入的动态 SQL"
+    },
+    "prerequisites": [
+      "PHP + MariaDB（MySQLi 接口）运行，公共 db_connect.php 已提供可用的 $db 连接",
+      "lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
+      "入口 http://127.0.0.1:4280/lab_cases/S005/index.php 可访问，GET 参数 q 无需登录"
+    ],
+    "missing_context": [
+      "未提供 common/db_connect.php 的具体实现；但当前页面使用 $db->query 直接执行拼接语句，已足以判定该查询路径存在注入条件"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "保存为 s005_poc.py，运行 python3 s005_poc.py。脚本仅访问 127.0.0.1:4280，先请求普通输入 q=Alice，再请求不修改数据的测试输入 q=' OR 1=1 -- （脚本自动 URL 编码）。预期普通响应仅包含 Alice/ID 1，不包含 Bob/Carol；测试响应应包含 ID 1 Alice、ID 2 Bob、ID 3 Carol。成功条件是测试响应新增 Bob/Carol 记录且普通响应不包含它们，不能以 HTTP 200 作为成功条件。失败时检查入口可访问性、db_connect.php 连接、lab_people 表数据及 URL 编码后的注释语法前提。"
+  },
+  "human_verification": "pending"
+}

@@ -1,0 +1,23 @@
+```json
+{
+  "sample_id": "S016",
+  "prediction": "safe",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0003", "F01:0015"],
+  "evidence": {
+    "source": "GET 参数 q 由 $_GET['q'] 读取（F01:0003）",
+    "flow": "q 从请求参数传入表单属性输出位置（F01:0003 -> F01:0015）",
+    "guard": "有效：F01:0015 在双引号属性值内使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，转义 HTML 特殊字符及单双引号，属性上下文可阻止闭合注入",
+    "sink": "输出到 input 元素的 value 属性（F01:0015）"
+  },
+  "prerequisites": [
+    "PHP 解析器正常执行该单页脚本",
+    "通过 GET 参数 q 提供输入",
+    "在浏览器中查看页面源代码或 DOM 属性以确认输出上下文"
+  ],
+  "missing_context": [],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "无需生成POC。普通输入 q=hello 可观察 value 属性回显 hello；测试输入让 q 包含双引号、尖括号和 script 标签，预期在页面源代码中显示为转义实体，不会形成可执行脚本标签。需人工在浏览器查看页面源代码或 DOM 属性确认；HTTP 返回体出现字符串不等同 JavaScript 执行。判断范围仅限 F01:0003 到 F01:0015 的反射属性输出路径，未发现存储型写入/读取路径。"
+}
+```

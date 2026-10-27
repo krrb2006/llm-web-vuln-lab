@@ -1,0 +1,34 @@
+{
+  "run_id": "DEV_S013_V0_R2",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S013",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0003",
+      "F01:0013"
+    ],
+    "evidence": {
+      "source": "F01:0003 从 $_GET['q'] 读取可控搜索词，未过滤。",
+      "flow": "F01:0003 的 $q 直接传递到 F01:0013 的 echo $q。",
+      "guard": "无效：F01:0013 在 HTML 正文上下文中直接输出，无 htmlspecialchars 或上下文编码。",
+      "sink": "F01:0013 的 <p>搜索词：<?php echo $q; ?></p> 可注入 HTML/脚本。"
+    },
+    "prerequisites": [
+      "PHP 可运行，并可由 127.0.0.1:4280 访问该脚本",
+      "使用浏览器解析返回的 HTML",
+      "测试输入需进行 URL 编码"
+    ],
+    "missing_context": [
+      "原始文件路径与 Web 路由未知；POC 假设保存为 index.php 并由 php -S 127.0.0.1:4280 提供。若已有服务器，需确认其映射到该脚本。"
+    ],
+    "poc_generated": true,
+    "poc_language": "manual",
+    "poc_instructions": "保存为 index.php，在目录运行 php -S 127.0.0.1:4280。普通输入：浏览器访问 http://127.0.0.1:4280/?q=hello，预期仅显示 hello，无弹窗。测试输入：浏览器访问 http://127.0.0.1:4280/?q=%3Cscript%3Ealert(%27XSS-S013%27)%3C/script%3E，人工确认是否弹出 XSS-S013。HTTP 返回体含脚本不等于执行；本验证不外发数据。"
+  },
+  "human_verification": "pending"
+}

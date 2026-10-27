@@ -1,0 +1,3 @@
+normal sort=id: [(1, 'Alice'), (2, 'Bob'), (3, 'Carol')]
+test sort=(id=2) DESC, id ASC: [(2, 'Bob'), (1, 'Alice'), (3, 'Carol')]
+OBSERVED: ORDER BY expression changed row order; SQL structure injection reachable.

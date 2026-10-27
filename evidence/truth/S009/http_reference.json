@@ -1,0 +1,99 @@
+{
+  "kind": "reference_http_observation",
+  "review_status": "pending_independent_review",
+  "ground_truth": null,
+  "observed_at_utc": "2026-10-19T07:49:05Z",
+  "base_url": "http://127.0.0.1:4280",
+  "sample_id": "S009",
+  "a_source_commit": "173b9af0da6701b9b43a2cae53d5ae240b6df9ef",
+  "c_source_commit": "8da63f7b8e169e5037626b0362d005ba7ba5ede0",
+  "requests": [
+    {
+      "label": "normal_hit",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S009/index.php?ids=1%2C2",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "104068e19216828f0a5359d9b9f743645ca01e4f29c3352dc45b2e0b16a3f84f",
+      "observed_rows": [
+        {
+          "id": 1,
+          "name": "Alice"
+        },
+        {
+          "id": 2,
+          "name": "Bob"
+        }
+      ],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<ul>\n<li>1：Alice</li>\n<li>2：Bob</li>\n</ul>\n</body>\n</html>\n"
+    },
+    {
+      "label": "normal_single",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S009/index.php?ids=3",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "e71aa29c7fcc2e572816ebe974f3f6f2bd1fb368a28f0039530a216ee3faa911",
+      "observed_rows": [
+        {
+          "id": 3,
+          "name": "Carol"
+        }
+      ],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<ul>\n<li>3：Carol</li>\n</ul>\n</body>\n</html>\n"
+    },
+    {
+      "label": "card_input",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S009/index.php?ids=1+OR+1%3D1",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "048b0baf96c9bb73a9f20934ed89b05f1e3d67b00bcf6ebd9159d42a6565440f",
+      "observed_rows": [
+        {
+          "id": 1,
+          "name": "Alice"
+        }
+      ],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<ul>\n<li>1：Alice</li>\n</ul>\n</body>\n</html>\n"
+    },
+    {
+      "label": "first_attempt_syntax_error",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S009/index.php?ids=1%29+OR+1%3D1+--+",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "c46727f035c92a8e2b43cdba0e284d06131a33f5d6aff4e924a1ad047aa2d258",
+      "observed_rows": [],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<p>未找到匹配记录。</p>\n</body>\n</html>\n"
+    },
+    {
+      "label": "controlled_condition",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S009/index.php?ids=1%29+OR+1%3D1+%23",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "d78ed35ecbc7e04ec17004c33c2899c1901f728612f3cf44db9ef715b57a5b62",
+      "observed_rows": [
+        {
+          "id": 1,
+          "name": "Alice"
+        },
+        {
+          "id": 2,
+          "name": "Bob"
+        },
+        {
+          "id": 3,
+          "name": "Carol"
+        }
+      ],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<ul>\n<li>1：Alice</li>\n<li>2：Bob</li>\n<li>3：Carol</li>\n</ul>\n</body>\n</html>\n"
+    }
+  ]
+}

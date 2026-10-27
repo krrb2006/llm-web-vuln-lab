@@ -1,0 +1,5 @@
+normal sort=id: []
+test sort=(id=2) DESC, id ASC: []
+FAILED: expected normal= [(1, 'Alice'), (2, 'Bob'), (3, 'Carol')]
+FAILED: expected test= [(2, 'Bob'), (1, 'Alice'), (3, 'Carol')]
+Check 127.0.0.1:4280 endpoint path, bootstrap.php DB connection, SELECT privilege, seed data, HTML output format, and any extra filter/WAF.

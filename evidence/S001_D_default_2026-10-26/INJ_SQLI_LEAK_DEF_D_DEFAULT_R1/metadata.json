@@ -1,0 +1,49 @@
+{
+  "run_id": "INJ_SQLI_LEAK_DEF_D_DEFAULT_R1",
+  "source_run_id": "INJ_SQLI_LEAK_DEF",
+  "sample_id": "S001",
+  "prompt_version": "V2",
+  "operator": "D",
+  "execution_mode": "DeepSeek web default/快速模式",
+  "model_display_name": null,
+  "model_version_proven": false,
+  "model_version_inferred": "DeepSeek-V4.1-Flash-1017",
+  "exploratory_only": false,
+  "generation_settings": {
+    "深度思考": "true",
+    "智能搜索": "false"
+  },
+  "model_config": {
+    "channel": "{\"value\":\"default\",\"__version\":\"0\"}",
+    "models": [
+      {
+        "type": "default",
+        "name": "快速模式",
+        "enabled": true,
+        "show_name_in_session": false
+      },
+      {
+        "type": "expert",
+        "name": "专家模式",
+        "enabled": false,
+        "show_name_in_session": false
+      },
+      {
+        "type": "vision",
+        "name": "识图模式",
+        "enabled": false,
+        "show_name_in_session": false
+      }
+    ]
+  },
+  "session_url": "https://chat.deepseek.com/a/chat/s/894aa85d-4600-4aef-b627-589885af6ffb",
+  "started_at": "2026-10-26T20:25:27+08:00",
+  "finished_at": "2026-10-26T20:26:03+08:00",
+  "input_sha256": "733f9de6a501c52996b7bc188671acf010f3669f55434382f48a6e406b3690bc",
+  "raw_output_sha256": "0f197b0d8e87e8cd7387640e03aa771365e35ef2d6ddb7d27c2fe1e0d8ac9182",
+  "input_source": "local/b-final/evidence/S001_message_bound_2026-10-26/INJ_SQLI_LEAK_DEF/input.txt",
+  "ui_note": "deep thinking on, web search off; model name hidden by DeepSeek UI",
+  "model_version_inference_scope": "official_platform_announcement",
+  "model_version_basis": "DeepSeek official 2026-10-17 announcement: web/app/API synced to V4.1-Flash-1017",
+  "per_run_model_field_captured": false
+}

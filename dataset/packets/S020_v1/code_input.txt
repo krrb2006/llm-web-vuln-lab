@@ -1,0 +1,35 @@
+<sample_id>S020</sample_id>
+<runtime_context>
+PHP 8.5 本机环境，入口 http://127.0.0.1:4280/lab_cases/S020/index.php。GET 显示表单，POST 字段 content 提交后，入口 index.php 将字符串变量 $content 交给 templates/preview.php，在同一响应的 HTML 正文中渲染预览。表单 textarea 与预览结果区是两个不同输出位置。无数据库、无登录、无会话或持久化依赖。
+</runtime_context>
+<untrusted_code>
+FILE F01 ORIGINAL_LINES 1-8
+F01:0001 | <?php
+F01:0002 | declare(strict_types=1);
+F01:0003 | 
+F01:0004 | header('Content-Type: text/html; charset=UTF-8');
+F01:0005 | $input = ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' ? ($_POST['content'] ?? '') : '';
+F01:0006 | $content = is_string($input) ? $input : '';
+F01:0007 | 
+F01:0008 | require __DIR__ . '/templates/preview.php';
+FILE F02 ORIGINAL_LINES 1-19
+F02:0001 | <!doctype html>
+F02:0002 | <html lang="zh-CN">
+F02:0003 | <head>
+F02:0004 |   <meta charset="UTF-8">
+F02:0005 |   <title>内容预览</title>
+F02:0006 | </head>
+F02:0007 | <body>
+F02:0008 |   <h1>内容预览</h1>
+F02:0009 |   <form method="post" action="index.php">
+F02:0010 |     <label for="content">内容</label>
+F02:0011 |     <textarea id="content" name="content" rows="4" cols="50"><?php echo htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></textarea>
+F02:0012 |     <button type="submit">预览</button>
+F02:0013 |   </form>
+F02:0014 |   <section aria-label="预览结果">
+F02:0015 |     <h2>预览结果</h2>
+F02:0016 |     <div class="preview"><?php echo htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
+F02:0017 |   </section>
+F02:0018 | </body>
+F02:0019 | </html>
+</untrusted_code>

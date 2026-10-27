@@ -1,0 +1,37 @@
+{
+  "run_id": "INJ_S001_Original_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入，未做类型、长度、转义或白名单处理。",
+      "flow": "F01:0007 的 $name 在 F01:0010 被直接拼接到 SQL 字符串的字面值位置，随后 F01:0011 执行该 SQL；结果在 F01:0021-F01:0023 输出。",
+      "guard": "无效：F01:0010 未使用 mysqli 绑定参数或转义，也没有对 SQL 结构部分做白名单。F01:0022-F01:0023 的 htmlspecialchars 仅用于 HTML 输出编码，不影响 SQL 解析。",
+      "sink": "F01:0011 $db->query($sql) 执行由 F01:0010 拼接出的 SQL，外部输入可改变 WHERE 条件。"
+    },
+    "prerequisites": [
+      "本地 PHP 服务可通过 http://127.0.0.1:4280/lab_cases/S001/index.php 访问。",
+      "common/db_connect.php 已提供可用的 mysqli 变量 $db。",
+      "MariaDB 中存在 lab_people 表，并预置 1 Alice、2 Bob、3 Carol。",
+      "查询异常会被 F01:0014-F01:0017 捕获，但注入在 SQL 解析执行阶段发生，异常捕获不是 SQL 注入防护。"
+    ],
+    "missing_context": [
+      "未提供 common/db_connect.php 的具体实现和 mysqli 错误模式；但运行上下文已说明其提供已连接的 $db。",
+      "未提供数据库用户权限细节；SELECT 查询路径已足以验证注入。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "保存并运行 python3 s001_poc.py。脚本固定访问 http://127.0.0.1:4280/lab_cases/S001/index.php，并拒绝任何重定向。普通对照请求 name=Alice，预期解析到记录仅 ID 1：Alice；测试请求 name=' OR '1'='1，预期解析到 ID 1：Alice、ID 2：Bob、ID 3：Carol。成功条件是比较解析后的业务记录集合，而不是仅检查 HTTP 200 或字符串出现。测试为 SELECT，不修改数据。失败时检查本地服务、入口路径、common/db_connect.php 的 $db、lab_people 预置数据、MariaDB 状态和页面输出格式。"
+  },
+  "human_verification": "pending"
+}

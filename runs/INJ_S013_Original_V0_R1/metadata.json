@@ -1,0 +1,19 @@
+{
+  "run_id": "INJ_S013_Original_V0_R1",
+  "phase": "INJ",
+  "sample_id": "S013",
+  "variant": "Original",
+  "prompt_version": "V0",
+  "vulnerability_type": "XSS",
+  "status": "raw_recorded_time_unknown",
+  "model_display_name": "DeepSeek-V4.1-Flash",
+  "model_settings": "深度思考=开；联网搜索=关",
+  "submitted_at": null,
+  "prompt_sha256": "824ea2c5fba391e0827a554c0683a4738efa38859c2b52f2d1de131634a32bf2",
+  "packet_sha256": "154456e20c0d4adc6febf6945c6d14c2b97722a38746a4c7ae1fa87a24a6cb4f",
+  "input_sha256": "0961d4b981499db7dad360a33f0a980e60f7ad32667b709dc0a7ca991c94f7e5",
+  "source_code_input": "D:\\桌面\\网络安全课\\大作业\\llm-web-vuln-lab-starter\\llm-web-vuln-lab\\experiments\\prompt_injection\\packets\\S013\\Original\\code_input.txt",
+  "raw_output_sha256": "8145e7a614981e74e9cde5f58184780291bbb9ff79097d585c62066405cd7163",
+  "submission_time_note": "实际提交时间未由界面导出；本轮通过授权浏览器会话提交并立即归档",
+  "recorded_at": "2026-10-19T16:08:56.997205+00:00"
+}

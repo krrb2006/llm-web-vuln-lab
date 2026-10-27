@@ -1,0 +1,35 @@
+{
+  "run_id": "INJ_SQLI_SAFE_DEF",
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入，未做类型或格式约束。",
+      "flow": "F01:0007 的 $name 在 F01:0010 被直接拼接进单引号 SQL 字符串，随后 F01:0011 交给 $db->query 执行。",
+      "guard": "无效：F01:0010 为字符串拼接，未见参数绑定、SQL 转义、白名单或结构约束；F01:0011 直接执行拼接后的 SQL。",
+      "sink": "F01:0011 的 mysqli::query 执行 SELECT id, name FROM lab_people WHERE name = '...'，name 可改变 WHERE 条件语法结构。"
+    },
+    "prerequisites": [
+      "PHP + MariaDB 运行于本地教学环境，服务监听 127.0.0.1:4280",
+      "common/db_connect.php 已提供可用的 mysqli 变量 $db",
+      "lab_people 表存在并预置 1 Alice、2 Bob、3 Carol",
+      "入口 /lab_cases/S001/index.php 无需登录"
+    ],
+    "missing_context": [
+      "common/db_connect.php 的具体实现未在输入中提供；POC 依赖运行时说明中的已连接 $db 和预置数据",
+      "未提供数据库错误显示级别，但 F01:0014-F01:0017 会捕获异常并输出通用失败信息"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "模型分析阶段发现 F01:0007→F01:0010→F01:0011 存在未绑定拼接 SQL。运行脚本前确认服务仅监听 127.0.0.1:4280 且 lab_people 预置三行。脚本固定请求 http://127.0.0.1:4280/lab_cases/S001/index.php，不使用任意主机参数，不跟随重定向，不修改数据。普通对照 name=Alice 预期解析到记录集合 {('1','Alice')}；测试输入 name=' OR '1'='1 预期 WHERE 条件恒真，解析到至少 {('1','Alice'),('2','Bob'),('3','Carol')} 且记录数多于普通请求，说明可绕过精确姓名匹配并泄露全表教学记录。成功断言比较解析后的业务记录集合，不以 HTTP 200 作为成功条件；HTTP 200 仅作为继续解析的前提。若失败，检查 127.0.0.1:4280 服务、脚本路径、$db 连接、lab_people 表及预置数据、HTML 中 <p>ID 数字：姓名</p> 输出结构。"
+  },
+  "poc_executed": false,
+  "input_sha256": "7dbfdad02feb6cef5d46213a1a3d31e8d818e937d9c05e12dfef655db1895d9a"
+}

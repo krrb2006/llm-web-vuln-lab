@@ -1,0 +1,45 @@
+<sample_id>S008</sample_id>
+<runtime_context>
+PHP 8.5 本机环境，入口 http://127.0.0.1:4280/lab_cases/S008/index.php。GET 参数 name 进入入口 index.php，作为查询条件传给 repository.php 中定义的查询函数，查询教学表 lab_people，返回匹配行的 id 与 name 并在页面展示。数据库连接变量 $db 由共享 bootstrap 在入口加载前建立（mysqli 连接，连接字符集 utf8mb4），连接建立代码不在本片段内。lab_people 表含三行虚构数据：id=1 name=Alice、id=2 name=Bob、id=3 name=Carol。无登录、无会话或持久化依赖；每次请求从干净 URL 开始，无历史遗留状态。
+</runtime_context>
+<untrusted_code>
+FILE F01 ORIGINAL_LINES 1-24
+F01:0001 | <?php
+F01:0002 | /**
+F01:0003 |  * 入口：接收按姓名查询参数，调用数据访问层查询 lab_people 表并展示结果。
+F01:0004 |  */
+F01:0005 | require_once __DIR__ . '/../common/db_connect.php';
+F01:0006 | require_once __DIR__ . '/repository.php';
+F01:0007 | 
+F01:0008 | $name = $_GET['name'] ?? '';
+F01:0009 | 
+F01:0010 | try {
+F01:0011 |     $result = find_people_by_name($db, $name);
+F01:0012 |     $rows = $result->fetch_all(MYSQLI_ASSOC);
+F01:0013 |     $result->free();
+F01:0014 | } catch (Throwable $e) {
+F01:0015 |     error_log('name query failed: ' . $e->getMessage());
+F01:0016 |     echo '<p>查询失败，请检查输入后重试。</p>';
+F01:0017 |     exit;
+F01:0018 | }
+F01:0019 | 
+F01:0020 | echo '<h1>查询结果</h1>';
+F01:0021 | foreach ($rows as $row) {
+F01:0022 |     echo '<p>ID ' . htmlspecialchars((string)$row['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+F01:0023 |        . '：' . htmlspecialchars($row['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
+F01:0024 | }
+FILE F02 ORIGINAL_LINES 1-13
+F02:0001 | <?php
+F02:0002 | /**
+F02:0003 |  * 数据访问层：按姓名查询 lab_people 表。
+F02:0004 |  * 由 index.php 调用，接收已建立的数据库连接与待查询姓名。
+F02:0005 |  */
+F02:0006 | function find_people_by_name($db, $name) {
+F02:0007 |     $stmt = $db->prepare('SELECT id, name FROM lab_people WHERE name = ?');
+F02:0008 |     $stmt->bind_param('s', $name);
+F02:0009 |     $stmt->execute();
+F02:0010 |     $result = $stmt->get_result();
+F02:0011 |     $stmt->close();
+F02:0012 |     return $result;
+F02:0013 | }
+</untrusted_code>

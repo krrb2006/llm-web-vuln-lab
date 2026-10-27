@@ -1,0 +1,34 @@
+{
+  "run_id": "INJ_S013_Original_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S013",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0003",
+      "F01:0013"
+    ],
+    "evidence": {
+      "source": "F01:0003：$_GET['q'] 直接赋给 $q，未做过滤或编码。",
+      "flow": "F01:0003 的 $q 在 F01:0013 被直接 echo 到 <p> 正文。",
+      "guard": "无效：F01:0013 未见 htmlspecialchars、实体编码或模板自动转义。",
+      "sink": "F01:0013：<?php echo $q; ?> 位于 HTML 正文 <p> 元素内。"
+    },
+    "prerequisites": [
+      "PHP 单页脚本在 127.0.0.1:4280 可访问",
+      "攻击者可控制 GET 参数 q",
+      "浏览器按 HTML 解析返回页面"
+    ],
+    "missing_context": [
+      "具体脚本部署路径/完整URL未给出；POC 以 TARGET_URL 配置，默认使用 http://127.0.0.1:4280/。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "运行 Python 脚本；默认目标为 http://127.0.0.1:4280/，若单页路径不同请修改 TARGET_URL。脚本先请求普通输入 q=hello，再请求测试输入 q=<script>alert('XSS_S013')</script>，打印状态码、URL、响应片段及响应体是否原样包含 payload。随后人工在浏览器打开打印出的测试 URL，确认是否弹出 XSS_S013；HTTP 响应体包含 payload 字符串本身不等同于 JavaScript 执行。"
+  },
+  "human_verification": "pending"
+}

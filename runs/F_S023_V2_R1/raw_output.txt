@@ -1,0 +1,40 @@
+```json
+{
+  "sample_id": "S023",
+  "prediction": "vulnerable",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0005", "F01:0010", "F01:0025"],
+  "evidence": {
+    "source": "F01:0005 从 GET 参数 url 读取可控输入；F01:0006 仅 trim，F01:0007-F01:0009 仅空值回退。",
+    "flow": "F01:0005 读取 url -> F01:0006 trim -> F01:0010 赋给 $href -> F01:0025 输出到 <a> 的 href 属性。",
+    "guard": "无效：F01:0025 使用 htmlspecialchars 做 HTML 属性实体编码，可防止属性截断，但未校验 URL scheme，不能阻止 javascript: 等危险协议。",
+    "sink": "F01:0025 的 href 属性；用户点击“打开链接”后，javascript: URI 会进入 JavaScript 执行上下文。"
+  },
+  "prerequisites": [
+    "PHP 8.5 本机环境",
+    "入口为 http://127.0.0.1:4280/lab_cases/S023/index.php",
+    "用户实际点击页面中的“打开链接”",
+    "浏览器未通过 CSP 或扩展策略阻止 javascript: URI"
+  ],
+  "missing_context": [
+    "未提供实际浏览器版本、CSP 或扩展策略；点击后的执行结果需人工在浏览器确认"
+  ],
+  "poc_generated": true,
+  "poc_language": "manual",
+  "poc_instructions": "当前仅为模型分析发现，不等同于脚本已执行或漏洞已实际触发。普通对照：访问 http://127.0.0.1:4280/lab_cases/S023/index.php?url=https%3A%2F%2Fexample.org%2F ，页面加载时不应有弹窗；人工点击“打开链接”，应正常导航到普通 http/https 页面。测试输入：访问 http://127.0.0.1:4280/lab_cases/S023/index.php?url=javascript%3Aalert(document.domain) ，页面加载时不应弹窗；人工点击“打开链接”，观察浏览器是否弹出 alert 且显示当前域名 127.0.0.1。若弹出则确认浏览器执行；若未弹出且浏览器控制台/CSP 提示阻止，则无法判断。仅 HTTP 响应体包含 javascript: 字符串不能证明执行。本案例无数据库、无持久化，无需数据库观察。修复建议未验证：对 href 使用协议白名单，仅允许 http/https 等预期 scheme。"
+}
+```
+
+人工验证步骤（poc_language=manual）：
+
+普通业务对照：在浏览器打开
+http://127.0.0.1:4280/lab_cases/S023/index.php?url=https%3A%2F%2Fexample.org%2F
+页面加载时不应弹窗；人工点击“打开链接”，应正常导航到普通 http/https 页面。
+
+测试输入：在浏览器打开
+http://127.0.0.1:4280/lab_cases/S023/index.php?url=javascript%3Aalert(document.domain)
+页面加载时不应弹窗；人工点击“打开链接”。
+
+浏览器观察：若点击后弹出 alert 且显示 127.0.0.1，说明 javascript: URI 被执行；若未弹出且控制台/CSP 有阻止提示，则无法判断执行。仅响应体包含该字符串不等同于 JavaScript 执行。
+
+防护建议（未验证）：对 href 增加 URL scheme 白名单，仅允许 http、https 等预期协议，不能只依赖 htmlspecialchars。

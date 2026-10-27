@@ -1,0 +1,13 @@
+{
+  "kind": "independent_source_delta_review",
+  "sample_id": "S011",
+  "reviewer": "A",
+  "reviewed_at": "2026-10-17",
+  "runtime_evidence_source_commit": "a04a83218e7999acd03d8a20422cf4b405903479",
+  "runtime_evidence_sha256": "0ec694a2296ee71631b66f99b571680304e43a83f830611bf5fe038a918ee6f6",
+  "current_sha256": "3028eb9cd8c08e3678f586cdb417c22957fd156c5f757f8ad9b3aee2c97b6ecb",
+  "delta_scope": "The query block changed from result===false handling to try/catch(Throwable); SQL construction, execution reachability, and output rendering are unchanged.",
+  "security_flow_unchanged": true,
+  "new_runtime_execution_claimed": false,
+  "ground_truth": true
+}

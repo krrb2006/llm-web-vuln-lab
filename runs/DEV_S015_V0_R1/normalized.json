@@ -1,0 +1,35 @@
+{
+  "run_id": "DEV_S015_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S015",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0003",
+      "F01:0015"
+    ],
+    "evidence": {
+      "source": "F01:0003 读取 $_GET['q'] 到变量 $q",
+      "flow": "F01:0003 的 $q 未经处理直接传到 F01:0015 输出",
+      "guard": "无效：F01:0015 直接 echo $q，缺少 htmlspecialchars/ENT_QUOTES 等属性上下文编码",
+      "sink": "F01:0015 在 input 的 value 属性中回显，可闭合属性并注入脚本"
+    },
+    "prerequisites": [
+      "PHP 解析执行该单页脚本",
+      "通过浏览器访问 127.0.0.1:4280 上实际入口",
+      "浏览器解析 HTML 与 JavaScript"
+    ],
+    "missing_context": [
+      "未给出 127.0.0.1:4280 上实际脚本入口路径",
+      "未提供浏览器实际执行确认"
+    ],
+    "poc_generated": true,
+    "poc_language": "manual",
+    "poc_instructions": "将 <实际脚本路径> 替换为 127.0.0.1:4280 上部署的入口。普通输入：GET http://127.0.0.1:4280/<实际脚本路径>?q=normalS015，页面 input 显示 normalS015，无弹窗/标记。测试输入：GET http://127.0.0.1:4280/<实际脚本路径>?q=%22%3E%3Cscript%3Ealert%28%27XSS_S015%27%29%3C%2Fscript%3E，在浏览器打开并人工确认是否弹出 XSS_S015。无需登录或写入；HTTP 返回体出现字符串不等同 JavaScript 执行。"
+  },
+  "human_verification": "pending"
+}

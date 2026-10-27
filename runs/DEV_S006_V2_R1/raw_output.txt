@@ -1,0 +1,26 @@
+```json
+{
+  "sample_id": "S006",
+  "prediction": "safe",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0009", "F01:0012", "F01:0013", "F01:0014"],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['q'] 读取外部输入；F01:0009 仅将其拼入 LIKE 模式值 '%' . $q . '%'。",
+    "flow": "F01:0007 -> F01:0009 -> F01:0013 bind_param('s', $pattern) -> F01:0014 execute；外部输入作为绑定值传递，未进入 SQL 文本。",
+    "guard": "有效：F01:0012 使用固定 SQL 文本和 ? 占位符，F01:0013 以字符串类型绑定 pattern；LIKE 中 % 和 _ 的通配符语义变化不构成 SQL 注入证据。",
+    "sink": "F01:0014 执行的是绑定后的固定 SELECT 语句；F01:0016 获取业务记录；F01:0027-F01:0028 对输出做 htmlspecialchars 转义。"
+  },
+  "prerequisites": [
+    "PHP + MariaDB（MySQLi 接口）运行环境",
+    "公共连接文件提供已连接的 mysqli 变量 $db",
+    "存在 lab_people 表及预置记录",
+    "通过 GET 参数 q 访问本地教学入口 http://127.0.0.1:4280/lab_cases/S006/index.php"
+  ],
+  "missing_context": [
+    "未提供 common/db_connect.php 的具体实现，但运行上下文声明其提供已连接的 $db；该缺失不影响当前 SQL 注入路径判定。"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "当前仅完成模型分析阶段，不生成攻击性 POC。判定为 safe：外部输入经 F01:0013 绑定为 LIKE 模式值，F01:0012 的 SQL 结构固定，未发现可达的 SQL 结构注入点。可做普通业务对照：请求 q=Alice 预期返回 ID 1 Alice；q=zzz 预期无匹配记录；q=% 可能因 LIKE 通配符返回全部记录，这是 LIKE 匹配语义而非 SQL 注入。若本地复核，仅允许目标 http://127.0.0.1:4280/lab_cases/S006/index.php，并比较解析后的实际业务记录，不以 HTTP 200 作为成功条件。防护建议：继续使用预处理绑定；若未来出现动态列名、排序表达式或 IN 列表等 SQL 结构部分，应使用严格白名单，不能仅依赖绑定值。"
+}
+```

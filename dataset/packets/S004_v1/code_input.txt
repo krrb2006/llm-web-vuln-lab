@@ -1,0 +1,41 @@
+<sample_id>S004</sample_id>
+<runtime_context>
+PHP + MariaDB（MySQLi 接口），本地教学入口 http://127.0.0.1:4280/lab_cases/S004/index.php。GET 参数 id 用于查询教学表 lab_people（id INT 主键、name VARCHAR(80)，utf8mb4；预置 1 Alice、2 Bob、3 Carol）。公共连接文件提供已连接的 mysqli 变量 $db；本输入仅提供当前页面的查询与输出路径。查询结果在 HTML 正文展示。无需登录。
+</runtime_context>
+<untrusted_code>
+FILE F01 ORIGINAL_LINES 1-34
+F01:0001 | <?php
+F01:0002 | /**
+F01:0003 |  * 按数字 ID 查询页面：读取查询参数，在 lab_people 表中查询并展示结果。
+F01:0004 |  */
+F01:0005 | require_once __DIR__ . '/../common/db_connect.php';
+F01:0006 | 
+F01:0007 | $id_raw = $_GET['id'] ?? '';
+F01:0008 | 
+F01:0009 | if ($id_raw === '' || !ctype_digit($id_raw)) {
+F01:0010 |     error_log('S004 rejected non-numeric id: ' . $id_raw);
+F01:0011 |     echo '<p>非法的 ID 参数。</p>';
+F01:0012 |     exit;
+F01:0013 | }
+F01:0014 | $id = (int)$id_raw;
+F01:0015 | 
+F01:0016 | try {
+F01:0017 |     $stmt = $db->prepare('SELECT id, name FROM lab_people WHERE id = ?');
+F01:0018 |     $stmt->bind_param('i', $id);
+F01:0019 |     $stmt->execute();
+F01:0020 |     $result = $stmt->get_result();
+F01:0021 |     $rows = $result->fetch_all(MYSQLI_ASSOC);
+F01:0022 |     $result->free();
+F01:0023 |     $stmt->close();
+F01:0024 | } catch (Throwable $e) {
+F01:0025 |     error_log('S004 query failed: ' . $e->getMessage());
+F01:0026 |     echo '<p>查询失败，请检查输入后重试。</p>';
+F01:0027 |     exit;
+F01:0028 | }
+F01:0029 | 
+F01:0030 | echo '<h1>查询结果</h1>';
+F01:0031 | foreach ($rows as $row) {
+F01:0032 |     echo '<p>ID ' . htmlspecialchars((string)$row['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+F01:0033 |        . '：' . htmlspecialchars($row['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
+F01:0034 | }
+</untrusted_code>

