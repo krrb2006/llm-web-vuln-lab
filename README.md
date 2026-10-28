@@ -2,43 +2,29 @@
 
 网络安全课程四人小组实验：面向 SQL 注入和 XSS 的提示词迭代及误漏报分析。
 
-**当前状态：项目已完成。24 个教学样本、12 个正式样本、36 条正式记录（36/36 reviewed）、26 条加分证据（26/26 reviewed）、22/22 单元测试、冻结检查 READY、严格提交审计 READY。**
-
-- 正式结果：V0/V1/V2 各 12 条，TP=6、FP=0、TN=6、FN=0，判定与定位准确率 100%。
-- 加分实验：Prompt Injection 16、Burp 联动 2、CTX 4、ADV 4。
-- 模型口径：DeepSeek 网页默认/快速模式；按官方 2026-10-17 公告映射为 `V4.1-Flash-1017`；单次 API/HAR 的 `model` 字段未捕获。
-- 复核口径：S001 8 条为 A 项目内自审，C 明确不把独立签字作为提交阻塞项；ADV 的 POC 标记 `not_run`，不冒充已触发。
-
-## 最终交付物
-
-- [完整版实验报告](docs/实验报告_完整版_2026-10-27.docx)
-- [比赛答辩 PPT](docs/答辩PPT_比赛答辩版_2026-10-27.pptx)
-- [口头报告执行文档（4人×1分钟 / 12页PPT脚本）](docs/口头报告_4人分工与12页PPT脚本_2026-10-28.docx)
-- [Q&A 收尾页（单页，插在第12页结论之后）](docs/PPT_收尾页_Q&A_2026-10-28.pptx)
-- [12页PPT逐页详细内容与截图（最终版）](docs/口头报告_12页PPT逐页详细内容与截图_最终版_2026-10-28.docx)
-- [正式统计结果](results/formal_eval_2026-10-19-v2/summary.md)
-- [模型口径说明](results/A_model_provenance_update_2026-10-26.md)
+**当前状态：24例源码、标准输入包和独立真值复核均已完成；B版唯一V2候选及S013—S016的4条DeepSeek V0原始记录已整合。V1/V2真实迭代、四人冻结签字和正式36条运行尚未完成，仓库不预填实测结论。**
 
 ## 从这里开始
 
-1. 先看[完整版实验报告](docs/实验报告_完整版_2026-10-27.docx)和[比赛答辩 PPT](docs/答辩PPT_比赛答辩版_2026-10-27.pptx)，了解实验设计与结论。
-2. 看[正式统计](results/formal_eval_2026-10-19-v2/summary.md)与 `runs/formal.json`，核对 36 条正式记录。
-3. 按 [D 环境手册](docs/D_环境与POC验证操作手册.md) 与 `environment/` 复现 Docker/DVWA 靶场。
-4. 运行 `check_freeze.py`、`audit_submission.py` 和单元测试复核最终状态。
+1. 阅读 [总执行手册](docs/00_总执行手册.md)，再阅读自己的手册。
+2. A 确定判定标准，B 准备 V0，C 整理首例源码，D 启动本地靶场。
+3. 全组先跑通一例 SQLi 和一例 XSS，再扩展到 24 个样本。
+4. 在开发集完成 V0 → V1 → V2 两轮迭代，冻结后完成 36 条正式记录。
+5. 用[高分冲刺路线与证据矩阵](docs/00_高分冲刺路线与证据矩阵.md)核对基础 80% 和加分 20% 的证据闭环。
 
 |成员|职责|操作文档|正式样本|记录数|
 |---|---|---|---|---|
 |A|判定、真值、指标与整合|[A 手册](docs/A_判定评估与整合操作手册.md)|S007、S020、S021|9|
 |B|Prompt、迭代与模型对照|[B 手册](docs/B_Prompt与模型对照操作手册.md)|S008、S019、S024|9|
 |C|样本、预处理与追溯|[C 手册](docs/C_样本与预处理操作手册.md)|S009、S012、S023|9|
-|D|环境、POC、Burp 与第二台电脑复现|[D 手册](docs/D_环境与POC验证操作手册.md)|S010、S011、S022|9|
+|D|环境、POC 与 Burp 联动|[D 手册](docs/D_环境与POC验证操作手册.md)|S010、S011、S022|9|
 
 ## 目录
 
 |目录|内容|
 |---|---|
 |docs/|总手册及 A/B/C/D 手册，Markdown 和 Word 版本|
-|prompts/|SQLi、XSS 各 V0/V1/V2；六份冻结 Prompt|
+|prompts/|SQLi、XSS 各 V0/V1/V2；初始候选文本，需真实迭代|
 |templates/|记录、审核、冻结、演示模板与计划清单|
 |dataset/|样本、编号输入、映射及 manifest.json|
 |runs/|formal.json 和后续原始模型记录|
@@ -48,7 +34,7 @@
 |tools/|标准库辅助脚本：输入编号、记录校验与评估|
 |experiments/|Prompt 注入、Burp 联动、上下文消融、二次注入与逻辑漏洞加分实验|
 
-`dataset/manifest.json` 记录 24 个样本；`runs/formal.json` 记录 36 条已复核的正式运行，36/36 为 `reviewed`；加分计划见 `experiments/bonus_runs.plan.json`。
+`dataset/manifest.json` 和 `runs/formal.json` 已从计划模板初始化。未知结果保留 null，不要重复复制覆盖工作记录。
 
 ## 本地开始
 
