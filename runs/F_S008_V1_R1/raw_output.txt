@@ -1,0 +1,34 @@
+```json
+{
+  "sample_id": "S008",
+  "prediction": "safe",
+  "vulnerability_type": "SQL注入",
+  "locations": [
+    "F01:0008",
+    "F01:0011",
+    "F02:0006",
+    "F02:0007",
+    "F02:0008",
+    "F02:0009"
+  ],
+  "evidence": {
+    "source": "F01:0008 从 $_GET['name'] 读取外部输入 name。",
+    "flow": "F01:0008 的 name 经 F01:0011 调用 find_people_by_name，进入 F02:0006 函数参数，在 F02:0007 固定SQL中仅由占位符 ? 表示，并在 F02:0008 通过 bind_param('s', $name) 绑定为字符串值。",
+    "guard": "有效：F02:0007 使用固定语句 'SELECT id, name FROM lab_people WHERE name = ?'，F02:0008 以 s 类型绑定 name；本片段未发现动态列名、排序表达式或 IN 列表拼接。",
+    "sink": "F02:0009 的 $stmt->execute() 是实际执行点；F02:0007 的 prepare 与 F02:0008 的 bind_param 仅说明语句构造与参数绑定，不冒充执行点。"
+  },
+  "prerequisites": [
+    "PHP 8.5 与 mysqli 扩展可用。",
+    "共享 bootstrap 已建立 $db 连接，且连接字符集为 utf8mb4。",
+    "数据库中存在教学表 lab_people，并含 id=1 Alice、id=2 Bob、id=3 Carol 三行虚构数据。"
+  ],
+  "missing_context": [
+    "common/db_connect.php 未包含在输入片段中，无法核对 $db 连接建立细节；但本片段中的 SQL 构造、绑定与执行路径完整。"
+  ],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "不生成攻击性POC。判断范围仅限本片段 SQL 路径。人工普通对照可访问 http://127.0.0.1:4280/lab_cases/S008/index.php?name=Alice，预期页面仅展示与 name=Alice 匹配的记录；测试对照可使用 name=NoSuchName，预期无匹配记录。实际观察页面返回的记录内容或“无结果”，不以 HTTP 200 作为成功条件。若结果异常，检查 $db 连接、lab_people 表数据与 mysqli 扩展。"
+}
+```
+
+防护建议：继续使用参数化查询并将外部输入仅作为绑定值；若未来支持动态列名、排序表达式或 IN 列表，应使用白名单或相应安全构造，不得把请求值直接拼入 SQL 结构。

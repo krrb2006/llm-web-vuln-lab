@@ -1,0 +1,40 @@
+{
+  "run_id": "DEV_S017_V1_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S017",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0008",
+      "F01:0015",
+      "F01:0016",
+      "F01:0017",
+      "F01:0030",
+      "F01:0033",
+      "F01:0053"
+    ],
+    "evidence": {
+      "source": "F01:0008 从 $_POST['body'] 读取可控字符串；F01:0009 仅检查非空和长度。",
+      "flow": "写入请求：F01:0008 取得 body，F01:0015-F01:0017 通过参数绑定 INSERT 到 lab_guestbook 持久化。随后独立 GET 请求：F01:0030-F01:0033 按 sample_id 查询 body。渲染：F01:0053 在 HTML 正文的 div 内直接 echo。",
+      "guard": "无效；F01:0009 只做非空和长度限制，F01:0015-F01:0016 的 SQL 参数绑定只防 SQL 注入，F01:0038 的 charset 声明不防 XSS，F01:0053 未使用 htmlspecialchars 等 HTML 上下文编码。",
+      "sink": "F01:0053 直接输出 $message['body'] 到 HTML 正文，未编码，可注入 HTML 事件处理器并触发 JavaScript。"
+    },
+    "prerequisites": [
+      "可通过 HTTP 访问 127.0.0.1:4280 下实际的 S017 留言板页面；无需登录。",
+      "PHP 与 MariaDB 教学留言板正常运行，POST 写入和 GET 读取均成功。",
+      "浏览器需实际加载读取后的页面以确认 JavaScript 执行；仅 HTTP 响应体包含字符串不等同于执行。"
+    ],
+    "missing_context": [
+      "输入包未给出 127.0.0.1:4280 上 S017 页面的具体 URL 路径；POC 通过 TARGET_URL 指定实际页面 URL。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "仅对 http://127.0.0.1:4280 下实际 S017 页面运行。设置 TARGET_URL 为浏览器访问该留言板页面的 URL，路径以本地环境为准，脚本会校验 host 和 port。先运行 python3 poc_s017.py normal，发布普通留言，然后在浏览器打开 TARGET_URL，确认不出现 S017-XSS 提示框。再运行 python3 poc_s017.py test，发布测试载荷，重新在浏览器打开 TARGET_URL，人工确认出现 alert('S017-XSS')。脚本只做本地 POST 和 GET，不执行 JavaScript、不外发数据；HTTP 响应体包含载荷字符串不等同于浏览器执行。防护建议：在 F01:0053 输出到 HTML 正文前使用 htmlspecialchars($message['body'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，该建议未经本地验证。"
+  },
+  "human_verification": "pending",
+  "raw_source": "R1-R12.docx"
+}

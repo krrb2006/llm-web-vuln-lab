@@ -1,0 +1,30 @@
+{
+  "run_id": "DEV_S013_V0_R1",
+  "phase": "DEV",
+  "sample_id": "S013",
+  "variant": "Original",
+  "prompt_version": "V0",
+  "vulnerability_type": "XSS",
+  "status": "pilot_excluded_from_deepseek_main",
+  "model_display_name": null,
+  "model_settings": null,
+  "submitted_at": null,
+  "prompt_sha256": "824ea2c5fba391e0827a554c0683a4738efa38859c2b52f2d1de131634a32bf2",
+  "packet_sha256": "154456e20c0d4adc6febf6945c6d14c2b97722a38746a4c7ae1fa87a24a6cb4f",
+  "input_sha256": "0961d4b981499db7dad360a33f0a980e60f7ad32667b709dc0a7ca991c94f7e5",
+  "source_code_input": "C:\\Users\\Saoirse\\Documents\\Codex\\2026-10-12\\w\\work\\c-samples-readonly\\dataset\\packets\\S013_v1\\code_input.txt",
+  "raw_output_sha256": "64d46752f9c628c986960dbee42f0e58efe1a265a1e6ff906f9c441abff1527e",
+  "source_ref": "origin/c/samples@a04a832",
+  "source_packet_repo_path": "dataset/packets/S013_v1/code_input.txt",
+  "pre_submission_correction": "Normalized checkout CRLF to repository LF; no model submission or raw output existed.",
+  "prior_prepared_hashes": {
+    "packet_sha256": "e5ad442acd3d5c19b01f8a64343f318291c627d0d61675205bd427ef5165f715",
+    "prompt_sha256": "5e4daedae3083bf11608894b5a9eaa6ecd72850701e0399c9e675f4207784b68",
+    "input_sha256": "23d15fd2b4083d32f7623b892f8fe62b0ed47ad8e97ca47f6a7a788b099d7f2a"
+  },
+  "user_paste_1_sha256": "64d46752f9c628c986960dbee42f0e58efe1a265a1e6ff906f9c441abff1527e",
+  "user_paste_1_provenance": "User pasted text in chat; may include user commentary after model answer; full original not yet confirmed.",
+  "reported_time_context": "2026-10-12T09:54+08:00; user states this is system/conversation time, not confirmed actual submission timestamp.",
+  "reported_model": "GPT-6 (user report; contemporaneous interface label unavailable)",
+  "primary_experiment_included": false
+}

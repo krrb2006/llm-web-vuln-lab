@@ -1,0 +1,22 @@
+{
+  "run_id": "F_S020_V2_R1",
+  "phase": "F",
+  "sample_id": "S020",
+  "variant": "Original",
+  "prompt_version": "V2",
+  "vulnerability_type": "XSS",
+  "status": "raw_recorded",
+  "model_display_name": "DeepSeek-V4.1-Flash",
+  "model_settings": "深度思考=开；联网搜索=关",
+  "submitted_at": "2026-10-19 21:43:23 (UTC+8)",
+  "prompt_sha256": "3666ebeb28980e192172852639ab1759c94b6cbb2e5cdfe0c6f185a946841178",
+  "packet_sha256": "64ec2ee56ba873938292418f4342eb3c3233f181e7ed879c2caac4eaa38d953e",
+  "input_sha256": "c6e73014379ff77da694b43aef18c714d8b97e09a085b889afcfde0055de52dc",
+  "raw_output_sha256": "9634d0cfe6c6bd669153c736c534d4872ef6a2fde71d29049a0008043f722e3c",
+  "source_code_input": "D:\\桌面\\网络安全课\\大作业\\llm-web-vuln-lab-starter\\llm-web-vuln-lab\\dataset\\packets\\S020_v1\\code_input.txt",
+  "planned_model_display_name": "DeepSeek-V4.1-Flash",
+  "planned_model_settings": "深度思考=开；联网搜索=关",
+  "raw_source": "DeepSeek web session",
+  "submission_mode": "A authorized browser automation",
+  "recorded_at": "2026-10-19T13:43:23.462536+00:00"
+}

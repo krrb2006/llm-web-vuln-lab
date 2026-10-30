@@ -1,0 +1,14 @@
+mode=normal
+HTTP=200
+payload_in_body=True
+body_snippet:
+t" action="index.php">
+    <label for="content">内容</label>
+    <textarea id="content" name="content" rows="4" cols="50">S019 normal preview</textarea>
+    <button type="submit">预览</button>
+  </form>
+  <section aria-label="预览结果">
+    <h2>预览结果</h2>
+    <div cla
+说明：本脚本只验证 HTTP 回显，不触发浏览器 JavaScript。
+人工确认：在浏览器打开入口并提交相同测试输入，观察是否弹出 XSS-S019；普通输入作对照。

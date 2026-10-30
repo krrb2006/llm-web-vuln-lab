@@ -1,0 +1,103 @@
+{
+  "sample_id": "SECOND_SQLI_01_FIXED",
+  "prediction": "safe",
+  "vulnerability_type": "SQL注入（未发现）",
+  "locations": [
+    {
+      "file": "fixed/save_profile.php",
+      "line": 5,
+      "description": "从 _POST['nickname'] 读取 nickname，作为写入数据来源。"
+    },
+    {
+      "file": "fixed/save_profile.php",
+      "line": 6,
+      "description": "INSERT 语句使用 ? 占位符，未拼接 nickname。"
+    },
+    {
+      "file": "fixed/save_profile.php",
+      "line": 7,
+      "description": "使用 bind_param('s', nickname) 绑定字符串参数。"
+    },
+    {
+      "file": "fixed/lookup_profile.php",
+      "line": 5,
+      "description": "从 _GET['id'] 读取并强制转换为 int。"
+    },
+    {
+      "file": "fixed/lookup_profile.php",
+      "line": 6,
+      "description": "按 id 查询使用 ? 占位符。"
+    },
+    {
+      "file": "fixed/lookup_profile.php",
+      "line": 7,
+      "description": "使用 bind_param('i', id) 绑定整数参数。"
+    },
+    {
+      "file": "fixed/lookup_profile.php",
+      "line": 9,
+      "description": "从数据库读取 nickname 到 nickname。"
+    },
+    {
+      "file": "fixed/lookup_profile.php",
+      "line": 11,
+      "description": "按 nickname 二次查询使用 ? 占位符，未拼接 nickname。"
+    },
+    {
+      "file": "fixed/lookup_profile.php",
+      "line": 12,
+      "description": "使用 bind_param('s', nickname) 绑定字符串参数。"
+    },
+    {
+      "file": "fixed/lookup_profile.php",
+      "line": 15,
+      "description": "输出使用 htmlspecialchars 转义，属于输出编码防护。"
+    }
+  ],
+  "evidence": {
+    "source": [
+      "fixed/save_profile.php:5 接收 _POST['nickname'] 作为写入来源。",
+      "fixed/lookup_profile.php:5 接收 \r\nG\r\nE\r\nT\r\n[\r\n′\r\ni\r\nd\r\n′\r\n]\r\n并强制转换为\r\ni\r\nn\r\nt\r\n。\r\n",
+      "\r\nf\r\ni\r\nx\r\ne\r\nd\r\n/\r\nl\r\no\r\no\r\nk\r\nu\r\np\r\np\r\nr\r\no\r\nf\r\ni\r\nl\r\ne\r\n.\r\np\r\nh\r\np\r\n:\r\n9\r\n从数据库读取\r\nn\r\ni\r\nc\r\nk\r\nn\r\na\r\nm\r\ne\r\n作为二次查询来源。\r\n"
+    ],
+    "\r\nf\r\nl\r\no\r\nw\r\n": [
+      "\r\nf\r\ni\r\nx\r\ne\r\nd\r\n/\r\ns\r\na\r\nv\r\ne\r\np\r\nr\r\no\r\nf\r\ni\r\nl\r\ne\r\n.\r\np\r\nh\r\np\r\n:\r\n5\r\n的\r\nG\r\n​\r\n ET[ \r\n′\r\n id \r\n′\r\n ]并强制转换为int。",
+      "fixed/lookup \r\np\r\n​\r\n rofile.php:9从数据库读取nickname作为二次查询来源。"
+    ],
+    "flow": [
+      "fixed/save \r\np\r\n​\r\n rofile.php:5的nickname 流向 fixed/save_profile.php:6 的 INSERT 占位符查询，并由 fixed/save_profile.php:7 绑定。",
+      "fixed/lookup_profile.php:5 的 \r\ni\r\nd\r\n经\r\ni\r\nn\r\nt\r\n强转后流向\r\nf\r\ni\r\nx\r\ne\r\nd\r\n/\r\nl\r\no\r\no\r\nk\r\nu\r\np\r\np\r\nr\r\no\r\nf\r\ni\r\nl\r\ne\r\n.\r\np\r\nh\r\np\r\n:\r\n6\r\n的\r\nS\r\nE\r\nL\r\nE\r\nC\r\nT\r\n占位符查询，并由\r\nf\r\ni\r\nx\r\ne\r\nd\r\n/\r\nl\r\no\r\no\r\nk\r\nu\r\np\r\np\r\nr\r\no\r\nf\r\ni\r\nl\r\ne\r\n.\r\np\r\nh\r\np\r\n:\r\n7\r\n绑定。\r\n",
+      "\r\nf\r\ni\r\nx\r\ne\r\nd\r\n/\r\nl\r\no\r\no\r\nk\r\nu\r\np\r\np\r\nr\r\no\r\nf\r\ni\r\nl\r\ne\r\n.\r\np\r\nh\r\np\r\n:\r\n9\r\n的\r\nid经int强转后流向fixed/lookup \r\np\r\n​\r\n rofile.php:6的SELECT占位符查询，并由fixed/lookup \r\np\r\n​\r\n rofile.php:7绑定。",
+      "fixed/lookup \r\np\r\n​\r\n rofile.php:9的nickname 流向 fixed/lookup_profile.php:11 的 SELECT 占位符查询，并由 fixed/lookup_profile.php:12 绑定。"
+    ],
+    "guard": [
+      "fixed/save_profile.php:6 使用 prepare 与 ? 占位符；fixed/save_profile.php:7 使用 bind_param('s', \r\nn\r\ni\r\nc\r\nk\r\nn\r\na\r\nm\r\ne\r\n)\r\n。\r\n",
+      "\r\nf\r\ni\r\nx\r\ne\r\nd\r\n/\r\nl\r\no\r\no\r\nk\r\nu\r\np\r\np\r\nr\r\no\r\nf\r\ni\r\nl\r\ne\r\n.\r\np\r\nh\r\np\r\n:\r\n5\r\n使用\r\n(\r\ni\r\nn\r\nt\r\n)\r\n强制转换；\r\nf\r\ni\r\nx\r\ne\r\nd\r\n/\r\nl\r\no\r\no\r\nk\r\nu\r\np\r\np\r\nr\r\no\r\nf\r\ni\r\nl\r\ne\r\n.\r\np\r\nh\r\np\r\n:\r\n6\r\n使用\r\n?\r\n占位符；\r\nf\r\ni\r\nx\r\ne\r\nd\r\n/\r\nl\r\no\r\no\r\nk\r\nu\r\np\r\np\r\nr\r\no\r\nf\r\ni\r\nl\r\ne\r\n.\r\np\r\nh\r\np\r\n:\r\n7\r\n使用\r\nb\r\ni\r\nn\r\nd\r\np\r\na\r\nr\r\na\r\nm\r\n(\r\n′\r\ni\r\n′\r\n,\r\nnickname)。",
+      "fixed/lookup \r\np\r\n​\r\n rofile.php:5使用(int)强制转换；fixed/lookup \r\np\r\n​\r\n rofile.php:6使用?占位符；fixed/lookup \r\np\r\n​\r\n rofile.php:7使用bind \r\np\r\n​\r\n aram( \r\n′\r\n i \r\n′\r\n ,id)。",
+      "fixed/lookup_profile.php:11 使用 ? 占位符；fixed/lookup_profile.php:12 使用 bind_param('s', nickname)。",
+      "fixed/lookup_profile.php:15 使用 htmlspecialchars 进行输出转义。"
+    ],
+    "sink": [
+      "fixed/save_profile.php:8 执行参数化 INSERT，未发现 SQL 拼接注入点。",
+      "fixed/lookup_profile.php:8 执行参数化按 id 查询，未发现 SQL 拼接注入点。",
+      "fixed/lookup_profile.php:13 执行参数化按 nickname 查询，未发现 SQL 拼接注入点。"
+    ]
+  },
+  "prerequisites": "无需满足 SQL 注入利用前提；静态审计显示写入与两次查询均使用参数化语句和 bind_param 绑定。",
+  "missing_context": [
+    "SECOND_SQLI_01_VULN 的原始代码未在提示中提供，无法逐行对照其具体拼接位置。",
+    "common/db_connect.php 未提供，无法审计数据库连接配置、错误模式和字符集设置。",
+    "未提供运行时 MySQL 模式、异常处理与日志配置。",
+    "本次仅做静态审计，未执行代码或发送请求。"
+  ],
+  "poc_generated": false,
+  "poc_language": null,
+  "poc_instructions": "不生成 POC。若后续针对其他样本生成 POC，仅允许固定 http://127.0.0.1:4280，不得外发数据；不得执行任何请求，也不能把 POC 文本说成已触发。",
+  "notes": [
+    "1. fixed/save_profile.php 写入阶段安全：fixed/save_profile.php:6 使用 INSERT ... VALUES (?) 占位符，fixed/save_profile.php:7 使用 bind_param('s', nickname)，未将 nickname 拼接到 SQL 中。",
+    "2. fixed/lookup_profile.php 读取 nickname 后仍不存在 SQL 注入：fixed/lookup_profile.php:9 取得 nickname 后，fixed/lookup_profile.php:11 使用 WHERE nickname = ?，fixed/lookup_profile.php:12 使用 bind_param('s', $nickname)，未拼接 SQL；fixed/lookup_profile.php:15 还有输出转义。",
+    "3. 与 SECOND_SQLI_01_VULN 的修复差异：本 FIXED 样本在 fixed/save_profile.php:6-7 和 fixed/lookup_profile.php:6-7、11-12 使用预处理与参数绑定，尤其对二次查询的 nickname 也参数化；id 在 fixed/lookup_profile.php:5 强制转为 int。由于 VULN 原始代码未提供，无法确认其具体漏洞行，但修复差异应在于消除 SQL 字符串拼接并改用占位符绑定。",
+    "4. 若生成 POC，只允许固定 http://127.0.0.1:4280，不得外发数据；本样本未生成 POC。",
+    "5. 未执行任何请求，以上为静态审计结论，不声称漏洞已触发。"
+  ]
+}

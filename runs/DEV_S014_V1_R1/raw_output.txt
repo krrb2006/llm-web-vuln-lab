@@ -1,0 +1,23 @@
+```json
+{
+  "sample_id": "S014",
+  "prediction": "safe",
+  "vulnerability_type": "XSS",
+  "locations": ["F01:0003", "F01:0013"],
+  "evidence": {
+    "source": "F01:0003：$q = $_GET['q'] ?? ''; 搜索词来自GET参数q。",
+    "flow": "F01:0003 读取后仅在 F01:0013 同一请求内回显到HTML正文<p>；无数据库写入、持久化或二次读取渲染路径。",
+    "guard": "有效：F01:0013 使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，在HTML正文文本上下文转义 & < > \" '，并替换无效UTF-8。",
+    "sink": "F01:0013：echo 输出位于<p>元素正文，未进入HTML属性、URL、JavaScript或DOM执行上下文。"
+  },
+  "prerequisites": [
+    "可通过GET参数q传入任意字符串",
+    "PHP按F01:0013指定参数执行htmlspecialchars",
+    "输出上下文固定为HTML正文<p>元素"
+  ],
+  "missing_context": [],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "不适用：未生成POC；判断为safe。可人工核查F01:0013的转义调用，不应将HTTP返回体出现字符串视为JavaScript执行。防护建议：继续在HTML正文使用htmlspecialchars并固定UTF-8；若未来输出到属性、URL、JavaScript或DOM，需按对应上下文编码。"
+}
+```

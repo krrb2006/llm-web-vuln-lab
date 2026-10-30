@@ -1,0 +1,30 @@
+{
+  "format_valid": true,
+  "parsed_json": {
+    "sample_id": "S001",
+    "prediction": "vulnerable",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011"
+    ],
+    "evidence": {
+      "source": "F01:0007：从 $_GET['name'] 读取外部输入 $name",
+      "flow": "F01:0010：$name 被直接拼接到 SELECT 语句的 WHERE 条件中",
+      "guard": "无效：未使用预处理绑定、转义或白名单，输入可改变 SQL 条件结构；应改为参数化查询",
+      "sink": "F01:0011：$db->query($sql) 执行拼接后的 SQL"
+    },
+    "prerequisites": [
+      "入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问且无需登录",
+      "common/db_connect.php 能成功提供已连接的 mysqli 变量 $db",
+      "MariaDB 中存在 lab_people 表并预置 Alice、Bob、Carol",
+      "查询结果在 HTML 正文展示"
+    ],
+    "missing_context": [],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "脚本仅访问 127.0.0.1:4280。运行：python3 s001_poc.py。普通输入为 name=Alice；测试输入为 name=Alice' AND '1'='1 和 name=Alice' AND '1'='2，脚本会自动 URL 编码且不修改数据库。比较 HTML 正文：预期普通输入出现 Alice，注入真条件仍出现 Alice，注入假条件不出现 Alice，表示输入改变了 WHERE 条件。不要用 HTTP 200 作为成功条件。失败时检查 MariaDB 服务、db_connect.php 是否可加载、lab_people 表及预置数据、入口路径是否正确。"
+  },
+  "error": null
+}

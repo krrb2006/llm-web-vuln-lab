@@ -95,7 +95,19 @@ raw_execution_ok表示原始代码未修改、仅按说明配置环境后正常�
 
 ## 五  使用评价辅助脚本
 
-先检查tools/evaluate.py中的口径是否与本组冻结单一致。脚本只读取JSON和证据路径，不联网、不调用LLM、不执行POC。所有证据路径以项目根目录为基准。
+正式测试前先运行冻结自动验收；准备阶段加 `--report-only` 可以完整列出缺项而不返回失败状态：
+
+```bash
+cd ~/llm-web-lab
+python3 tools/check_freeze.py --report-only \
+  --json-out docs/A_冻结自动验收.json \
+  --md-out docs/A_冻结自动验收.md
+```
+
+正式开跑前去掉 `--report-only`，自动结论必须为 `READY`；随后再人工确认冻结单四人签字、
+统一运行环境/数据库状态、普通请求与参考验证可运行。自动验收不会执行 POC，也不能代替证据内容复核。
+
+完成 36 条记录后，先检查tools/evaluate.py中的口径是否与本组冻结单一致。脚本只读取JSON和证据路径，不联网、不调用LLM、不执行POC。所有证据路径以项目根目录为基准。
 
 ```bash
 cd ~/llm-web-lab

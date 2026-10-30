@@ -1,0 +1,1 @@
+PHP 与 MariaDB 教学草稿。POST submit.php 的 title 和 body 保存草稿并跳转到 preview.php；GET list.php 列出标题，GET preview.php?id=... 显示指定草稿的标题和正文。无需登录。数据库连接由公共文件提供，字符集为 utf8mb4。

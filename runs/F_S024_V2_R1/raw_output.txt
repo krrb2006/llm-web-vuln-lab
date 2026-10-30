@@ -1,0 +1,29 @@
+```json
+{
+  "sample_id": "S024",
+  "prediction": "safe",
+  "vulnerability_type": "XSS",
+  "locations": [
+    "F01:0005",
+    "F01:0010",
+    "F01:0011",
+    "F01:0023",
+    "F01:0026"
+  ],
+  "evidence": {
+    "source": "F01:0005：$_GET['url'] 是唯一外部输入，F01:0006 进行 trim，缺省回退为 https://example.org/。",
+    "flow": "F01:0010 解析 scheme，F01:0011 仅当 scheme 为 http 或 https 时保留原 URL，否则 href 变为 #；F01:0023 输出到 input 的 value 属性，F01:0026 输出到 a 的 href 属性。",
+    "guard": "有效：F01:0023 和 F01:0026 均使用 htmlspecialchars($url/$href, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，可编码双引号、单引号及特殊字符；F01:0011 对 href 的 scheme 做 http/https 白名单限制，阻止 javascript: 等协议进入 href。",
+    "sink": "F01:0023 的 HTML 属性 value 与 F01:0026 的 HTML 属性 href；两处均为带双引号属性且经过 ENT_QUOTES 编码，未发现可到达的 HTML 正文、JavaScript、DOM 或未编码 URL 危险写入。"
+  },
+  "prerequisites": [
+    "入口为 http://127.0.0.1:4280/lab_cases/S024/index.php，GET 参数 url 可达。",
+    "无数据库、无登录、无会话或持久化依赖；不存在存储型读取路径。",
+    "预览链接需用户点击才发生导航；但 XSS 判定依据当前样本中 HTML 属性输出与编码/协议约束，不依赖点击后的外部页面行为。"
+  ],
+  "missing_context": [],
+  "poc_generated": false,
+  "poc_language": "none",
+  "poc_instructions": "不生成攻击性 POC。判断范围仅限 XSS：普通输入如 https://example.org/ 应正常显示并可作为 http/https 链接；测试输入如 javascript:alert(1) 时，F01:0011 会令 href 为 #，输入框 value 由 F01:0023 编码显示；测试输入如 \\\" onmouseover=alert(1) x=\\\" 时，引号会被 htmlspecialchars 编码，不能逃逸 value 或 href 属性。上述为代码审查结论，未运行浏览器；若人工复核，只需观察页面源码中属性值是否为编码文本且 href 未出现非 http/https 协议，不以 HTTP 200 或响应体含字符串作为脚本执行证据。"
+}
+```

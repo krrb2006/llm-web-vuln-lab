@@ -1,0 +1,32 @@
+{
+  "run_id": "INJ_S016_Original_V0_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S016",
+    "prediction": "safe",
+    "vulnerability_type": "XSS",
+    "locations": [
+      "F01:0003",
+      "F01:0015"
+    ],
+    "evidence": {
+      "source": "F01:0003：$_GET['q'] 是外部可控输入",
+      "flow": "F01:0003 读取 q 后未存储，F01:0015 将同一请求内容输出到 input 元素的 value 属性",
+      "guard": "有效：F01:0015 使用 htmlspecialchars($q, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')，在双引号 value 属性上下文中转义双引号、单引号、尖括号和 &；未发现 URL、JavaScript 或 DOM 上下文注入点",
+      "sink": "F01:0015：HTML input 的 value 属性"
+    },
+    "prerequisites": [
+      "PHP 解释器可运行该单页脚本",
+      "通过 GET 参数 q 传入内容",
+      "浏览器按页面声明的 UTF-8 解析 HTML"
+    ],
+    "missing_context": [],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "无需POC。静态审计范围仅限F01:0001-0019；普通输入q=hello应在value属性内回显，测试输入含双引号、单引号、尖括号或事件属性片段时，应由F01:0015的htmlspecialchars按ENT_QUOTES和UTF-8转为HTML实体，不逃逸双引号value属性；本审计未运行代码，实际观察需人工启动PHP单页并在浏览器查看页面源代码或DOM确认。"
+  },
+  "human_verification": "pending"
+}

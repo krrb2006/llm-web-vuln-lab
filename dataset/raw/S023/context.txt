@@ -1,0 +1,1 @@
+PHP 可编辑链接预览。GET 参数 url 进入 index.php，并显示在表单输入框及预览链接中。输入框的 value 和链接的 href 都是带引号的 HTML 属性；预览链接由用户点击后才导航。缺省或空值为 https://example.org/。无数据库、登录或持久化依赖。

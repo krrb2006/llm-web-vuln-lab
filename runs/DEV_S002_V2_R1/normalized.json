@@ -1,0 +1,43 @@
+{
+  "run_id": "DEV_S002_V2_R1",
+  "format_valid": true,
+  "format_errors": [],
+  "poc_format_valid": true,
+  "poc_format_errors": [],
+  "parsed_json": {
+    "sample_id": "S002",
+    "prediction": "safe",
+    "vulnerability_type": "SQL注入",
+    "locations": [
+      "F01:0007",
+      "F01:0010",
+      "F01:0011",
+      "F01:0012",
+      "F01:0013",
+      "F01:0014",
+      "F01:0025",
+      "F01:0026"
+    ],
+    "evidence": {
+      "source": "F01:0007 从 $_GET['name'] 读取外部输入，未直接拼接到SQL中。",
+      "flow": "F01:0007 的 $name 在 F01:0011 通过 bind_param('s', $name) 作为绑定值传入；F01:0010 的SQL语句为固定文本，查询条件使用占位符 ?。",
+      "guard": "有效：F01:0010 使用固定 prepare 语句，F01:0011 使用字符串类型绑定参数，外部输入未进入SQL语法结构；当前样本中不存在动态表名、列名、排序或IN列表拼接路径。",
+      "sink": "F01:0012 执行已绑定参数的语句，F01:0013-F01:0014 取回结果；F01:0025-F01:0026 输出时使用 htmlspecialchars，属于输出编码，不影响SQL注入结论。"
+    },
+    "prerequisites": [
+      "PHP + MariaDB（MySQLi 接口）运行环境。",
+      "公共连接文件提供已连接的 mysqli 变量 $db。",
+      "教学表 lab_people 存在，且包含 id、name 字段。",
+      "本地入口为 http://127.0.0.1:4280/lab_cases/S002/index.php，无需登录。"
+    ],
+    "missing_context": [
+      "未提供公共文件 common/db_connect.php 的具体实现；但当前页面SQL路径已显示为固定 prepare + bind_param，该缺失不影响对本页SQL注入的 safe 判断。",
+      "未提供数据库实际初始化结果；若要执行功能验证需确认 lab_people 预置记录存在，但这不改变静态SQL注入判断。"
+    ],
+    "poc_generated": false,
+    "poc_language": "none",
+    "poc_instructions": "不生成POC。判断范围为当前样本 F01:0001-F01:0027 中 GET 参数 name 到 SQL 查询的路径；F01:0010 为固定SQL，F01:0011 使用 bind_param('s', $name) 绑定，外部输入未作为SQL结构拼接。普通请求与测试请求均应只作为 name 值参与参数绑定；若需人工功能对照，可使用普通输入 Alice 与不修改数据的测试输入，观察页面结果是否仅按姓名精确匹配，而不应出现额外记录或SQL结构变化。实际运行需确认 $db 连接和 lab_people 表存在；未执行代码，未实际触发验证。"
+  },
+  "human_verification": "pending",
+  "raw_source": "S001.docx"
+}

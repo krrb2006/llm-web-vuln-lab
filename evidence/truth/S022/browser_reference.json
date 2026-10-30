@@ -1,0 +1,39 @@
+{
+  "kind": "reference_browser_dom_observation",
+  "review_status": "pending_independent_review",
+  "ground_truth": null,
+  "observed_at_utc": "2026-10-19T09:50:22.439Z",
+  "sample_id": "S022",
+  "base_url": "http://127.0.0.1:4280",
+  "d_source_commit": "6cd58b3eb69defd5d84034761888833a11728279",
+  "browser_version": "Edg/155.0.4283.62",
+  "marker_purpose": "Set only document.documentElement.dataset.labXss; no Cookie access or external request",
+  "note": "Write, list, and preview are separate requests; only preview renders stored body.",
+  "observations": {
+    "submitted": {
+      "method": "POST",
+      "path": "/lab_cases/S022/submit.php",
+      "fields": {
+        "title": "Teaching draft",
+        "body": "<script>document.documentElement.dataset.labXss='yes'</script>"
+      },
+      "status": 303,
+      "location": "preview.php?id=24",
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "listing": {
+      "location": "http://127.0.0.1:4280/lab_cases/S022/list.php",
+      "title": "草稿列表",
+      "html_data_lab_xss": null,
+      "script_element_count": 0,
+      "rendered_dom": "<html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><title>草稿列表</title></head>\n<body>\n<h1>草稿列表</h1>\n<p><a href=\"submit.php\">新建草稿</a></p>\n<ul>\n  <li><a href=\"preview.php?id=24\">Teaching draft</a></li>\n</ul>\n\n\n</body></html>"
+    },
+    "separate_preview_read": {
+      "location": "http://127.0.0.1:4280/lab_cases/S022/preview.php?id=24",
+      "title": "草稿预览",
+      "html_data_lab_xss": null,
+      "script_element_count": 0,
+      "rendered_dom": "<html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><title>草稿预览</title></head>\n<body>\n<h1>Teaching draft</h1>\n<div class=\"draft-body\" style=\"white-space: pre-wrap\">&lt;script&gt;document.documentElement.dataset.labXss='yes'&lt;/script&gt;</div>\n<p><a href=\"list.php\">返回草稿列表</a></p>\n\n\n</body></html>"
+    }
+  }
+}

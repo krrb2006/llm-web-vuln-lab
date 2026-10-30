@@ -1,0 +1,18 @@
+{
+  "kind": "independent_source_delta_review",
+  "sample_id": "S018",
+  "reviewer": "A",
+  "reviewed_at": "2026-10-17",
+  "runtime_evidence_source_commit": "a90708be2a4a53f732b3cabea37f7feed5f04125",
+  "current_source_commit": "f82ddc24d444435003ea3e4f1025e72f5184ec5d",
+  "files": [{
+    "path": "index.php",
+    "runtime_evidence_sha256": "10f31cfacff04df8294a8a7e70fb80576fc81baaace77dd1f9405ece5bc5d5f8",
+    "current_sha256": "910088373fcdad2e6df3dd9e83cccf3653b069dfa22c1d09b923860ebe188fab"
+  }],
+  "delta_scope": "Only database insert/list operations gained try/catch(Throwable), server-side logging, and generic failure handling.",
+  "security_flow_unchanged": true,
+  "unchanged_security_sink": "index.php:53 HTML-encodes message body with ENT_QUOTES and UTF-8",
+  "new_runtime_execution_claimed": false,
+  "ground_truth": false
+}

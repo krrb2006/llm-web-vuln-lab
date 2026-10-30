@@ -1,0 +1,30 @@
+```json
+{"sample_id":"S013","prediction":"vulnerable","vulnerability_type":"XSS","locations":["F01:0003","F01:0013"],"evidence":{"source":"F01:0003：$q = $_GET['q'] ?? ''; 读取GET参数q，未见内容校验或编码。","flow":"F01:0003读取的$q在F01:0013通过<?php echo $q; ?>直接进入<p>搜索词：...</p>的HTML正文。","guard":"无效：F01:0013为HTML正文上下文，直接echo，未见htmlspecialchars等编码或净化调用；不能凭函数名推断防护。","sink":"F01:0013：echo $q 到HTML正文，可注入HTML/脚本标签。"},"prerequisites":["PHP单页脚本可运行并监听 http://127.0.0.1:4280","通过浏览器以GET参数q访问页面","需人工在浏览器观察弹窗或页面自定义标记"],"missing_context":[],"poc_generated":true,"poc_language":"python3","poc_instructions":"运行python3 poc_s013.py；脚本仅打印普通URL(q=hello)与测试URL(q=<script>alert('XSS-S013')</script>)，不发起网络请求。普通对照：人工浏览器打开普通URL，应仅显示搜索词hello且无弹窗。测试步骤：人工浏览器打开测试URL，观察是否出现alert('XSS-S013')弹窗或页面自定义标记。实际影响需人工确认；HTTP响应体含payload不等同JavaScript执行，数据库不适用。若浏览器禁用JS、CSP阻止脚本或服务并非该脚本，则无法判断。"}
+```
+
+```python3
+from urllib.parse import urlencode
+
+BASE = "http://127.0.0.1:4280"
+
+def build_url(q: str) -> str:
+    # 固定目标，不请求网络，不跟随重定向，不外发数据。
+    if BASE != "http://127.0.0.1:4280":
+        raise SystemExit("目标必须固定为 http://127.0.0.1:4280")
+    return BASE + "/?" + urlencode({"q": q})
+
+def main() -> None:
+    normal_q = "hello"
+    test_q = "<script>alert('XSS-S013')</script>"
+
+    print("普通对照URL（人工浏览器打开）：")
+    print(build_url(normal_q))
+    print()
+    print("测试URL（人工浏览器打开，确认是否出现弹窗或页面标记）：")
+    print(build_url(test_q))
+    print()
+    print("说明：本脚本不发起HTTP请求。成功断言需人工在浏览器确认实际脚本执行影响。")
+
+if __name__ == "__main__":
+    main()
+```

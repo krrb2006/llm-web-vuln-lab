@@ -1,0 +1,19 @@
+{
+  "sample_id": "S019",
+  "family_id": "XSS04",
+  "author": "D",
+  "date": "2026-10-11",
+  "source_type": "self-built",
+  "basis": "docs/C_样本与预处理操作手册.md 二（XSS04 控制器加独立模板蓝图）",
+  "source_url": "",
+  "source_commit": "",
+  "license": "本组自建教学样本；未复制第三方源码",
+  "files": [
+    {"file": "index.php", "role": "入口控制器和参数传递", "sha256": "bdbb3389553b3116745ff869f28aa9fd0fa0b498ecc07cabf36bd470f1c6de8c"},
+    {"file": "templates/preview.php", "role": "表单及 HTML 正文预览模板", "sha256": "357661b2fe763a8dd29a931196e385835eea339ee7aa80f3c7cdb0247548e09c"}
+  ],
+  "dependencies": [
+    {"name": "templates/preview.php", "note": "由 index.php 包含；入口与模板必须一起部署"},
+    {"name": "PHP", "note": "无需数据库、登录或其他共享文件"}
+  ]
+}

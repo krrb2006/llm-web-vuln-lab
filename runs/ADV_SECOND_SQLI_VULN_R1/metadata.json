@@ -1,0 +1,27 @@
+{
+  "schema": "adv-chat-evidence/v1",
+  "run_id": "ADV_SECOND_SQLI_VULN",
+  "sample_id": "SECOND_SQLI_01_VULN",
+  "captured_date": "2026-10-26",
+  "session_url": "https://chat.deepseek.com/a/chat/s/fbf3ac4e-7d95-4a9b-89a1-ab5c085dec11",
+  "model": "DeepSeek-V4.1-Flash-1017",
+  "reasoning": "enabled (visible in supplied screenshot)",
+  "web_search": "disabled (visible as unselected in supplied screenshot)",
+  "prompt_version": "SQLi_V2",
+  "input_provenance": "results/A_ADV_model_input_manifest_2026-10-26.json",
+  "raw_output_sha256": "a6acc001091a5bbad3b30130295d4cf4b6908fa39e9c7912003780d5a387dc1b",
+  "normalized_sha256": "71cf3b3c26f805671cc041cbfa41bf244efdf05024ca782b40b3de5dd5f2d3f0",
+  "screenshot_sha256": "964fc06255ed58ad6cbc77a753e3be680f31594ff265482eae5433beee92965d",
+  "extraction": "normalized.json is the final balanced JSON object extracted from user-supplied DeepSeek answer transcript; raw_output.txt preserves the supplied transcript unchanged.",
+  "poc_execution": "not_run",
+  "status": "reviewed",
+  "limitations": [
+    "The exact full submitted input was not exported from the DeepSeek UI; source/code hashes are bound by the prepared input manifest and visible prompt screenshot.",
+    "The supplied screenshots do not display the exact model-version label or a generated timestamp.",
+    "No POC was executed as part of this chat-evidence capture."
+  ],
+  "reviewer": "D",
+  "model_version_basis": "DeepSeek official 2026-10-17 announcement: web/app/API synced to V4.1-Flash-1017",
+  "model_version_proven_scope": "official_platform_announcement",
+  "per_run_model_field_captured": false
+}

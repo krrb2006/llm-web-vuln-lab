@@ -1,0 +1,1 @@
+RESULT: boolean SQL injection behavior matched expectations; HTTP 200 alone was not used.

