@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import text
+from sqlalchemy import inspect, text
 
 from .config import get_settings
 from .db import Base, SessionLocal, engine
@@ -34,8 +34,21 @@ def _wait_for_db(attempts: int = 40) -> None:
     raise RuntimeError("数据库连接失败")
 
 
+def _ensure_schema_columns() -> None:
+    """为已存在的库补列（不引入迁移框架，保持部署简单）。"""
+    inspector = inspect(engine)
+    if not inspector.has_table("findings"):
+        return
+    columns = {column["name"] for column in inspector.get_columns("findings")}
+    if "flow" not in columns:
+        with engine.begin() as connection:
+            connection.execute(text("ALTER TABLE findings ADD COLUMN flow JSON NULL"))
+        logger.info("已为 findings 表补充 flow 列")
+
+
 def _create_schema_and_demo() -> None:
     Base.metadata.create_all(bind=engine)
+    _ensure_schema_columns()
     if os.getenv("SEED_DEMO", "true").lower() != "true":
         return
     with SessionLocal() as db:

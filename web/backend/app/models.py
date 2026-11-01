@@ -82,6 +82,7 @@ class Finding(Base):
     remediation: Mapped[str] = mapped_column(Text, default="")
     confidence: Mapped[int] = mapped_column(Integer, default=0)
     source: Mapped[str] = mapped_column(String(20), default="static")
+    flow: Mapped[list] = mapped_column(JSON, default=list)
 
     job: Mapped[Job] = relationship(back_populates="findings")
 

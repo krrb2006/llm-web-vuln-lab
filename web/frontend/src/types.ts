@@ -20,7 +20,8 @@ export interface Finding {
   explanation: string;
   remediation: string;
   confidence: number;
-  source: "static" | "llm";
+  source: "static" | "llm" | "dataflow";
+  flow?: { line: number; code: string; note: string }[];
 }
 
 export interface Job {

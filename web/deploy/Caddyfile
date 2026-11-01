@@ -1,0 +1,28 @@
+# Caddy 只做两件事：自动申请/续期证书，并把流量反代给内部 nginx。
+# nginx 继续负责静态资源、SPA 回退和 /api 代理。
+{
+	email {$ACME_EMAIL}
+	# 本地调试可打开下一行（自签证书）
+	# local_certs
+}
+
+{$DOMAIN} {
+	encode zstd gzip
+
+	# 只信任来自 Caddy 的转发头
+	reverse_proxy nginx:80 {
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+		header_up X-Forwarded-For {remote_host}
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

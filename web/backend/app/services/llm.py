@@ -61,6 +61,7 @@ def confirm_candidate(
     category: str,
     rule_title: str,
     snippet: str,
+    flow_text: str = "",
 ) -> dict:
     base = (base_url or DEFAULT_BASE_URLS.get(provider, "")).rstrip("/")
     if not base:

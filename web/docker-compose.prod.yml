@@ -1,0 +1,31 @@
+# 生产部署：Caddy 自动 HTTPS → nginx 网关 → FastAPI
+#
+# 用法：
+#   cp .env.example .env
+#   # 在 .env 中设置 DOMAIN、ACME_EMAIL，以及强随机 JWT_SECRET / 数据库密码
+#   docker compose --env-file .env -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# 前置条件：域名 A/AAAA 记录已指向本机，且 80/443 端口可从公网访问。
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN:?请在 .env 中设置 DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL:-}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - nginx
+    networks: [internal]
+
+volumes:
+  caddy_data:
+  caddy_config:

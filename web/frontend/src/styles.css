@@ -289,3 +289,15 @@ h1 { margin: 8px 0 6px; font-size: clamp(24px, 3vw, 32px); line-height: 1.25; fo
 }
 .toast.error { border-color: rgba(255, 107, 107, 0.45); }
 .toast.success { border-color: rgba(74, 222, 128, 0.45); }
+
+.flow { margin: 6px 0 2px; padding-left: 20px; display: grid; gap: 8px; }
+.flow li { font-size: 12.8px; color: #d7e2f2; }
+.flow .flow-line {
+  display: inline-block; min-width: 46px; color: var(--accent); font-family: var(--mono); font-size: 12px;
+}
+.flow .flow-note { color: var(--muted); margin-right: 8px; }
+.flow code {
+  display: block; margin-top: 4px; padding: 7px 10px; border-radius: 8px; background: #060c16;
+  border: 1px solid var(--line-soft); color: #cfe0ff; font-size: 12px; white-space: pre-wrap; word-break: break-all;
+}
+.badge.dataflow { color: #d8ccff; background: rgba(166, 124, 255, 0.14); border-color: rgba(166, 124, 255, 0.4); }

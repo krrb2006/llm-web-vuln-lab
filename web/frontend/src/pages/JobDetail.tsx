@@ -23,6 +23,12 @@ const STAGE_TEXT: Record<string, string> = {
 
 const SEVERITY_ORDER: Severity[] = ["critical", "high", "medium", "low", "info"];
 
+const SOURCE_LABEL: Record<string, string> = {
+  llm: "LLM 复核",
+  dataflow: "数据流",
+  static: "规则",
+};
+
 const SEVERITY_LABEL: Record<Severity, string> = {
   critical: "严重",
   high: "高危",
@@ -209,6 +215,7 @@ export function JobDetail() {
           <div>
             {findings.map((finding) => {
               const open = expanded[finding.id];
+              const flow = finding.flow ?? [];
               return (
                 <div className="finding" key={finding.id}>
                   <div
@@ -220,7 +227,7 @@ export function JobDetail() {
                     <span className="loc">
                       {finding.file_path}:{finding.line}
                     </span>
-                    <span className={`badge ${finding.source}`}>{finding.source === "llm" ? "LLM" : "静态"}</span>
+                    <span className={`badge ${finding.source}`}>{SOURCE_LABEL[finding.source] ?? finding.source}</span>
                     <span style={{ transform: open ? "rotate(180deg)" : "none", transition: "0.2s" }}>
                       <IconChevron size={16} />
                     </span>
@@ -234,6 +241,20 @@ export function JobDetail() {
                         <span>置信度：{finding.confidence}%</span>
                         <span>位置：{finding.file_path}:{finding.line}</span>
                       </div>
+                      {flow.length > 0 && (
+                        <>
+                          <h4>数据流路径</h4>
+                          <ol className="flow">
+                            {flow.map((step, index) => (
+                              <li key={`${step.line}-${index}`}>
+                                <span className="flow-line">L{step.line}</span>
+                                <span className="flow-note">{step.note}</span>
+                                <code>{step.code}</code>
+                              </li>
+                            ))}
+                          </ol>
+                        </>
+                      )}
                       <h4>分析</h4>
                       <p>{finding.explanation || "—"}</p>
                       <h4>修复建议</h4>

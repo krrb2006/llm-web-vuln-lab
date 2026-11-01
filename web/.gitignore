@@ -8,3 +8,4 @@ __pycache__/
 *.log
 pnpm-lock.yaml
 package-lock.json
+landing/assets/

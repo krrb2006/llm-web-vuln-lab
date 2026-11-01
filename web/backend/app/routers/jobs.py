@@ -242,6 +242,14 @@ def export_job(
             f"- 严重度：{finding.severity}；置信度：{finding.confidence}%",
             f"- 结论：{finding.verdict}（来源：{finding.source}）",
             "",
+        ]
+        if finding.flow:
+            lines.append("**数据流路径**：")
+            lines.append("")
+            for step in finding.flow:
+                lines.append(f"- L{step.get('line')} · {step.get('note', '')} · `{step.get('code', '')}`")
+            lines.append("")
+        lines += [
             "```",
             finding.snippet,
             "```",

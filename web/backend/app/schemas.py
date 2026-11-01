@@ -62,6 +62,7 @@ class FindingOut(BaseModel):
     remediation: str
     confidence: int
     source: str
+    flow: list[dict] = []
 
 
 class JobOut(BaseModel):

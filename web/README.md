@@ -31,7 +31,9 @@
 ## 功能
 
 - **上传即分析**：支持 `.zip` / `.tar.gz` / `.tgz` 或单个源码文件；自动跳过 `.git`、`node_modules`、`dist` 等目录，只读取代码，**永不执行上传代码**。
-- **静态规则**：SQLi（字符串拼接 / 请求参数进查询）、XSS（反射输出、DOM 写入）、命令注入、路径穿越 / LFI、代码执行、反序列化、SSRF、硬编码密钥、弱哈希、关闭 TLS 校验、调试输出。
+- **静态数据流（主）**：轻量 tokenizer + 语句拆分 + 变量级污点传播，支持 PHP / JS / TS / Python，输出完整**污染路径**（源 → 中间变量 → 汇点）。
+- **规则兜底（辅）**：硬编码密钥、弱哈希、关闭 TLS 校验、调试输出等无数据流语义的问题仍由正则规则覆盖。
+- **清洗函数感知**：按汇点类型区分 html / sql / shell / path / url 清洗函数 —— `intval()` 后的 SQL 不误报，"HTML 转义后拼进 SQL" 仍报告并降低置信度。
 - **LLM 复核（可选）**：填入任意 OpenAI 兼容服务的 Key（OpenAI / DeepSeek / Moonshot / 通义千问 / 自建网关），对优先级最高的若干条候选逐条复核，返回结论、严重度、置信度、分析与修复建议。
 - **证据可复核**：每条发现都包含 `文件:行号`、上下文代码片段、类别、来源（静态 / LLM）、置信度。
 - **报告导出**：一键导出 Markdown 报告（含汇总表与逐条详情）。
@@ -76,6 +78,31 @@ npm run dev        # http://localhost:5173
 npm run typecheck
 npm run build
 ```
+
+## 生产部署（域名 + 自动 HTTPS）
+
+```bash
+cd web
+cp .env.prod.example .env        # 填 DOMAIN / ACME_EMAIL / 强密码
+docker compose --env-file .env   -f docker-compose.yml -f docker-compose.prod.yml   up -d --build
+```
+
+Caddy 负责申请与续期证书（80/443），反向代理到内部 nginx；nginx 继续托管前端并转发 `/api`。
+上公网前建议：`ALLOW_REGISTER=false`、`SEED_DEMO=false`、给 `JWT_SECRET` 用 `openssl rand -hex 32`。
+
+## 测试
+
+```bash
+cd web/backend
+python -m unittest discover -s tests -v      # 12 条：数据流分析 + 解压安全
+```
+
+CI（`.github/workflows/web-ci.yml`）会跑：前端 `tsc --noEmit` + `vite build`、后端 `compileall` + 单元测试、两个镜像构建。
+
+## 项目介绍页
+
+`web/landing/` 是给 GitHub Pages 用的纯静态介绍页（架构图 / 截图 / 部署命令），由 `.github/workflows/pages.yml` 自动发布：
+在仓库 Settings → Pages 里把 Source 设为 **GitHub Actions** 即可，之后每次改动 `web/landing/` 会自动更新。
 
 ## 配置项
 
