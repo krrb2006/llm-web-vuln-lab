@@ -151,3 +151,14 @@ HTTP 200、脚本退出码 0 或模型回答本身都不能单独证明漏洞成
 见 [协作规范](CONTRIBUTING.md) 和 [启动任务](docs/启动任务.md)。每人使用独立分支，以 Pull Request 提交自己的成果并交叉复核；最终交付内容已合并到 `main`。
 
 所有验证仅用于授权的本地教学靶场；证据提交前去除登录 Cookie、令牌与个人信息。第三方源码保留来源、提交号和原许可证；本仓库暂未授予统一开源许可证。
+
+## 衍生 Web 应用：VulnLab 智能代码审计
+
+把本实验的“静态规则 + LLM 复核”做成可自部署的产品原型，位于 [`web/`](web/README.md)：
+
+- React 18 + TypeScript 前端，FastAPI 后端，MySQL 8 存任务与发现，nginx 做网关；
+- 使用者上传开源仓库压缩包，填入**自己的**模型 API Key（OpenAI / DeepSeek / Moonshot / 通义千问 / 自建网关均可），得到带文件:行号、代码片段、分析依据与修复建议的报告；
+- 代码只在服务端本地解压分析、永不执行；Key 不落库、不写日志；
+- 一条命令启动：`cd web && cp .env.example .env && docker compose up -d --build`，访问 `http://localhost:8080`。
+
+![VulnLab 工作台](web/docs/screenshots/dashboard.png)

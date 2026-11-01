@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.vite/
+__pycache__/
+*.pyc
+.env
+.env.local
+*.log
+pnpm-lock.yaml
+package-lock.json

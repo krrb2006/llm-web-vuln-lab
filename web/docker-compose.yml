@@ -1,0 +1,62 @@
+name: vulnlab
+
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-vulnlab}
+      MYSQL_USER: ${MYSQL_USER:-vulnlab}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-vulnlab}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root-vulnlab}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root-vulnlab}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    networks: [internal]
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: mysql+pymysql://${MYSQL_USER:-vulnlab}:${MYSQL_PASSWORD:-vulnlab}@mysql:3306/${MYSQL_DATABASE:-vulnlab}?charset=utf8mb4
+      JWT_SECRET: ${JWT_SECRET:-please-change-this-secret}
+      DATA_DIR: /data
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-20}
+      MAX_FILES: ${MAX_FILES:-3000}
+      DAILY_JOB_LIMIT: ${DAILY_JOB_LIMIT:-10}
+      MAX_LLM_FINDINGS: ${MAX_LLM_FINDINGS:-8}
+      SEED_DEMO: ${SEED_DEMO:-true}
+      DEMO_EMAIL: ${DEMO_EMAIL:-demo@vulnlab.local}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-demo-vulnlab-2026}
+      ALLOW_REGISTER: ${ALLOW_REGISTER:-true}
+    volumes:
+      - upload_data:/data
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks: [internal]
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-8080}:80"
+    depends_on:
+      - backend
+    networks: [internal]
+
+volumes:
+  mysql_data:
+  upload_data:
+
+networks:
+  internal:
+    driver: bridge
