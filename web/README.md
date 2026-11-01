@@ -101,8 +101,10 @@ CI（`.github/workflows/web-ci.yml`）会跑：前端 `tsc --noEmit` + `vite bui
 
 ## 项目介绍页
 
-`web/landing/` 是给 GitHub Pages 用的纯静态介绍页（架构图 / 截图 / 部署命令），由 `.github/workflows/pages.yml` 自动发布：
-在仓库 Settings → Pages 里把 Source 设为 **GitHub Actions** 即可，之后每次改动 `web/landing/` 会自动更新。
+`web/landing/` 是给 GitHub Pages 用的纯静态介绍页（架构图 / 截图 / 部署命令），由 `.github/workflows/pages.yml` 自动发布。
+
+**首次启用（需要仓库管理员操作一次）**：Settings → Pages → Build and deployment → Source 选择 **GitHub Actions**，然后到 Actions 里重跑 `pages` workflow（或再推一次 `web/landing/` 的改动）。
+发布地址：<https://krrb2006.github.io/llm-web-vuln-lab/>。
 
 ## 配置项
 

@@ -162,3 +162,5 @@ HTTP 200、脚本退出码 0 或模型回答本身都不能单独证明漏洞成
 - 一条命令启动：`cd web && cp .env.example .env && docker compose up -d --build`，访问 `http://localhost:8080`。
 
 ![VulnLab 工作台](web/docs/screenshots/dashboard.png)
+
+项目介绍页（启用 GitHub Pages 后）：<https://krrb2006.github.io/llm-web-vuln-lab/>
