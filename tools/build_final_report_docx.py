@@ -427,11 +427,11 @@ def build() -> None:
 
     add_heading(doc, "5. 正式实验结果与分析", 1)
     add_heading(doc, "5.1 整体统计", 2)
-    add_paragraph(doc, "正式统计来自 results/formal_eval_2026-10-19-v2/summary.md。36 条记录均为 reviewed；三版 Prompt 在 12 个正式样本上得到相同分类与定位结果。")
+    add_paragraph(doc, "正式统计来自 results/formal_eval_2026-11-01-v3/summary.md（由 runs/formal.json 的 36 条 reviewed 记录重算，与记录集一一对应）；36 条记录均为 reviewed；三版 Prompt 在 12 个正式样本上得到相同分类与定位结果。")
     add_table(doc, ["Prompt", "N", "TP", "FP", "TN", "FN", "不确定", "准确率", "定位正确率", "原始 POC 可执行率"], [
-        ("V0", "12", "6", "0", "6", "0", "0", "100.0%", "100.0%", "0.0%"),
+        ("V0", "12", "6", "0", "6", "0", "0", "100.0%", "100.0%", "20.0%"),
         ("V1", "12", "6", "0", "6", "0", "0", "100.0%", "100.0%", "0.0%"),
-        ("V2", "12", "6", "0", "6", "0", "0", "100.0%", "100.0%", "16.7%"),
+        ("V2", "12", "6", "0", "6", "0", "0", "100.0%", "100.0%", "33.3%"),
     ], widths=[1.55, 1.0, 0.85, 0.85, 0.85, 0.85, 1.2, 2.0, 2.4, 3.3], font_size=8.1)
     add_image(doc, charts["metrics"], 15.3)
     add_caption(doc, "图 4  V0、V1、V2 的正式分类准确率与定位正确率")
@@ -492,7 +492,7 @@ def build() -> None:
     add_heading(doc, "附录 B. 核心证据索引", 1)
     add_table(doc, ["证据类型", "仓库位置", "用途"], [
         ("数据与真值", "dataset/manifest.json；dataset/packets/；docs/C_输入包总清单.md", "样本、源码、行号与真值基线"),
-        ("正式结果", "runs/formal.json；runs/F_*；results/formal_eval_2026-10-19-v2/", "36 条主实验原文、规范化和统计"),
+        ("正式结果", "runs/formal.json；runs/F_*；results/formal_eval_2026-11-01-v3/", "36 条主实验原文、规范化和统计"),
         ("模型口径", "results/A_model_provenance_update_2026-10-26.md", "网页默认/快速模式与版本映射说明"),
         ("环境与动态验证", "environment/；results/A_ADV_runtime_recheck_2026-10-26.md", "Docker、业务对照、第二台电脑复现"),
         ("加分实验", "experiments/bonus_runs.plan.json；evidence/；runs/ADV_*_R1/", "Prompt Injection、Burp、CTX、ADV 证据"),
