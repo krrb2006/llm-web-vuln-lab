@@ -59,7 +59,7 @@ export interface LlmConfig {
 
 export const PROVIDERS: { id: string; label: string; baseUrl: string; models: string[] }[] = [
   { id: "openai", label: "OpenAI", baseUrl: "https://api.openai.com/v1", models: ["gpt-4o-mini", "gpt-4o", "gpt-4.1-mini"] },
-  { id: "deepseek", label: "DeepSeek", baseUrl: "https://api.deepseek.com/v1", models: ["deepseek-chat", "deepseek-reasoner"] },
+  { id: "deepseek", label: "DeepSeek", baseUrl: "https://api.deepseek.com", models: ["deepseek-flash", "deepseek-v4-pro", "deepseek-chat", "deepseek-reasoner"] },
   { id: "moonshot", label: "Moonshot", baseUrl: "https://api.moonshot.cn/v1", models: ["moonshot-v1-32k", "kimi-latest"] },
   { id: "qwen", label: "通义千问", baseUrl: "https://dashscope.aliyuncs.com/compatible-mode/v1", models: ["qwen-plus", "qwen-max"] },
   { id: "custom", label: "自定义（OpenAI 兼容）", baseUrl: "", models: ["gpt-4o-mini"] },

@@ -155,7 +155,7 @@ export function UploadCard({ onCreated }: Props) {
               list="model-options"
               value={config.model}
               onChange={(event) => update({ model: event.target.value })}
-              placeholder="deepseek-chat"
+              placeholder="deepseek-flash"
             />
             <datalist id="model-options">
               {provider.models.map((model) => (
@@ -171,7 +171,7 @@ export function UploadCard({ onCreated }: Props) {
             className="input"
             value={config.baseUrl}
             onChange={(event) => update({ baseUrl: event.target.value })}
-            placeholder="https://api.deepseek.com/v1"
+            placeholder="https://api.deepseek.com"
           />
         </div>
 

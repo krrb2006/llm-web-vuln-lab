@@ -22,13 +22,22 @@ export function setToken(token: string | null) {
 }
 
 export function loadLlmConfig(): LlmConfig {
+  const fallback: LlmConfig = { provider: "deepseek", baseUrl: "https://api.deepseek.com", model: "deepseek-flash", apiKey: "" };
   try {
     const raw = localStorage.getItem(LLM_KEY);
-    if (raw) return JSON.parse(raw) as LlmConfig;
+    if (raw) {
+      const saved = { ...fallback, ...(JSON.parse(raw) as Partial<LlmConfig>) };
+      // Migrate the old built-in DeepSeek URL; the current official endpoint
+      // does not use the OpenAI /v1 prefix.
+      if (saved.provider === "deepseek" && saved.baseUrl === "https://api.deepseek.com/v1") {
+        saved.baseUrl = "https://api.deepseek.com";
+      }
+      return saved;
+    }
   } catch {
     /* ignore corrupted config */
   }
-  return { provider: "deepseek", baseUrl: "https://api.deepseek.com/v1", model: "deepseek-chat", apiKey: "" };
+  return fallback;
 }
 
 export function saveLlmConfig(config: LlmConfig) {

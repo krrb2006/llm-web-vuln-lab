@@ -109,6 +109,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts\run-native.ps1 -NoBr
 | 页面能打开但 API 报 502/503 | FastAPI 或 MySQL 仍在启动 | 等待 `/api/health` 返回 `status=ok`，再刷新页面 |
 | 别人访问不了局域网地址 | 只监听了 `127.0.0.1` 或防火墙拦截 | 使用 `-Bind 0.0.0.0`，放行 TCP 8081，并确保在同一网络 |
 | API Key 无法调用模型 | Base URL、模型名、Key 或网络不正确 | 先用静态扫描验证网站，再核对 OpenAI 兼容接口地址和模型名 |
+| 模型服务返回 404，页面显示“已调用”但“仅模型确认”为 0 | 请求已进入 LLM 流程，但服务商拒绝了地址或模型名；旧版 DeepSeek 常见原因是仍使用 `/v1` 地址 | DeepSeek 使用 `https://api.deepseek.com`，模型填写 `deepseek-flash` 或服务商控制台显示的有效模型；更新页面后重新发起任务。页面会显示成功/失败调用数和服务商错误详情 |
 | GitHub Pages 打开但没有后端功能 | Pages 只能托管静态文件 | 使用本地原生模式或 Docker 服务器；Pages 不运行 FastAPI/MySQL |
 
 ## 界面

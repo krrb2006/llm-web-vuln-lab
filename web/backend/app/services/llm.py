@@ -13,7 +13,7 @@ settings = get_settings()
 
 DEFAULT_BASE_URLS = {
     "openai": "https://api.openai.com/v1",
-    "deepseek": "https://api.deepseek.com/v1",
+    "deepseek": "https://api.deepseek.com",
     "moonshot": "https://api.moonshot.cn/v1",
     "qwen": "https://dashscope.aliyuncs.com/compatible-mode/v1",
     "custom": "",
@@ -31,6 +31,45 @@ JSON 字段：
 
 class LLMError(RuntimeError):
     pass
+
+
+def _completion_url(provider: str, base_url: str | None) -> str:
+    """Build one OpenAI-compatible chat-completions URL.
+
+    DeepSeek's current official endpoint uses ``https://api.deepseek.com``
+    without the OpenAI ``/v1`` prefix. Keep accepting the old value so keys
+    saved by earlier versions of the web UI do not keep producing a 404.
+    """
+    base = (base_url or DEFAULT_BASE_URLS.get(provider, "")).strip().rstrip("/")
+    if not base:
+        raise LLMError("未配置可用的模型服务地址")
+    if provider == "deepseek" and base.lower() == "https://api.deepseek.com/v1":
+        base = "https://api.deepseek.com"
+    if base.lower().endswith("/chat/completions"):
+        return base
+    return f"{base}/chat/completions"
+
+
+def _error_detail(response: httpx.Response) -> str:
+    """Keep useful provider error text instead of displaying a blank 404."""
+    try:
+        body = response.json()
+    except ValueError:
+        return response.text[:300].strip()
+    if isinstance(body, dict):
+        error = body.get("error")
+        if isinstance(error, dict):
+            for key in ("message", "detail", "code"):
+                value = error.get(key)
+                if value:
+                    return str(value)[:300]
+        elif isinstance(error, str) and error.strip():
+            return error.strip()[:300]
+        for key in ("detail", "message"):
+            value = body.get(key)
+            if value:
+                return str(value)[:300]
+    return response.text[:300].strip()
 
 
 def _extract_json(text: str) -> dict:
@@ -78,9 +117,7 @@ def confirm_candidate(
     snippet: str,
     flow_text: str = "",
 ) -> dict:
-    base = (base_url or DEFAULT_BASE_URLS.get(provider, "")).rstrip("/")
-    if not base:
-        raise LLMError("未配置可用的模型服务地址")
+    endpoint = _completion_url(provider, base_url)
     payload = {
         "model": model,
         "temperature": 0,
@@ -102,18 +139,14 @@ def confirm_candidate(
     }
     try:
         with httpx.Client(timeout=settings.llm_timeout_seconds) as client:
-            response = client.post(f"{base}/chat/completions", json=payload, headers=headers)
+            response = client.post(endpoint, json=payload, headers=headers)
     except httpx.HTTPError as error:
         raise LLMError(f"模型服务连接失败: {type(error).__name__}") from error
 
     if response.status_code >= 400:
-        detail = ""
-        try:
-            body = response.json()
-            detail = body.get("error", {}).get("message", "")
-        except ValueError:
-            detail = response.text[:200]
-        raise LLMError(f"模型服务返回 {response.status_code}: {detail[:200]}")
+        detail = _error_detail(response)
+        suffix = f": {detail}" if detail else ""
+        raise LLMError(f"模型服务返回 {response.status_code}{suffix}")
 
     try:
         content = response.json()["choices"][0]["message"]["content"]

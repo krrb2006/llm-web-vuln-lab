@@ -58,7 +58,7 @@ export function Settings() {
               className="input"
               value={config.baseUrl}
               onChange={(event) => update({ baseUrl: event.target.value })}
-              placeholder="https://api.deepseek.com/v1"
+              placeholder="https://api.deepseek.com"
             />
           </div>
 
@@ -68,7 +68,7 @@ export function Settings() {
               className="input"
               value={config.model}
               onChange={(event) => update({ model: event.target.value })}
-              placeholder="deepseek-chat"
+              placeholder="deepseek-flash"
             />
           </div>
 
