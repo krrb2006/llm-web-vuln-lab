@@ -57,6 +57,7 @@ docker compose up -d --build
 - **提示 `No module named uvicorn`**：不要手动运行半成品环境；重新执行 `run-native.ps1`，脚本会检查并修复依赖。若之前安装被强制中断，可删除 `web/.venv-native` 后重试。
 - **浏览器显示 `ERR_CONNECTION_REFUSED`**：后端进程已经退出或终端窗口被关闭。重新启动后，先用 `curl http://127.0.0.1:8081/api/health` 检查；CMD 中使用 `curl.exe`，`Invoke-WebRequest` 只在 PowerShell 中可用。
 - **局域网分享**：使用 `run-native.ps1 -Bind 0.0.0.0`，再运行 `scripts/show-url.ps1`；Windows 防火墙需要放行 8081 端口。
+- **提交包运行 `environment/build_lab_cases.py` 报 Git ref / `.git` 错误**：教师 ZIP 为了安全不会包含 `.git`，请从仓库根目录运行 `python environment/build_lab_cases.py --from-working-tree`。它会从包内 `dataset/raw/` 生成样本；若要启动 DVWA Compose，再获取 `third_party/DVWA` 后重复该命令。
 
 ### 依赖安装失败：`pydantic-core` / `Failed building wheel`
 
