@@ -44,6 +44,7 @@ export function JobDetail() {
   const [error, setError] = useState("");
   const [filter, setFilter] = useState<"all" | Severity | "llm">("all");
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [exporting, setExporting] = useState(false);
   const navigate = useNavigate();
   const { push } = useToast();
 
@@ -93,6 +94,19 @@ export function JobDetail() {
     }
   }
 
+  async function exportReport() {
+    if (!jobId) return;
+    setExporting(true);
+    try {
+      await api.exportJob(jobId);
+      push("报告已下载", "success");
+    } catch (cause) {
+      push(cause instanceof Error ? cause.message : "导出失败", "error");
+    } finally {
+      setExporting(false);
+    }
+  }
+
   if (loading) {
     return (
       <div className="container">
@@ -133,9 +147,9 @@ export function JobDetail() {
         </div>
         <div className="inline">
           {job.status === "succeeded" && (
-            <a className="btn ghost small" href={api.exportUrl(job.id)} target="_blank" rel="noreferrer">
-              <IconDownload size={15} /> 导出报告
-            </a>
+            <button className="btn ghost small" onClick={exportReport} disabled={exporting} type="button">
+              {exporting ? <span className="spinner" /> : <IconDownload size={15} />} {exporting ? "准备下载…" : "导出报告"}
+            </button>
           )}
           <button className="btn danger small" onClick={remove} type="button">
             <IconTrash size={15} /> 删除

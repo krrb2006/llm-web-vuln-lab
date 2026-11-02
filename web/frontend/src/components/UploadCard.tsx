@@ -106,7 +106,7 @@ export function UploadCard({ onCreated }: Props) {
           ref={inputRef}
           type="file"
           hidden
-          accept=".zip,.tar,.gz,.tgz,.bz2,.xz,.php,.js,.ts,.py,.java,.go,.rb,.html,.vue"
+          accept=".zip,.tar.gz,.tgz,.tar.bz2,.tar.xz,.php,.js,.jsx,.ts,.tsx,.py,.java,.go,.rb,.html,.vue,.svelte"
           onChange={(event) => pick(event.target.files?.[0] ?? null)}
         />
       </div>

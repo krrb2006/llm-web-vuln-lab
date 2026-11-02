@@ -33,6 +33,17 @@ settings = get_settings()
 
 SAMPLE_DIR = Path(__file__).resolve().parent.parent / "samples" / "vulnerable-demo"
 
+SOURCE_SUFFIXES = {
+    ".php", ".phtml", ".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx",
+    ".py", ".java", ".go", ".rb", ".jsp", ".html", ".htm", ".vue", ".svelte",
+}
+ARCHIVE_SUFFIXES = (".zip", ".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tar.xz")
+
+
+def _is_supported_upload_name(filename: str) -> bool:
+    lowered = filename.lower()
+    return lowered.endswith(ARCHIVE_SUFFIXES) or Path(lowered).suffix in SOURCE_SUFFIXES
+
 
 def _recent_count(db: Session, user_id: str) -> int:
     since = datetime.utcnow() - timedelta(days=1)
@@ -64,12 +75,7 @@ async def create_job(
         raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, "今日分析次数已达上限，请明天再试")
 
     filename = Path(file.filename or "upload.zip").name
-    suffix = Path(filename).suffix.lower()
-    allowed = {".zip", ".tar", ".gz", ".tgz", ".bz2", ".xz"} | {
-        ".php", ".phtml", ".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx",
-        ".py", ".java", ".go", ".rb", ".jsp", ".html", ".htm", ".vue", ".svelte",
-    }
-    if suffix not in allowed:
+    if not _is_supported_upload_name(filename):
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "请上传 zip/tar.gz 压缩包，或单个源码文件")
 
     job_id = uuid.uuid4().hex

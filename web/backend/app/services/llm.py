@@ -50,6 +50,21 @@ def _extract_json(text: str) -> dict:
             raise LLMError(f"模型 JSON 解析失败: {error}") from error
 
 
+def _message_text(content: object) -> str:
+    """Normalize both plain strings and OpenAI-compatible content-part arrays."""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts: list[str] = []
+        for part in content:
+            if isinstance(part, str):
+                parts.append(part)
+            elif isinstance(part, dict) and isinstance(part.get("text"), str):
+                parts.append(part["text"])
+        return "\n".join(parts)
+    return str(content)
+
+
 def confirm_candidate(
     *,
     api_key: str,
@@ -76,6 +91,7 @@ def confirm_candidate(
                 "content": (
                     f"文件：{file_path}\n语言：{language}\n静态规则：{category} / {rule_title}\n\n"
                     f"代码片段（含上下文）：\n```{language.lower()}\n{snippet[:4000]}\n```"
+                    + (f"\n\n静态数据流路径：\n{flow_text}" if flow_text else "")
                 ),
             },
         ],
@@ -104,7 +120,7 @@ def confirm_candidate(
     except (KeyError, IndexError, ValueError) as error:
         raise LLMError("模型响应结构异常") from error
 
-    data = _extract_json(content if isinstance(content, str) else str(content))
+    data = _extract_json(_message_text(content))
     verdict = str(data.get("verdict", "uncertain")).lower()
     if verdict not in {"vulnerable", "safe", "uncertain"}:
         verdict = "uncertain"

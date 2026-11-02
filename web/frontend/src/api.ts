@@ -42,12 +42,24 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   if (options.body && !(options.body instanceof FormData)) {
     headers.set("Content-Type", "application/json");
   }
-  const response = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  } catch {
+    throw new ApiError("无法连接到服务，请确认 Docker 服务已启动或检查网关地址", 0);
+  }
   if (response.status === 204) {
     return undefined as T;
   }
   const text = await response.text();
-  const data = text ? JSON.parse(text) : {};
+  let data: unknown = {};
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = { detail: text.slice(0, 300) };
+    }
+  }
   if (!response.ok) {
     const detail = (data as { detail?: unknown }).detail;
     const message =
@@ -59,6 +71,38 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     throw new ApiError(message || `请求失败（${response.status}）`, response.status);
   }
   return data as T;
+}
+
+async function downloadReport(id: string): Promise<void> {
+  const headers = new Headers();
+  const token = getToken();
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE}/jobs/${encodeURIComponent(id)}/export`, { headers });
+  } catch {
+    throw new ApiError("无法连接到服务，请确认 Docker 服务已启动或检查网关地址", 0);
+  }
+  if (!response.ok) {
+    const text = await response.text();
+    let detail = text.slice(0, 300);
+    try {
+      const data = JSON.parse(text) as { detail?: unknown };
+      if (typeof data.detail === "string") detail = data.detail;
+    } catch {
+      /* 网关错误页可能是 HTML，保留原始短消息 */
+    }
+    throw new ApiError(detail || `导出失败（${response.status}）`, response.status);
+  }
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = `vuln-report-${id.slice(0, 8)}.md`;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 export const api = {
@@ -88,5 +132,5 @@ export const api = {
     return request<Job>("/jobs", { method: "POST", body: form });
   },
   demoJob: () => request<Job>("/jobs/demo", { method: "POST" }),
-  exportUrl: (id: string) => `${API_BASE}/jobs/${id}/export`,
+  exportJob: downloadReport,
 };
