@@ -57,6 +57,50 @@ docker compose down            # 保留数据卷
 docker compose down -v         # 连数据一起删除
 ```
 
+### 原生模式（不依赖 Docker，最稳）
+
+不想被 Docker 状态影响时，用同一套代码直接跑在 Python 上（SQLite 存数据，预构建前端由 FastAPI 托管）：
+
+```powershell
+# Windows
+powershell -File scripts/run-native.ps1          # 默认 http://127.0.0.1:8081
+```
+
+```bash
+# Linux / macOS / WSL
+./scripts/run-native.sh                          # PORT=9000 ./scripts/run-native.sh 可换端口
+```
+
+- 首次运行自动建 `.venv-native` 并装依赖（1–2 分钟），之后秒开；
+- 数据在 `web/data/vulnlab.db`（SQLite），JWT 密钥写在 `web/local-native.env`（自动生成、已被 git 忽略）；
+- 前端用仓库里的 `web/static/` 预构建产物，**不需要 Node**；改了前端代码后跑一次 `powershell -File scripts/build-static.ps1` 刷新；
+- 可以和 Docker 版同时跑（8080 / 8081），互不干扰。
+
+### 稳定性：自动启动与自愈
+
+本应用依赖 Docker 运行。电脑休眠/重启后 Docker Desktop 不会自动恢复时，站点就会打不开。仓库里提供了两层保障：
+
+| 机制 | 作用 | 安装 |
+|---|---|---|
+| `scripts/auto-start.ps1` + 启动文件夹快捷方式 | 登录时启动 Docker、拉起容器，并常驻看门狗 | `powershell -File scripts/install-autostart.ps1` |
+| `scripts/watchdog.ps1 -Loop` | 每 5 分钟检查 `/api/health`，异常自动 `docker compose up -d` | 由 `auto-start.ps1` 自动拉起 |
+| compose `restart: always` + 三个服务的 healthcheck | 容器崩溃/宿主机重启后自动重启，不健康即重启 | 无需操作 |
+
+卸载自启：`powershell -File scripts/install-autostart.ps1 -Remove`。
+日志：`web/scripts/watchdog.log`、`web/scripts/startup.log`。
+
+手动检查一次：`powershell -File scripts/watchdog.ps1`（正常时静默退出，异常时自动修复）。
+
+### 打不开 localhost:8080 时
+
+应用跑在 Docker 里（nginx + FastAPI + MySQL）。**电脑重启后如果 Docker Desktop 没启动，8080 就没有进程监听**，浏览器会提示无法连接。三种处理方式：
+
+1. 打开 Docker Desktop，等引擎就绪后容器会按 `restart: unless-stopped` 自动拉起；
+2. 或执行一键脚本：`powershell -ExecutionPolicy Bypass -File scripts/start.ps1`（Linux/macOS 用 `bash scripts/start.sh`）；
+3. 想彻底免维护：Docker Desktop → Settings → General 勾选 **Start Docker Desktop when you sign in**。
+
+脚本会自己检查引擎、拉起容器并轮询 `/api/health`，就绪后打印访问地址。
+
 ## 本地开发
 
 后端：

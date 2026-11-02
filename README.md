@@ -12,7 +12,7 @@
 
 仓库提供了可部署到 GitHub Pages 的静态前端：[TraceGuard 使用说明](web/README.md)。使用者可在浏览器内导入自己有权审计的源码压缩包，填写自己的 OpenAI 兼容 API Key 后获取结构化安全审计报告。代码和密钥不经过本项目服务器；部署和安全边界见该说明。
 
-仓库曾保留一个公开演示版：[TraceGuard 交互式安全审计](https://traceguard-security-review.krrb2006.chatgpt.site)。它支持 AI 初步扫描、对话式追问、风险卡片人工复核和 Markdown 报告导出；新的自托管部署请使用下方 `app/`，不依赖这个演示站。
+仓库曾有一个公开演示版（TraceGuard，已标记为 legacy）。现在唯一的自托管实现是 [`web/`](web/README.md)：React + FastAPI + MySQL + nginx，支持上传仓库、接入自己的模型 API Key、静态数据流 + LLM 复核。
 
 ## 从这里开始
 
@@ -171,12 +171,15 @@ HTTP 200、脚本退出码 0 或模型回答本身都不能单独证明漏洞成
 
 项目介绍页（启用 GitHub Pages 后）：<https://krrb2006.github.io/llm-web-vuln-lab/>
 
-## 自托管交互式工作台（推荐新部署）
+## 自托管部署（唯一实现：`web/`）
 
-如果要把网站部署到你自己的服务器，并让用户在同一页面里上传源码、连接自己的 API Key、和 AI 逐轮追问漏洞，请使用 [`app/`](app/README.md)：
+网站代码全部在 [`web/`](web/README.md)：
 
-- React + Vite 前端、FastAPI 后端、MySQL 数据库、Nginx 网关；
-- API Key 只在当前请求中使用，不写入数据库；审计结果和人工/AI 对话写入 MySQL；
-- `docker compose -f app/docker-compose.yml up -d --build` 一条命令启动；
-- GitHub 只负责保存和发布代码，FastAPI/MySQL 仍需部署在你自己的 Linux/Docker 服务器上；
-- 原有 `web/`、实验数据、报告和旧的 TraceGuard Site 源码均保留，不会被新版本删除。
+- React 18 + TypeScript + Vite 前端、FastAPI 后端、MySQL 8、nginx 网关；
+- Docker 版：`cd web && cp .env.example .env && docker compose up -d --build`，访问 `http://localhost:8080`；
+- 生产版（域名 + 自动 HTTPS）：`docker compose --env-file .env -f docker-compose.yml -f docker-compose.prod.yml up -d --build`；
+- 原生版（不依赖 Docker）：`powershell -File web/scripts/run-native.ps1`，访问 `http://127.0.0.1:8081`；
+- 站点自愈：`web/scripts/install-autostart.ps1` 安装登录自启 + 每 5 分钟看门狗；
+- GitHub 只保存代码与发布静态介绍页，FastAPI/MySQL 需要跑在 Docker 主机或本机 Python 上。
+
+> 2026-11-02 整理：删除了与 `web/` 重复的另一套实现（原 `app/` 目录与 `web/` 根目录下的静态原型），统一以 `web/` 为准；历史提交仍可在 git 中找回。

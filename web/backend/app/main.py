@@ -7,8 +7,12 @@ import os
 import time
 from contextlib import asynccontextmanager
 
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import inspect, text
 
 from .config import get_settings
@@ -93,6 +97,26 @@ app.include_router(auth.router, prefix=api_prefix)
 app.include_router(jobs.router, prefix=api_prefix)
 
 
-@app.get("/")
-def root() -> dict[str, str]:
-    return {"service": settings.app_name, "docs": "/api/docs", "health": "/api/health"}
+FRONTEND_DIR = Path(os.getenv("FRONTEND_DIR", "")).resolve()
+HAS_FRONTEND = FRONTEND_DIR.is_dir() and (FRONTEND_DIR / "index.html").is_file()
+
+if HAS_FRONTEND:
+    # 原生模式：同一个进程同时提供 SPA 静态资源（Docker 模式下由 nginx 托管）
+    assets_dir = FRONTEND_DIR / "assets"
+    if assets_dir.is_dir():
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    def spa(full_path: str):
+        candidate = (FRONTEND_DIR / full_path).resolve()
+        if full_path and candidate.is_file() and str(candidate).startswith(str(FRONTEND_DIR)):
+            return FileResponse(candidate)
+        return FileResponse(FRONTEND_DIR / "index.html")
+
+    @app.get("/", include_in_schema=False)
+    def index() -> FileResponse:
+        return FileResponse(FRONTEND_DIR / "index.html")
+else:
+    @app.get("/")
+    def root() -> dict[str, str]:
+        return {"service": settings.app_name, "docs": "/api/docs", "health": "/api/health"}
