@@ -55,6 +55,9 @@ function Repair-Site {
 }
 
 if ($Loop) {
+    # 单实例：已有一个循环在跑时直接退出
+    $mutex = New-Object System.Threading.Mutex($false, "Global\VulnLabWatchdog")
+    if (-not $mutex.WaitOne(0)) { exit 0 }
     Write-Log "看门狗循环启动，间隔 ${IntervalSeconds}s"
     while ($true) {
         if (-not (Test-Site)) { Repair-Site | Out-Null }
