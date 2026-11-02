@@ -7,6 +7,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 WEB_ROOT="$(pwd)"
 PORT="${PORT:-8081}"
+BIND="${BIND:-127.0.0.1}"   # BIND=0.0.0.0 可让局域网访问
 
 PY="${PYTHON:-python3}"
 if ! "$PY" --version >/dev/null 2>&1; then
@@ -47,4 +48,4 @@ echo "演示账号 demo@vulnlab.local / demo-vulnlab-2026"
 echo ""
 
 cd backend
-exec "${WEB_ROOT}/.venv-native/bin/python" -m uvicorn app.main:app --host 127.0.0.1 --port "$PORT"
+exec "${WEB_ROOT}/.venv-native/bin/python" -m uvicorn app.main:app --host "$BIND" --port "$PORT"

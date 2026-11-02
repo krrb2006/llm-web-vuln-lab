@@ -76,6 +76,24 @@ powershell -File scripts/run-native.ps1          # 默认 http://127.0.0.1:8081
 - 前端用仓库里的 `web/static/` 预构建产物，**不需要 Node**；改了前端代码后跑一次 `powershell -File scripts/build-static.ps1` 刷新；
 - 可以和 Docker 版同时跑（8080 / 8081），互不干扰。
 
+### 分享给别人（局域网）
+
+```powershell
+powershell -File scripts/show-url.ps1     # 打印当前本机/局域网地址并检测在线状态
+```
+
+| 模式 | 本机 | 局域网 |
+|---|---|---|
+| Docker（推荐分享） | `http://localhost:8080` | `http://<本机IP>:8080` |
+| 原生（无需 Docker） | `http://127.0.0.1:8081` | `http://<本机IP>:8081` |
+
+注意：
+
+- 局域网访问要求对方连同一个 Wi-Fi；校园网（如 `tjuwlan`）常开启客户端隔离，可能连不上，改用手机热点。
+- 8080 由 Docker 的入站规则放行；**8081 需要管理员放行一次**：
+  `netsh advfirewall firewall add rule name="VulnLab 8081" dir=in action=allow protocol=TCP localport=8081`
+- 本机 IP 由 DHCP 分配，重连 Wi-Fi 会变化，分享前重跑 `show-url.ps1`；原生模式想让局域网访问需加 `-Bind 0.0.0.0`。
+
 ### 稳定性：自动启动与自愈
 
 本应用依赖 Docker 运行。电脑休眠/重启后 Docker Desktop 不会自动恢复时，站点就会打不开。仓库里提供了两层保障：

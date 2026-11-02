@@ -7,6 +7,7 @@
 
 param(
     [int]$Port = 8081,
+    [string]$Bind = "127.0.0.1",   # 想在局域网访问用 -Bind 0.0.0.0（还需放行防火墙）
     [switch]$NoBrowser
 )
 
@@ -82,7 +83,10 @@ if (-not $NoBrowser) {
 Write-Host ""
 Write-Host "VulnLab 原生模式启动中：$url" -ForegroundColor Green
 Write-Host "演示账号 demo@vulnlab.local / demo-vulnlab-2026；数据在 $dataDir" -ForegroundColor DarkGray
+if ($Bind -ne "127.0.0.1") {
+    Write-Host "已监听 $Bind，局域网地址形如 http://<本机IP>:$Port（需放行防火墙入站）" -ForegroundColor DarkGray
+}
 Write-Host "按 Ctrl+C 停止（不依赖 Docker，关掉窗口即退出）" -ForegroundColor DarkGray
 Write-Host ""
 
-& $pythonExe -m uvicorn app.main:app --host 127.0.0.1 --port $Port
+& $pythonExe -m uvicorn app.main:app --host $Bind --port $Port
