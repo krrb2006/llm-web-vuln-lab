@@ -57,6 +57,25 @@ docker compose down            # 保留数据卷
 docker compose down -v         # 连数据一起删除
 ```
 
+### 原生模式（不依赖 Docker，最稳）
+
+不想被 Docker 状态影响时，用同一套代码直接跑在 Python 上（SQLite 存数据，预构建前端由 FastAPI 托管）：
+
+```powershell
+# Windows
+powershell -File scripts/run-native.ps1          # 默认 http://127.0.0.1:8081
+```
+
+```bash
+# Linux / macOS / WSL
+./scripts/run-native.sh                          # PORT=9000 ./scripts/run-native.sh 可换端口
+```
+
+- 首次运行自动建 `.venv-native` 并装依赖（1–2 分钟），之后秒开；
+- 数据在 `web/data/vulnlab.db`（SQLite），JWT 密钥写在 `web/local-native.env`（自动生成、已被 git 忽略）；
+- 前端用仓库里的 `web/static/` 预构建产物，**不需要 Node**；改了前端代码后跑一次 `powershell -File scripts/build-static.ps1` 刷新；
+- 可以和 Docker 版同时跑（8080 / 8081），互不干扰。
+
 ### 稳定性：自动启动与自愈
 
 本应用依赖 Docker 运行。电脑休眠/重启后 Docker Desktop 不会自动恢复时，站点就会打不开。仓库里提供了两层保障：
