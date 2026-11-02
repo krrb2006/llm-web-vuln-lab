@@ -21,8 +21,12 @@ if [ ! -f "static/index.html" ]; then
 fi
 
 if [ ! -x ".venv-native/bin/python" ]; then
-  echo "首次运行：创建虚拟环境并安装依赖…"
+  echo "首次运行：创建虚拟环境…"
   "$PY" -m venv .venv-native
+fi
+
+if ! .venv-native/bin/python -c 'import fastapi, sqlalchemy, uvicorn' >/dev/null 2>&1; then
+  echo "安装/修复依赖（首次约 1-2 分钟）…"
   .venv-native/bin/python -m pip install --upgrade pip --quiet
   .venv-native/bin/python -m pip install -r backend/requirements.txt --quiet
 fi

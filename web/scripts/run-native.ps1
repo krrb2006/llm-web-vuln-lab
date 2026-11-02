@@ -42,9 +42,20 @@ $pythonExe = $venv + "\Scripts\python.exe"
 if (-not (Test-Path $pythonExe)) {
     Write-Host "首次运行：创建虚拟环境 $venv …" -ForegroundColor Cyan
     if ($python.Length -eq 2) { & $python[0] $python[1] -m venv $venv } else { & $python[0] -m venv $venv }
+}
+
+$dependenciesReady = $false
+if (Test-Path $pythonExe) {
+    & $pythonExe -c "import fastapi, sqlalchemy, uvicorn" 2>$null
+    $dependenciesReady = ($LASTEXITCODE -eq 0)
+}
+if (-not $dependenciesReady) {
+    Write-Host "安装/修复依赖（首次约 1-2 分钟）…" -ForegroundColor Cyan
     & $pythonExe -m pip install --upgrade pip --quiet
-    Write-Host "安装依赖（首次约 1-2 分钟）…" -ForegroundColor Cyan
     & $pythonExe -m pip install -r (Join-Path $backend "requirements.txt") --quiet
+    if ($LASTEXITCODE -ne 0) {
+        throw "Python 依赖安装失败，请检查网络后重试。"
+    }
 }
 
 if (-not (Test-Path $dataDir)) { New-Item -ItemType Directory -Path $dataDir | Out-Null }
