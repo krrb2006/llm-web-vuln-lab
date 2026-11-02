@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="面向授权代码仓库的浏览器端 LLM 辅助安全审计工作台" />
+    <title>TraceGuard · LLM 代码安全审计</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="TraceGuard 首页"><span class="brand-mark">⌁</span><span>TRACE<span>GUARD</span></span></a>
+      <div class="topbar-right"><span class="status-dot"></span><span class="topbar-text">BROWSER-LOCAL</span><a href="#how" class="text-link">工作方式</a></div>
+    </header>
+    <main id="top">
+      <section class="hero">
+        <div class="eyebrow"><span></span> LLM-ASSISTED SECURITY REVIEW</div>
+        <h1>在代码抵达生产环境前，<em>看见风险。</em></h1>
+        <p>上传你有权审计的开源仓库压缩包，连接自己的模型 API，在浏览器中获得可追溯的漏洞审计报告。</p>
+        <div class="trust-row"><span>◈ 不上传到本服务</span><span>◈ API Key 不落盘</span><span>◈ 仅限授权审计</span></div>
+      </section>
+
+      <section class="workspace" aria-label="安全审计工作台">
+        <aside class="steps" aria-label="流程步骤">
+          <div class="step active"><b>01</b><span>导入代码</span><i>ZIP / 源码文本</i></div>
+          <div class="step"><b>02</b><span>连接模型</span><i>自带 API Key</i></div>
+          <div class="step"><b>03</b><span>审计发现</span><i>结构化报告</i></div>
+        </aside>
+        <div class="panels">
+          <section class="panel upload-panel" aria-labelledby="upload-title">
+            <div class="panel-title"><div><span class="panel-kicker">SOURCE INTAKE</span><h2 id="upload-title">导入待审计代码</h2></div><span class="chip">LOCAL ONLY</span></div>
+            <label class="dropzone" id="dropzone" for="repoFile">
+              <input id="repoFile" type="file" accept=".zip,.txt,.js,.ts,.py,.php,.java,.go,.rb,.cs,.html,.vue,.jsx,.tsx" />
+              <span class="upload-glyph">↥</span><strong>拖放仓库压缩包到此处</strong><small>支持 .zip，或选择单个源码文件 · 最大 30 MB</small><span class="browse">选择文件</span>
+            </label>
+            <div class="file-summary" id="fileSummary" hidden>
+              <span class="file-icon">▣</span><div><strong id="repoName"></strong><small id="repoStats"></small></div><button class="icon-button" id="clearFiles" type="button" aria-label="移除代码">×</button>
+            </div>
+            <p class="helper">自动排除 <code>node_modules</code>、依赖缓存、构建产物和二进制文件；仅将候选源码发送给你选定的模型。</p>
+          </section>
+
+          <section class="panel config-panel" aria-labelledby="config-title">
+            <div class="panel-title"><div><span class="panel-kicker">MODEL CONNECTION</span><h2 id="config-title">配置审计模型</h2></div><span class="key-safe">⌁ Session only</span></div>
+            <div class="form-grid">
+              <label>服务商<select id="provider"><option value="openai">OpenAI</option><option value="deepseek">DeepSeek</option><option value="compatible">兼容 OpenAI 的服务</option></select></label>
+              <label>模型名称<input id="model" value="gpt-4.1-mini" autocomplete="off" /></label>
+              <label class="wide">API Endpoint<input id="endpoint" type="url" value="https://api.openai.com/v1/chat/completions" autocomplete="off" /></label>
+              <label class="wide">API Key<div class="password-wrap"><input id="apiKey" type="password" placeholder="sk-...（仅保存在当前页面内存）" autocomplete="off" /><button id="toggleKey" type="button" aria-label="显示 API Key">◉</button></div></label>
+            </div>
+            <label class="authorization"><input id="authorized" type="checkbox" /><span>我确认拥有或已获得该代码仓库的审计授权，并理解模型提供商将接收所选源码。</span></label>
+          </section>
+
+          <section class="runbar">
+            <div><span class="run-label">READY WHEN YOU ARE</span><p id="runHint">导入代码、填写 API Key 后即可开始。</p></div>
+            <button class="analyze-button" id="analyze" type="button" disabled><span>开始安全审计</span><b>→</b></button>
+          </section>
+        </div>
+      </section>
+
+      <section class="results" id="results" hidden aria-live="polite">
+        <div class="results-head"><div><span class="panel-kicker">ANALYSIS OUTPUT</span><h2>审计发现</h2><p id="resultMeta">报告由模型生成，需人工验证后才能确认。</p></div><button id="exportReport" class="export-button" type="button">导出 Markdown <span>↓</span></button></div>
+        <div class="progress" id="progress"><div></div></div>
+        <div class="metrics" id="metrics"></div>
+        <div class="findings" id="findings"></div>
+        <details class="raw-output"><summary>查看模型原始输出</summary><pre id="rawOutput"></pre></details>
+      </section>
+
+      <section class="how" id="how"><div><span class="panel-kicker">PRIVACY BY DESIGN</span><h2>没有后端，只有你的浏览器和你的模型。</h2></div><div class="how-cards"><article><b>01</b><h3>本地预处理</h3><p>压缩包在浏览器内解压、过滤和截断，密钥不会发送到本网站。</p></article><article><b>02</b><h3>受控调用</h3><p>仅通过你填写的 Endpoint 向模型发送审计上下文，不作服务器转发。</p></article><article><b>03</b><h3>人工闭环</h3><p>报告提供代码位置和修复建议；漏洞结论应经人工复核与授权验证。</p></article></div></section>
+    </main>
+    <footer><span>TRACEGUARD / COURSE PROJECT</span><span>FOR AUTHORIZED SECURITY REVIEW ONLY</span></footer>
+  </body>
+</html>

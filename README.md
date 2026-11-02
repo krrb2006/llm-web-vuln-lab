@@ -8,6 +8,12 @@
 
 最终交付报告：[Word 版](docs/网络安全大作业实验报告.docx) · [PDF 版](docs/网络安全大作业实验报告.pdf) · [Markdown 源稿](docs/最终实验报告_2026-10-26.md) · [教师测试指南 Markdown 版](docs/代码说明_教师测试指南.md) · [代码作者索引](AUTHORS.md)
 
+## 浏览器端代码审计工作台
+
+仓库提供了可部署到 GitHub Pages 的静态前端：[TraceGuard 使用说明](web/README.md)。使用者可在浏览器内导入自己有权审计的源码压缩包，填写自己的 OpenAI 兼容 API Key 后获取结构化安全审计报告。代码和密钥不经过本项目服务器；部署和安全边界见该说明。
+
+当前公开动态版已上线：[TraceGuard 交互式安全审计](https://traceguard-security-review.krrb2006.chatgpt.site)。动态版支持 AI 初步扫描、对话式追问、风险卡片人工复核和 Markdown 报告导出；GitHub Pages 仅保留为静态前端备用版本。
+
 ## 从这里开始
 
 1. 先阅读 [最终实验报告](docs/最终实验报告_2026-10-26.md) 了解结果与限制，再阅读 [总执行手册](docs/00_总执行手册.md) 和自己的手册。
