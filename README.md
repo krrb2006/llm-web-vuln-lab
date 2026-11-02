@@ -12,7 +12,7 @@
 
 仓库提供了可部署到 GitHub Pages 的静态前端：[TraceGuard 使用说明](web/README.md)。使用者可在浏览器内导入自己有权审计的源码压缩包，填写自己的 OpenAI 兼容 API Key 后获取结构化安全审计报告。代码和密钥不经过本项目服务器；部署和安全边界见该说明。
 
-当前公开动态版已上线：[TraceGuard 交互式安全审计](https://traceguard-security-review.krrb2006.chatgpt.site)。动态版支持 AI 初步扫描、对话式追问、风险卡片人工复核和 Markdown 报告导出；GitHub Pages 仅保留为静态前端备用版本。
+仓库曾保留一个公开演示版：[TraceGuard 交互式安全审计](https://traceguard-security-review.krrb2006.chatgpt.site)。它支持 AI 初步扫描、对话式追问、风险卡片人工复核和 Markdown 报告导出；新的自托管部署请使用下方 `app/`，不依赖这个演示站。
 
 ## 从这里开始
 
