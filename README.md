@@ -14,6 +14,8 @@
 
 仓库曾有一个公开演示版（TraceGuard，已标记为 legacy）。现在唯一的自托管实现是 [`web/`](web/README.md)：React + FastAPI + MySQL + nginx，支持上传仓库、接入自己的模型 API Key、静态数据流 + LLM 复核。
 
+新用户直接阅读 [`web/README.md`](web/README.md) 的“新用户最快启动”即可：Windows 可双击 [`web/start-web.cmd`](web/start-web.cmd)，Linux/macOS/WSL 执行 `bash web/scripts/quickstart.sh`。前端功能边界和已知不足记录在 [`web/docs/FRONTEND_LIMITATIONS.md`](web/docs/FRONTEND_LIMITATIONS.md)。
+
 ## 从这里开始
 
 1. 先阅读 [最终实验报告](docs/最终实验报告_2026-10-26.md) 了解结果与限制，再阅读 [总执行手册](docs/00_总执行手册.md) 和自己的手册。

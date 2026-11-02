@@ -4,6 +4,60 @@
 
 > 与仓库根目录的实验数据集同源：判定口径、证据分层（模型预测 / 代码定位 / POC 执行 / 实际触发）沿用 `docs/` 中的实验约定，本应用只把"静态规则 + LLM 复核"这一层做成可用产品。
 
+## 新用户最快启动
+
+如果你只是想把仓库跑起来，不需要先理解 Docker、Vite 或 FastAPI：
+
+### Windows（推荐）
+
+双击 `web/start-web.cmd`，或在仓库根目录运行：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File web/scripts/run-native.ps1
+```
+
+脚本会自动创建 `.venv-native`、安装 Python 依赖、初始化本地 SQLite，并启动前端和 API。看到启动地址后保持窗口开启，访问：
+
+```text
+http://127.0.0.1:8081
+```
+
+### Linux / macOS / WSL
+
+```bash
+bash web/scripts/quickstart.sh
+```
+
+访问同一个地址 `http://127.0.0.1:8081`。首次安装依赖需要网络，之后启动会快很多。
+
+### Docker（MySQL + Nginx，全栈部署）
+
+```bash
+cd web
+cp .env.example .env
+# 修改 .env 中的 MYSQL_PASSWORD、MYSQL_ROOT_PASSWORD、JWT_SECRET
+docker compose up -d --build
+```
+
+访问 `http://localhost:8080`。Docker 模式使用 MySQL，原生模式使用 SQLite；两种模式的数据不会自动互通。
+
+### 第一次使用网页
+
+1. 使用演示账号 `demo@vulnlab.local / demo-vulnlab-2026` 登录，或切换到“注册”。
+2. 先点击“用示例仓库试一下”，确认分析、进度刷新、漏洞详情和报告导出正常。
+3. 上传自己有权审计的源码压缩包；支持 ZIP、tar.gz 和常见源码文件。
+4. 不填写 API Key 时只做本地静态扫描；填写 OpenAI 兼容 Key 后会对候选问题进行 LLM 复核。
+5. API Key 只保存在当前浏览器并随分析请求发送，不写入数据库；共享电脑使用后请点击“清除 Key”和退出登录。
+
+前端的已知限制、适用边界和后续计划见：[前端限制说明](docs/FRONTEND_LIMITATIONS.md)。
+
+### 常见启动问题
+
+- **提示找不到 `scripts/run-native.ps1`**：你在 Windows CMD 中切换盘符时要使用 `cd /d "D:\\...\\web"`，或者直接使用上面的完整路径命令。
+- **提示 `No module named uvicorn`**：不要手动运行半成品环境；重新执行 `run-native.ps1`，脚本会检查并修复依赖。若之前安装被强制中断，可删除 `web/.venv-native` 后重试。
+- **浏览器显示 `ERR_CONNECTION_REFUSED`**：后端进程已经退出或终端窗口被关闭。重新启动后，先用 `curl http://127.0.0.1:8081/api/health` 检查；CMD 中使用 `curl.exe`，`Invoke-WebRequest` 只在 PowerShell 中可用。
+- **局域网分享**：使用 `run-native.ps1 -Bind 0.0.0.0`，再运行 `scripts/show-url.ps1`；Windows 防火墙需要放行 8081 端口。
+
 ## 界面
 
 | 登录 | 工作台 |
