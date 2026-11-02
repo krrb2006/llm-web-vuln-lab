@@ -58,6 +58,58 @@ docker compose up -d --build
 - **浏览器显示 `ERR_CONNECTION_REFUSED`**：后端进程已经退出或终端窗口被关闭。重新启动后，先用 `curl http://127.0.0.1:8081/api/health` 检查；CMD 中使用 `curl.exe`，`Invoke-WebRequest` 只在 PowerShell 中可用。
 - **局域网分享**：使用 `run-native.ps1 -Bind 0.0.0.0`，再运行 `scripts/show-url.ps1`；Windows 防火墙需要放行 8081 端口。
 
+### 依赖安装失败：`pydantic-core` / `Failed building wheel`
+
+如果日志中出现下面的错误：
+
+```text
+Failed building wheel for pydantic-core
+failed-wheel-build-for-install
+```
+
+这通常不是业务代码问题，而是当前 Python 没有匹配的预编译 Wheel，`pip` 被迫尝试本地编译 Pydantic 的 Rust 扩展。组内复现时请统一使用 **64 位 Python 3.11 或 3.12**，不要使用 32 位 Python 或过新的 Python 版本。
+
+检查版本和架构：
+
+```cmd
+python --version
+python -c "import platform,struct; print(platform.machine()); print(struct.calcsize('P')*8)"
+```
+
+如果已经创建过失败的虚拟环境，先删除后用 Python 3.11 重建：
+
+```cmd
+cd /d "D:\\你的仓库路径\\llm-web-vuln-lab\\web"
+rmdir /s /q .venv-native
+py -3.11 -m venv .venv-native
+.venv-native\Scripts\python.exe -m pip install --upgrade pip
+.venv-native\Scripts\python.exe -m pip install -r backend\requirements.txt -i https://pypi.org/simple
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\run-native.ps1 -NoBrowser
+```
+
+如果官方源访问慢，可以替换为清华镜像：
+
+```cmd
+.venv-native\Scripts\python.exe -m pip install -r backend\requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+不要把“安装 Rust 编译器”作为第一解决方案；统一 Python 版本比本地编译更容易复现。若不想安装 Python 依赖，可改用 Docker 模式，但 Docker 仍需要能拉取镜像。
+
+### 其他常见问题对照表
+
+| 现象 | 原因 | 处理方式 |
+|---|---|---|
+| `-File scripts/run-native.ps1 不存在` | CMD 中只执行了 `cd D:`，没有切换盘符 | 使用 `cd /d "D:\\...\\web"`，或直接传脚本完整路径 |
+| `No module named uvicorn` | 上次安装被中断，虚拟环境只创建了一半 | 重新运行启动脚本；仍失败就删除 `.venv-native` 后重试 |
+| `ERR_CONNECTION_REFUSED` | 后端进程已退出或启动终端被关闭 | 保持终端开启，先执行 `curl.exe http://127.0.0.1:8081/api/health` |
+| `Invoke-WebRequest 不是内部或外部命令` | 在 CMD 中执行了 PowerShell 命令 | CMD 用 `curl.exe`；PowerShell 才能用 `Invoke-WebRequest` |
+| `端口已被占用` | 8081 或 8080 已有其他程序 | 原生模式加 `-Port 8082`；Docker 修改 `.env` 的 `HTTP_PORT` |
+| Docker 拉取镜像超时 | Docker Hub、PyPI 或校园网限制 | 更换网络/镜像源，或先使用原生模式 |
+| 页面能打开但 API 报 502/503 | FastAPI 或 MySQL 仍在启动 | 等待 `/api/health` 返回 `status=ok`，再刷新页面 |
+| 别人访问不了局域网地址 | 只监听了 `127.0.0.1` 或防火墙拦截 | 使用 `-Bind 0.0.0.0`，放行 TCP 8081，并确保在同一网络 |
+| API Key 无法调用模型 | Base URL、模型名、Key 或网络不正确 | 先用静态扫描验证网站，再核对 OpenAI 兼容接口地址和模型名 |
+| GitHub Pages 打开但没有后端功能 | Pages 只能托管静态文件 | 使用本地原生模式或 Docker 服务器；Pages 不运行 FastAPI/MySQL |
+
 ## 界面
 
 | 登录 | 工作台 |
