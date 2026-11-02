@@ -10,7 +10,8 @@ from docx.shared import Inches, Pt, RGBColor
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "docs" / "代码说明_教师测试指南.docx"
+OUT = ROOT / "代码说明_测试指南.docx"
+QR_IMAGE = ROOT / "docs" / "assets" / "github_qr.png"
 
 
 def shade(cell, fill):
@@ -93,17 +94,12 @@ def main():
 
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r = p.add_run("LLM 辅助 Web 漏洞挖掘与验证\n教师详细测试指南")
+    r = p.add_run("LLM 辅助 Web 漏洞挖掘与验证\n详细测试指南")
     r.bold = True
     r.font.name = "Microsoft YaHei"
     r._element.rPr.rFonts.set(qn("w:eastAsia"), "Microsoft YaHei")
     r.font.size = Pt(20)
     r.font.color.rgb = RGBColor(31, 78, 121)
-    p2 = doc.add_paragraph()
-    p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    rr = p2.add_run("项目：llm-web-vuln-lab    版本：main    日期：2026-10-30")
-    rr.font.size = Pt(10)
-    rr.font.color.rgb = RGBColor(100, 100, 100)
     doc.add_paragraph()
 
     doc.add_heading("一 项目概述", level=1)
@@ -141,7 +137,7 @@ def main():
     doc.add_heading("四 目录与文件说明", level=1)
     table(doc, ["目录", "用途", "主要作者"], [
         ("dataset/", "24 个 SQLi/XSS 教学样本、原始源码、真值和输入包", "C"),
-        ("prompts/", "SQLi、XSS V0/V1/V2 及高级案例 Prompt", "B"),
+        ("prompts/", "SQLi、XSS V0/V1/V2 共 6 份正式 Prompt 及高级案例 Prompt", "B"),
         ("runs/", "模型输入、原始回答、规范化 JSON 和运行元数据", "全组"),
         ("pocs/", "模型生成的原始 POC、适配 POC 和复核脚本", "D"),
         ("evidence/", "请求、响应、截图、日志和人工复核证据", "D"),
@@ -157,6 +153,12 @@ def main():
     doc.add_paragraph("推荐从 GitHub 的 main 分支获取代码：")
     code(doc, "git clone https://github.com/krrb2006/llm-web-vuln-lab.git\ncd llm-web-vuln-lab\ngit branch --show-current")
     doc.add_paragraph("若仅进行静态检查和单元测试，不需要安装 PHP，也不需要启动 Docker。")
+    doc.add_paragraph("注意：提交的 zip 压缩包（不含 .git/ 与 third_party/）只够做静态检查和单元测试；build_lab_cases.py 需要用 Git 历史中的固定提交抽取样本 PHP，init_lab_db.py 需要 third_party/DVWA/compose.yml。要运行第八节的靶场流程，请使用完整 Git 克隆。")
+    doc.add_paragraph("Github仓库可扫码进入")
+    if QR_IMAGE.is_file():
+        qr_pic = doc.add_paragraph()
+        qr_pic.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        qr_pic.add_run().add_picture(str(QR_IMAGE), width=Inches(1.1))
 
     doc.add_heading("六 最小静态检查流程", level=1)
     doc.add_paragraph("请先在仓库根目录依次执行：")
@@ -173,13 +175,14 @@ def main():
     for item in [
         "docs/最终实验报告_2026-10-26.md：最终结论、指标、限制和复现命令。",
         "docs/00_总执行手册.md：实验流程和成员职责。",
-        "results/formal_eval_2026-10-19-v2/summary.md：正式 36 条记录的统计。",
+        "results/formal_eval_2026-11-01-v3/summary.md：正式 36 条记录的统计（由 runs/formal.json 重算）。",
         "results/evidence_index_2026-10-21.md：运行 ID 到证据文件的索引。",
     ]:
         bullet(doc, item)
     doc.add_paragraph("正式实验为 12 个测试样本分别使用 V0、V1、V2 Prompt，共 36 条记录；加分实验包括 16 条 Prompt Injection、2 条 Burp 联动、4 条上下文消融和 4 条高级案例。")
 
     doc.add_heading("八 可选启动本地 DVWA 教学靶场", level=1)
+    doc.add_paragraph("本节有前置条件，缺一不可：① 完整 Git 克隆，且存在固定提交 d498903…、8da63f7…、a296e4b…；② Docker Desktop 已启动；③ 能访问 GitHub 与 ghcr.io 以拉取 DVWA 源码和钉住的镜像（直连失败时请使用可用的镜像或代理）。仅有提交的 zip 时本节无法执行，请只做第六节静态检查。")
     doc.add_paragraph("动态验证只允许在本机授权教学环境执行。首次使用时准备官方 DVWA：")
     code(doc, "git clone https://github.com/digininja/DVWA.git third_party/DVWA\n$aRef = 'd498903da01d89a695fa49d5392d3776eb901e2f'\n$cRef = '8da63f7b8e169e5037626b0362d005ba7ba5ede0'\n$dRef = 'a296e4b527ebdaf41ca04c2bbc5627b1a89efc06'\npython environment/build_lab_cases.py --a-ref $aRef --c-ref $cRef --d-ref $dRef\npython environment/init_lab_db.py")
     doc.add_paragraph("启动服务并确认端口只绑定到 127.0.0.1:4280：")
@@ -226,7 +229,8 @@ def main():
         ("README.md", "项目入口和快速开始"),
         ("AUTHORS.md", "完整目录到作者映射"),
         ("tools/show_author.py", "根据错误文件路径查询作者"),
-        ("docs/代码说明_教师测试指南.md", "本指南的 Markdown 源稿"),
+        ("tools/build_teacher_guide_docx.py", "本 Word 版测试指南的生成脚本"),
+        ("docs/代码说明_教师测试指南.md", "本指南的 Markdown 草稿（内容以本 Word 版为准）"),
         ("docs/最终实验报告_2026-10-26.md", "最终实验报告源稿"),
         ("docs/网络安全大作业实验报告.docx", "实验报告 Word 版"),
         ("docs/网络安全大作业实验报告.pdf", "实验报告 PDF 版"),

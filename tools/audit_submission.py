@@ -12,6 +12,11 @@ EXPECTED_BONUS = {
     "advanced_case": 4,
 }
 
+# The frozen statistics cited by the reports. Bump this path when a new frozen
+# evaluation is published so the self-check always compares "the file the
+# report quotes" against a fresh recomputation from runs/formal.json.
+CANONICAL_SUMMARY = Path("results") / "formal_eval_2026-11-01-v3" / "summary.json"
+
 
 def _read_json(path):
     return json.loads(Path(path).read_text(encoding="utf-8-sig"))
@@ -24,6 +29,56 @@ def _evidence_complete(root, record):
         and (root / item).is_file()
         for item in paths
     )
+
+
+def _diff_fields(expected, actual, prefix=""):
+    """Return dotted paths whose values differ between two JSON structures."""
+    differences = []
+    if isinstance(expected, dict) and isinstance(actual, dict):
+        for key in sorted(set(expected) | set(actual)):
+            name = f"{prefix}.{key}" if prefix else str(key)
+            differences.extend(_diff_fields(expected.get(key), actual.get(key), name))
+    elif isinstance(expected, list) and isinstance(actual, list):
+        for index, (left, right) in enumerate(zip(expected, actual)):
+            differences.extend(_diff_fields(left, right, f"{prefix}[{index}]"))
+        if len(expected) != len(actual):
+            differences.append(f"{prefix}.length")
+    elif expected != actual:
+        differences.append(prefix or "value")
+    return differences
+
+
+def validate_statistics_summary(root):
+    """Recompute the formal statistics and compare them with the frozen file.
+
+    A frozen summary that no longer matches ``runs/formal.json`` means the
+    published numbers cannot be reproduced by the documented command, so it is
+    reported as a blocking issue rather than silently accepted.
+    """
+    root = Path(root).resolve()
+    frozen_path = root / CANONICAL_SUMMARY
+    if not frozen_path.is_file():
+        return [f"missing frozen summary: {CANONICAL_SUMMARY.as_posix()}"]
+    try:
+        from .evaluate import summarize
+    except ImportError:  # script mode: python tools/audit_submission.py
+        from evaluate import summarize
+    manifest = _read_json(root / "dataset" / "manifest.json")
+    formal = _read_json(root / "runs" / "formal.json")
+    try:
+        recomputed = summarize(manifest, formal, root)
+    except ValueError as error:
+        return [f"cannot recompute statistics: {error}"]
+    frozen = _read_json(frozen_path)
+    differing = _diff_fields(frozen, recomputed)
+    if not differing:
+        return []
+    preview = "、".join(differing[:6])
+    suffix = f" 等 {len(differing)} 个字段" if len(differing) > 6 else ""
+    return [
+        f"{CANONICAL_SUMMARY.as_posix()} 与 runs/formal.json 重算结果不一致：{preview}{suffix}；"
+        "请重新生成冻结统计或修正记录"
+    ]
 
 
 def validate_bonus_plan(records):
@@ -79,6 +134,7 @@ def audit_repository(root):
     bonus = _read_json(bonus_path) if bonus_path.is_file() else []
     bonus_issues = validate_bonus_plan(bonus)
     bonus_issues.extend(validate_model_provenance(root, bonus))
+    statistics_issues = validate_statistics_summary(root)
 
     raw_ids = {
         path.name
@@ -130,6 +186,7 @@ def audit_repository(root):
         {"rubric": "基础", "item": "正式记录计划", "done": len(formal), "target": 36},
         {"rubric": "基础", "item": "正式记录完成且证据可读", "done": len(reviewed_formal), "target": 36},
         {"rubric": "基础", "item": "统计产物", "done": min(len(result_files), 1), "target": 1},
+        {"rubric": "基础", "item": "统计与记录一致", "done": 0 if statistics_issues else 1, "target": 1},
         {"rubric": "基础", "item": "最终实验报告", "done": min(len(final_report_candidates), 1), "target": 1},
         {"rubric": "加分", "item": "加分实验计划结构", "done": 0 if bonus_issues else 1, "target": 1},
         {"rubric": "加分", "item": "加分实验完成且证据可读", "done": len(reviewed_bonus), "target": sum(EXPECTED_BONUS.values())},
@@ -149,6 +206,7 @@ def audit_repository(root):
             item.get("category") for item in bonus
         ).items())),
         "bonus_plan_issues": bonus_issues,
+        "statistics_issues": statistics_issues,
         "notes": [
             "READY only means required files and review states are present; humans must still inspect evidence content.",
             "Planned bonus records never count as completed evidence.",
@@ -177,6 +235,9 @@ def render_markdown(report):
     if report["bonus_plan_issues"]:
         lines.extend(["", "## 计划问题", ""])
         lines.extend(f"- {item}" for item in report["bonus_plan_issues"])
+    if report.get("statistics_issues"):
+        lines.extend(["", "## 统计问题", ""])
+        lines.extend(f"- {item}" for item in report["statistics_issues"])
     lines.extend(["", "## 口径说明", ""])
     lines.extend(f"- {item}" for item in report["notes"])
     return "\n".join(lines) + "\n"

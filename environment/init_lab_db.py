@@ -65,8 +65,10 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    password = load_or_create_password()
+    # Validate the official compose file before creating any local secret file,
+    # so a missing third_party/DVWA checkout does not leave a stray lab.env.
     compose = compose_command()
+    password = load_or_create_password()
     subprocess.run(compose + ["up", "-d", "db"], cwd=ROOT, check=True)
 
     reset_sql = "DELETE FROM teaching_lab.lab_people;\n" if args.reset_data else ""
