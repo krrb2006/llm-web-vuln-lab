@@ -57,6 +57,16 @@ docker compose down            # 保留数据卷
 docker compose down -v         # 连数据一起删除
 ```
 
+### 打不开 localhost:8080 时
+
+应用跑在 Docker 里（nginx + FastAPI + MySQL）。**电脑重启后如果 Docker Desktop 没启动，8080 就没有进程监听**，浏览器会提示无法连接。三种处理方式：
+
+1. 打开 Docker Desktop，等引擎就绪后容器会按 `restart: unless-stopped` 自动拉起；
+2. 或执行一键脚本：`powershell -ExecutionPolicy Bypass -File scripts/start.ps1`（Linux/macOS 用 `bash scripts/start.sh`）；
+3. 想彻底免维护：Docker Desktop → Settings → General 勾选 **Start Docker Desktop when you sign in**。
+
+脚本会自己检查引擎、拉起容器并轮询 `/api/health`，就绪后打印访问地址。
+
 ## 本地开发
 
 后端：
