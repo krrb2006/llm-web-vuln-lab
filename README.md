@@ -170,3 +170,13 @@ HTTP 200、脚本退出码 0 或模型回答本身都不能单独证明漏洞成
 ![VulnLab 工作台](web/docs/screenshots/dashboard.png)
 
 项目介绍页（启用 GitHub Pages 后）：<https://krrb2006.github.io/llm-web-vuln-lab/>
+
+## 自托管交互式工作台（推荐新部署）
+
+如果要把网站部署到你自己的服务器，并让用户在同一页面里上传源码、连接自己的 API Key、和 AI 逐轮追问漏洞，请使用 [`app/`](app/README.md)：
+
+- React + Vite 前端、FastAPI 后端、MySQL 数据库、Nginx 网关；
+- API Key 只在当前请求中使用，不写入数据库；审计结果和人工/AI 对话写入 MySQL；
+- `docker compose -f app/docker-compose.yml up -d --build` 一条命令启动；
+- GitHub 只负责保存和发布代码，FastAPI/MySQL 仍需部署在你自己的 Linux/Docker 服务器上；
+- 原有 `web/`、实验数据、报告和旧的 TraceGuard Site 源码均保留，不会被新版本删除。
