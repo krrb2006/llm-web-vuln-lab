@@ -10,11 +10,38 @@
 
 ## 浏览器端代码审计工作台
 
-仓库提供了可部署到 GitHub Pages 的静态前端：[TraceGuard 使用说明](web/README.md)。使用者可在浏览器内导入自己有权审计的源码压缩包，填写自己的 OpenAI 兼容 API Key 后获取结构化安全审计报告。代码和密钥不经过本项目服务器；部署和安全边界见该说明。
+仓库提供了可部署到 GitHub Pages 的静态介绍页，以及唯一的自托管 Web 实现：[TraceGuard 使用说明](web/README.md)。使用者可在浏览器内导入自己有权审计的源码压缩包，填写自己的 OpenAI 兼容 API Key 后获取结构化安全审计报告。GitHub Pages 本身不运行 FastAPI/MySQL；自托管时 Key 只在自己的后端进程内存中用于当前任务，不写入数据库或日志。部署和安全边界见该说明。
 
 仓库曾有一个公开演示版（TraceGuard，已标记为 legacy）。现在唯一的自托管实现是 [`web/`](web/README.md)：React + FastAPI + MySQL + nginx，支持上传仓库、接入自己的模型 API Key、静态数据流 + LLM 复核。
 
 新用户直接阅读 [`web/README.md`](web/README.md) 的“新用户最快启动”即可：Windows 可双击 [`web/start-web.cmd`](web/start-web.cmd)，Linux/macOS/WSL 执行 `bash web/scripts/quickstart.sh`。前端功能边界和已知不足记录在 [`web/docs/FRONTEND_LIMITATIONS.md`](web/docs/FRONTEND_LIMITATIONS.md)。
+
+### Web 版本最近修复
+
+- 上传仓库和“用示例仓库试一下”都会把当前页面填写的 API Key、服务商、Base URL 和模型名传给后端；任务详情会显示候选数、调用数、成功数和失败数。
+- LLM 请求失败不会伪装成模型结论。静态候选仍会保留，并在任务错误栏显示服务商返回的原因；“调用 4 次、模型确认 0 条”表示请求已发出但 4 次全部失败。
+- DeepSeek 当前建议使用 `https://api.deepseek.com` 与 `deepseek-flash`；旧版保存的 `https://api.deepseek.com/v1` 会自动兼容迁移。其他 OpenAI 兼容服务仍按服务商文档填写 Base URL。
+- 修改前端代码后，原生模式需要重新执行 `powershell -File web/scripts/build-static.ps1`；Docker 模式需要 `docker compose up -d --build`，浏览器再用 `Ctrl+F5` 强制刷新。
+
+### Web 版快速部署
+
+Docker（MySQL + nginx + FastAPI）：
+
+```bash
+cd web
+cp .env.example .env
+# 至少修改 JWT_SECRET、MYSQL_PASSWORD、MYSQL_ROOT_PASSWORD
+docker compose up -d --build
+```
+
+访问 <http://localhost:8080>。不使用 Docker 时，Windows 执行 `powershell -File web/scripts/run-native.ps1`，访问 <http://127.0.0.1:8081>；首次启动会自动创建 SQLite 原生环境。
+
+### API Key / 404 排查
+
+1. 先不填写 Key 跑一次静态扫描，确认上传、解压和规则扫描正常。
+2. DeepSeek 配置使用：服务商 `DeepSeek`、Base URL `https://api.deepseek.com`、模型 `deepseek-flash`，再新建任务。
+3. 若页面显示“模型服务返回 404”，查看任务错误栏中的服务商原文；常见原因是 Base URL 多写了 `/v1`、模型名已下线、Key 属于另一个服务商，或服务商接口路径不是 `/chat/completions`。
+4. 如果看到“已调用 N 次但仅模型确认为 0”，这表示 N 次请求都失败，不代表模型已经返回了 0 个漏洞；修正配置后必须新建任务，旧任务不会自动重试。
 
 ## 从这里开始
 
