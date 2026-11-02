@@ -13,7 +13,13 @@ param(
 $ErrorActionPreference = "SilentlyContinue"
 $webRoot = Split-Path -Parent $PSScriptRoot
 $logFile = Join-Path $PSScriptRoot "watchdog.log"
-$healthUrl = "http://localhost:8080/api/health"
+$port = "8080"
+$envPath = Join-Path $webRoot ".env"
+if (Test-Path $envPath) {
+    $configuredPort = (Select-String -Path $envPath -Pattern '^HTTP_PORT=(\d+)' -ErrorAction SilentlyContinue).Matches.Groups[1].Value
+    if ($configuredPort) { $port = $configuredPort }
+}
+$healthUrl = "http://localhost:$port/api/health"
 
 function Write-Log([string]$message) {
     try {

@@ -8,7 +8,10 @@ $webRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $webRoot
 
 function Test-Docker {
-    try { docker version --format '{{.Server.Version}}' 2>$null | Out-Null; return $true }
+    try {
+        docker version --format '{{.Server.Version}}' 2>$null | Out-Null
+        return ($LASTEXITCODE -eq 0)
+    }
     catch { return $false }
 }
 
