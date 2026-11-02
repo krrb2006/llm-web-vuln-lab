@@ -274,8 +274,16 @@ def main() -> int:
             digest, changed = write_and_verify(relative_path, content)
             changed_count += changed
             print(f"{digest}  {relative_path.as_posix()}")
-        config_digest, config_changed = write_dvwa_config(dvwa_config_bytes())
-        print(f"{config_digest}  local/dvwa_config.inc.php (derived from official DVWA config)")
+        if args.from_working_tree and not DVWA_CONFIG_SOURCE.is_file():
+            print(
+                "DVWA source not found; skipped local/dvwa_config.inc.php. "
+                "Clone third_party/DVWA and rerun this command before starting Compose.",
+                file=sys.stderr,
+            )
+            config_changed = False
+        else:
+            config_digest, config_changed = write_dvwa_config(dvwa_config_bytes())
+            print(f"{config_digest}  local/dvwa_config.inc.php (derived from official DVWA config)")
         print(f"Verified {len(files)} PHP files; wrote {changed_count}.")
         print(f"DVWA config written: {config_changed}.")
         return 0

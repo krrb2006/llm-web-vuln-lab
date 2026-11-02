@@ -38,7 +38,7 @@ git rev-parse origin/c/samples
 python environment/build_lab_cases.py --from-working-tree
 ```
 
-该模式会读取包内的 S001–S024 源码并继续做路径、文件类型和 SHA-256 校验，但会明确提示“commit provenance not verified”。它适合课堂演示、页面访问和本地行为复现，不证明这些文件来自某个历史提交。需要核对 A/C/D 固定提交、重建正式证据或运行 `check_runtime.py --a-ref ...` 时，仍必须使用完整 Git 克隆，并按下一节的固定提交命令运行。
+该模式会读取包内的 S001–S024 源码并继续做路径、文件类型和 SHA-256 校验，但会明确提示“commit provenance not verified”。如果压缩包里还没有 `third_party/DVWA/`，脚本会跳过 `local/dvwa_config.inc.php` 生成并给出提示；获取 DVWA 后再次运行同一命令即可补齐配置。它适合课堂演示、页面访问和本地行为复现，不证明这些文件来自某个历史提交。需要核对 A/C/D 固定提交、重建正式证据或运行 `check_runtime.py --a-ref ...` 时，仍必须使用完整 Git 克隆，并按下一节的固定提交命令运行。
 
 ## 2. 生成样本并初始化教学数据库
 
