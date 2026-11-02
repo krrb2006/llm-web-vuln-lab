@@ -36,6 +36,8 @@ export interface Job {
   provider: string;
   model: string;
   llm_enabled: boolean;
+  llm_candidate_count: number;
+  llm_call_count: number;
   findings_count: number;
   severity_counts: Partial<Record<Severity, number>>;
   languages: Record<string, number>;

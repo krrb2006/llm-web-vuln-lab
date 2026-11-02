@@ -127,7 +127,7 @@ export function UploadCard({ onCreated }: Props) {
           <IconKey size={16} /> 模型 API Key（可选）
         </div>
         <p className="panel-hint" style={{ marginBottom: 12 }}>
-          填入后对前若干条候选做模型复核；不填则只跑静态规则。Key 仅存本机浏览器，随本次请求发送，不写入数据库。
+          填入后只会对静态扫描命中的前若干条候选做模型复核；如果静态扫描没有候选，本次不会产生模型请求。不填则只跑静态规则。Key 仅存本机浏览器，随本次请求发送，不写入数据库。
         </p>
 
         <div className="row">

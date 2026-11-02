@@ -118,12 +118,16 @@ def run_job(job_id: str, api_key: str | None, provider: str, base_url: str | Non
         _touch(db, job, stage="analyzing", progress=58)
 
         llm_targets = candidates[: settings.max_llm_findings] if api_key else []
+        job.llm_candidate_count = len(llm_targets)
+        job.llm_call_count = 0
+        db.commit()
         llm_errors: list[str] = []
         results: list[dict] = []
 
         for index, item in enumerate(candidates):
             record = dict(item)
             if record in llm_targets:
+                job.llm_call_count += 1
                 language = LANGUAGE_BY_SUFFIX.get(Path(record["file_path"]).suffix.lower(), "")
                 flow_text = " → ".join(step.get("note", "") for step in record.get("flow") or [])
                 try:

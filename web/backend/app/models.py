@@ -52,6 +52,8 @@ class Job(Base):
     provider: Mapped[str] = mapped_column(String(40), default="")
     model: Mapped[str] = mapped_column(String(80), default="")
     llm_enabled: Mapped[bool] = mapped_column(Boolean, default=False)
+    llm_candidate_count: Mapped[int] = mapped_column(Integer, default=0)
+    llm_call_count: Mapped[int] = mapped_column(Integer, default=0)
     findings_count: Mapped[int] = mapped_column(Integer, default=0)
     severity_counts: Mapped[dict] = mapped_column(JSON, default=dict)
     languages: Mapped[dict] = mapped_column(JSON, default=dict)

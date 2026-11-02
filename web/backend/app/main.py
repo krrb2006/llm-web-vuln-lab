@@ -41,13 +41,21 @@ def _wait_for_db(attempts: int = 40) -> None:
 def _ensure_schema_columns() -> None:
     """为已存在的库补列（不引入迁移框架，保持部署简单）。"""
     inspector = inspect(engine)
-    if not inspector.has_table("findings"):
-        return
-    columns = {column["name"] for column in inspector.get_columns("findings")}
-    if "flow" not in columns:
+    if inspector.has_table("findings"):
+        columns = {column["name"] for column in inspector.get_columns("findings")}
+        if "flow" not in columns:
+            with engine.begin() as connection:
+                connection.execute(text("ALTER TABLE findings ADD COLUMN flow JSON NULL"))
+            logger.info("已为 findings 表补充 flow 列")
+    if inspector.has_table("jobs"):
+        columns = {column["name"] for column in inspector.get_columns("jobs")}
         with engine.begin() as connection:
-            connection.execute(text("ALTER TABLE findings ADD COLUMN flow JSON NULL"))
-        logger.info("已为 findings 表补充 flow 列")
+            if "llm_candidate_count" not in columns:
+                connection.execute(text("ALTER TABLE jobs ADD COLUMN llm_candidate_count INTEGER NOT NULL DEFAULT 0"))
+                logger.info("已为 jobs 表补充 llm_candidate_count 列")
+            if "llm_call_count" not in columns:
+                connection.execute(text("ALTER TABLE jobs ADD COLUMN llm_call_count INTEGER NOT NULL DEFAULT 0"))
+                logger.info("已为 jobs 表补充 llm_call_count 列")
 
 
 def _create_schema_and_demo() -> None:

@@ -37,6 +37,13 @@ const SEVERITY_LABEL: Record<Severity, string> = {
   info: "提示",
 };
 
+function llmStatus(job: JobDetailType): string {
+  if (!job.llm_enabled) return "未启用（仅静态规则）";
+  if (job.llm_call_count > 0) return `已调用 ${job.llm_call_count} 次（候选 ${job.llm_candidate_count} 条）`;
+  if (job.llm_candidate_count === 0) return "未调用：静态扫描没有候选问题";
+  return "未完成调用：请查看下方错误信息";
+}
+
 export function JobDetail() {
   const { jobId } = useParams<{ jobId: string }>();
   const [job, setJob] = useState<JobDetailType | null>(null);
@@ -178,6 +185,7 @@ export function JobDetail() {
               .join("，") || "—"}
           </span>
           <span className="hint">模型：{job.llm_enabled ? `${job.provider} · ${job.model}` : "未启用（仅静态规则）"}</span>
+          <span className="hint">调用状态：{llmStatus(job)}</span>
         </div>
       </div>
 

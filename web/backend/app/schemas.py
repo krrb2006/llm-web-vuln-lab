@@ -79,6 +79,8 @@ class JobOut(BaseModel):
     provider: str
     model: str
     llm_enabled: bool
+    llm_candidate_count: int
+    llm_call_count: int
     findings_count: int
     severity_counts: dict
     languages: dict
