@@ -46,8 +46,12 @@ if (-not (Test-Path $pythonExe)) {
 
 $dependenciesReady = $false
 if (Test-Path $pythonExe) {
-    & $pythonExe -c "import fastapi, sqlalchemy, uvicorn" 2>$null
+    # 缺少模块是首次运行的正常状态；临时关闭 Stop，避免把导入失败当成脚本异常。
+    $previousErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    & $pythonExe -c "import fastapi, sqlalchemy, uvicorn" 2>$null | Out-Null
     $dependenciesReady = ($LASTEXITCODE -eq 0)
+    $ErrorActionPreference = $previousErrorActionPreference
 }
 if (-not $dependenciesReady) {
     Write-Host "安装/修复依赖（首次约 1-2 分钟）…" -ForegroundColor Cyan
