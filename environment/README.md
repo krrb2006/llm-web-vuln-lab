@@ -30,6 +30,16 @@ git rev-parse origin/c/samples
 
 `build_lab_cases.py` 不传 `--d-ref` 时只读取 A、C 分支，组装 S001–S016；传入 `--d-ref` 后，还从该 Git 提交组装 D 的 S017–S024。分支可能继续变化，运行前应审阅提交中的 PHP 代码及样本清单，并记录采用的完整提交号。正式参考验证使用固定提交号，不依赖可移动的分支名。若 `git fetch origin` 因网络问题失败，先检查下列固定提交是否已在本地；不存在时不要改用未经审阅的版本。
 
+### 提交压缩包没有 `.git` 时
+
+提交给老师的 ZIP 按安全边界排除了 `.git`，因此不能使用默认的 Git 历史模式。压缩包内已经包含当前 `dataset/raw/` 源码，可使用工作树模式生成运行目录：
+
+```powershell
+python environment/build_lab_cases.py --from-working-tree
+```
+
+该模式会读取包内的 S001–S024 源码并继续做路径、文件类型和 SHA-256 校验，但会明确提示“commit provenance not verified”。它适合课堂演示、页面访问和本地行为复现，不证明这些文件来自某个历史提交。需要核对 A/C/D 固定提交、重建正式证据或运行 `check_runtime.py --a-ref ...` 时，仍必须使用完整 Git 克隆，并按下一节的固定提交命令运行。
+
 ## 2. 生成样本并初始化教学数据库
 
 下面是本轮已核对的 A、C、D 源提交；换用后续提交前须重新审阅、重建并重做哈希与行为核对。按顺序运行：

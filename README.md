@@ -24,6 +24,8 @@
 4. 需要复现实验时，先运行 `python tools/audit_submission.py` 和测试套件，再按报告附录中的命令检查具体证据。
 5. 所有验证仅限授权的本地教学靶场；提交证据前去除登录 Cookie、令牌与个人信息。
 
+提交 ZIP 没有 `.git` 时，教学靶场样本可用 `python environment/build_lab_cases.py --from-working-tree` 从包内 `dataset/raw/` 生成；正式固定提交和 provenance 核对仍需完整 Git 克隆，详见[教师测试指南](docs/代码说明_教师测试指南.md)。
+
 |成员|职责|操作文档|正式样本|记录数|
 |---|---|---|---|---|
 |A|判定、真值、指标与整合|[A 手册](docs/A_判定评估与整合操作手册.md)|S007、S020、S021|9|

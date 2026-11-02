@@ -93,6 +93,23 @@ def source_file(commit: str, relative_path: str) -> bytes:
     return git_bytes("cat-file", "blob", f"{commit}:{relative_path}")
 
 
+def working_tree_file(relative_path: str) -> bytes:
+    """Read a tracked package file when Git history is unavailable.
+
+    This mode is intended for the teacher submission zip. It can reproduce the
+    current checked-in sample tree, but it cannot prove which historical
+    commit produced each file; formal provenance still requires Git refs.
+    """
+    candidate = (REPO_ROOT / relative_path).resolve()
+    try:
+        candidate.relative_to(REPO_ROOT.resolve())
+    except ValueError as error:
+        raise RuntimeError(f"refusing to read outside repository: {relative_path}") from error
+    if not candidate.is_file():
+        raise RuntimeError(f"working-tree source file not found: {relative_path}")
+    return candidate.read_bytes()
+
+
 def wanted_files(a_commit: str, c_commit: str, d_commit: str | None = None) -> dict[Path, bytes]:
     files: dict[Path, bytes] = {}
 
@@ -131,6 +148,44 @@ def wanted_files(a_commit: str, c_commit: str, d_commit: str | None = None) -> d
             for path in php_paths:
                 relative_path = Path(path).relative_to("dataset/raw")
                 files[relative_path] = source_file(d_commit, path)
+
+    return files
+
+
+def wanted_files_from_working_tree() -> dict[Path, bytes]:
+    """Build the same runtime tree from dataset/raw in a source zip."""
+    files: dict[Path, bytes] = {}
+
+    for number in range(1, 9):
+        sample_id = f"S{number:03d}"
+        files[Path(sample_id) / "index.php"] = working_tree_file(
+            f"dataset/raw/{sample_id}/index.php"
+        )
+    for sample_id in ("S007", "S008"):
+        files[Path(sample_id) / "repository.php"] = working_tree_file(
+            f"dataset/raw/{sample_id}/repository.php"
+        )
+    files[Path("common") / "db_connect.php"] = working_tree_file(
+        "dataset/raw/common/db_connect.php"
+    )
+
+    for number in range(9, 17):
+        sample_id = f"S{number:03d}"
+        files[Path(sample_id) / "index.php"] = working_tree_file(
+            f"dataset/raw/{sample_id}/index.php"
+        )
+    for number in range(9, 13):
+        files[Path(f"S{number:03d}") / "bootstrap.php"] = BOOTSTRAP
+
+    for number in range(17, 25):
+        sample_id = f"S{number:03d}"
+        sample_root = REPO_ROOT / "dataset" / "raw" / sample_id
+        php_paths = sorted(path for path in sample_root.rglob("*.php") if path.is_file())
+        if not php_paths:
+            raise RuntimeError(f"no PHP files found for {sample_id} in dataset/raw")
+        for path in php_paths:
+            relative_path = path.relative_to(REPO_ROOT / "dataset" / "raw")
+            files[relative_path] = path.read_bytes()
 
     return files
 
@@ -186,19 +241,34 @@ def main() -> int:
     parser.add_argument(
         "--d-ref", help="Git ref containing S017-S024; omit while those files are not committed"
     )
+    parser.add_argument(
+        "--from-working-tree",
+        action="store_true",
+        help=(
+            "read the checked-in dataset/raw files instead of Git history; "
+            "intended for source zips without .git (provenance is not commit-verified)"
+        ),
+    )
     args = parser.parse_args()
 
     try:
-        a_commit = resolve_commit(args.a_ref)
-        c_commit = resolve_commit(args.c_ref)
-        d_commit = resolve_commit(args.d_ref) if args.d_ref else None
-        files = wanted_files(a_commit, c_commit, d_commit)
+        if args.from_working_tree:
+            files = wanted_files_from_working_tree()
+            a_commit = c_commit = d_commit = None
+        else:
+            a_commit = resolve_commit(args.a_ref)
+            c_commit = resolve_commit(args.c_ref)
+            d_commit = resolve_commit(args.d_ref) if args.d_ref else None
+            files = wanted_files(a_commit, c_commit, d_commit)
         check_output_directory(set(files))
         changed_count = 0
-        print(f"A source: {args.a_ref} ({a_commit})")
-        print(f"C source: {args.c_ref} ({c_commit})")
-        if d_commit is not None:
-            print(f"D source: {args.d_ref} ({d_commit})")
+        if args.from_working_tree:
+            print("Source mode: checked-in dataset/raw (Git history not available; commit provenance not verified)")
+        else:
+            print(f"A source: {args.a_ref} ({a_commit})")
+            print(f"C source: {args.c_ref} ({c_commit})")
+            if d_commit is not None:
+                print(f"D source: {args.d_ref} ({d_commit})")
         print(f"Runtime directory: {OUTPUT_ROOT}")
         for relative_path, content in sorted(files.items()):
             digest, changed = write_and_verify(relative_path, content)
