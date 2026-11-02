@@ -9,3 +9,4 @@ __pycache__/
 pnpm-lock.yaml
 package-lock.json
 landing/assets/
+scripts/*.log

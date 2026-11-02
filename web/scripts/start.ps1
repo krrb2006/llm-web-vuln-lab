@@ -1,4 +1,4 @@
-# 一键启动 VulnLab（Windows / PowerShell）
+﻿# 一键启动 VulnLab（Windows / PowerShell）
 #
 # 用法：在 web/ 目录执行  powershell -ExecutionPolicy Bypass -File scripts/start.ps1
 # 作用：确认 Docker Desktop 已运行 → 拉起 compose 栈 → 等待健康检查 → 打印访问地址

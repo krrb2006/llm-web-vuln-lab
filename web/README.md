@@ -57,6 +57,21 @@ docker compose down            # 保留数据卷
 docker compose down -v         # 连数据一起删除
 ```
 
+### 稳定性：自动启动与自愈
+
+本应用依赖 Docker 运行。电脑休眠/重启后 Docker Desktop 不会自动恢复时，站点就会打不开。仓库里提供了两层保障：
+
+| 机制 | 作用 | 安装 |
+|---|---|---|
+| `scripts/auto-start.ps1` + 启动文件夹快捷方式 | 登录时启动 Docker、拉起容器，并常驻看门狗 | `powershell -File scripts/install-autostart.ps1` |
+| `scripts/watchdog.ps1 -Loop` | 每 5 分钟检查 `/api/health`，异常自动 `docker compose up -d` | 由 `auto-start.ps1` 自动拉起 |
+| compose `restart: always` + 三个服务的 healthcheck | 容器崩溃/宿主机重启后自动重启，不健康即重启 | 无需操作 |
+
+卸载自启：`powershell -File scripts/install-autostart.ps1 -Remove`。
+日志：`web/scripts/watchdog.log`、`web/scripts/startup.log`。
+
+手动检查一次：`powershell -File scripts/watchdog.ps1`（正常时静默退出，异常时自动修复）。
+
 ### 打不开 localhost:8080 时
 
 应用跑在 Docker 里（nginx + FastAPI + MySQL）。**电脑重启后如果 Docker Desktop 没启动，8080 就没有进程监听**，浏览器会提示无法连接。三种处理方式：
