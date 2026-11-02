@@ -131,6 +131,15 @@ export const api = {
     }
     return request<Job>("/jobs", { method: "POST", body: form });
   },
-  demoJob: () => request<Job>("/jobs/demo", { method: "POST" }),
+  demoJob: (config: LlmConfig | null = null) => {
+    const form = new FormData();
+    if (config?.apiKey) {
+      form.append("api_key", config.apiKey);
+      form.append("provider", config.provider);
+      form.append("base_url", config.baseUrl);
+      form.append("model", config.model);
+    }
+    return request<Job>("/jobs/demo", { method: "POST", body: form });
+  },
   exportJob: downloadReport,
 };

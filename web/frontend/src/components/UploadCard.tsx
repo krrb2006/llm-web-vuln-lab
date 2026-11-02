@@ -66,8 +66,8 @@ export function UploadCard({ onCreated }: Props) {
   async function runDemo() {
     setBusy(true);
     try {
-      const job = await api.demoJob();
-      push("已创建示例分析任务", "success");
+      const job = await api.demoJob(config.apiKey ? config : null);
+      push(job.llm_enabled ? "已创建示例任务，正在调用你的模型" : "已创建示例分析任务（仅静态扫描）", "success");
       onCreated(job);
     } catch (error) {
       push(error instanceof Error ? error.message : "创建示例任务失败", "error");

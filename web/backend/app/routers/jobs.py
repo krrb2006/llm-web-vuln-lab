@@ -122,7 +122,10 @@ async def create_job(
 @router.post("/demo", response_model=JobOut, status_code=status.HTTP_202_ACCEPTED)
 def create_demo_job(
     background: BackgroundTasks,
+    api_key: str | None = Form(default=None),
     provider: str = Form(default="openai"),
+    base_url: str | None = Form(default=None),
+    model: str = Form(default="gpt-4o-mini"),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> JobOut:
@@ -146,14 +149,14 @@ def create_demo_job(
         status="queued",
         stage="queued",
         progress=2,
-        provider="",
-        model="",
-        llm_enabled=False,
+        provider=provider[:40] if api_key else "",
+        model=model[:80] if api_key else "",
+        llm_enabled=bool((api_key or "").strip()),
     )
     db.add(job)
     db.commit()
     db.refresh(job)
-    _enqueue(background, job, None, provider, None, "gpt-4o-mini")
+    _enqueue(background, job, (api_key or "").strip() or None, provider, base_url, model)
     return JobOut.model_validate(job)
 
 
